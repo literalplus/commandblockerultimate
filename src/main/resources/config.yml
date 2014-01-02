@@ -1,0 +1,22 @@
+#  Command Blocker Ultimate config file
+
+# Define what commands should be blocked in the following property: (without leading slash)
+target-commands:
+ - ?
+ - help
+ - plugins
+ - pl
+ - version
+
+# Define the permission that a player needs to bypass the protection:
+bypass-permission: cmdblock.bypass
+
+# Define here if the console should eb allowed to bypass the protection (recommended)
+console-bypass: true
+
+# Should the plugin send an error message if one is not allowed to execute a command?
+show-error-message: true
+
+# What should that message be? (Use & for color codes, HTML escape codes accepted)
+# Example: &c&lError message &euro;&auml;&#00A7;
+error-message: '&cI am sorry, but you are not permitted to execute this command.'
