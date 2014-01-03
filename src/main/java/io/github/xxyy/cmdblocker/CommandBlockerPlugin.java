@@ -50,7 +50,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
         this.getServer().getPluginManager().registerEvents(this, this);
 
-        ProtocolLibrary.getProtocolManager().removePacketListener(new TabCompletePacketListener(this));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new TabCompletePacketListener(this));
 
         getServer().getPluginManager().addPermission(
                 new Permission(
