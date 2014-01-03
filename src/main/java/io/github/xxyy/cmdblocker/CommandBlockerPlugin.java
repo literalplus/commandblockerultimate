@@ -19,13 +19,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package io.github.xxyy.cmdblocker;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,17 +47,16 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         saveDefaultConfig();
 
         this.getServer().getPluginManager().registerEvents(this, this);
+
+        ProtocolLibrary.getProtocolManager().removePacketListener(new TabCompletePacketListener(this));
     }
 
-    private boolean canExecute(final CommandSender sender, final String command) {
-        if (!getConfig().getStringList("target-commands").contains(command)) {
-            return true;
-        }
-
-        return sender.hasPermission(getConfig().getString("bypass-permission"));
+    boolean canExecute(final CommandSender sender, final String command) {
+        return !getConfig().getStringList("target-commands").contains(command)
+                || sender.hasPermission(getConfig().getString("bypass-permission"));
     }
 
-    private void sendErrorMessageIfEnabled(final CommandSender target) {
+    void sendErrorMessageIfEnabled(final CommandSender target) {
         if (getConfig().getBoolean("show-error-message", true)) {
             target.sendMessage(
                     StringEscapeUtils.unescapeHtml(
@@ -67,9 +66,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    private String getRawCommand(final String chatMessage) {
+    String getRawCommand(final String chatMessage) {
         Matcher matcher = COMMAND_PATTERN.matcher(chatMessage);
-        matcher.find();
+
         if (!matcher.find() || matcher.groupCount() == 0) {
             return "";
         }
@@ -80,15 +79,6 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     public void onCommand(final PlayerCommandPreprocessEvent evt) {
         if (!canExecute(evt.getPlayer(), getRawCommand(evt.getMessage()))) {
             evt.setCancelled(true);
-
-            sendErrorMessageIfEnabled(evt.getPlayer());
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onTabComplete(final PlayerChatTabCompleteEvent evt) {
-        if (!canExecute(evt.getPlayer(), getRawCommand(evt.getChatMessage()))) {
-            evt.getTabCompletions().clear();
 
             sendErrorMessageIfEnabled(evt.getPlayer());
         }
