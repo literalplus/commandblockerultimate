@@ -1,6 +1,27 @@
 Command Blocker Ultimate!
 ======================
 
+```
+                                                                                            .........................................                  
+                .';::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;;:;;;;;;;;;;;;;;;;;;,,,,,,,,,,,,,,,:c,                
+               .l;.                                                                                                                  .l'               
+               ,l.                                                                                                                   .l,               
+               ,o.                                                                                                                    l,               
+               ,o.                .........       .'''''''''''    ','.      ',.    ',,.   ';;;;;;;;;;;.  ';;;::::;,.                  c,               
+               ,o.               .ooocccclooc'    ;ooc::::::::.  .looc.    .lo;    coo.   cooc,,,,,,,,.  ;ooc,,,,;lol,                c,               
+               'o.               .ooc     .coo;   ;oo.           .coooo;   .lo;    coo'   coo'           ,oo;      :oo;               c,               
+               'o.               .ooc      .ooo.  ;oo;........    coc;oo:  .lo:    coo'   cooc,,,,;;;.   ;oo;      .ool               c,               
+               'o.               .ooc      .loo.  ;oollllcccc,    co: .loc..lo:    coo'   :ool:::::::'   ;oo;      .ool.              c;               
+               'o.               .loc      .ooo.  ;oo'            co:  .:ol;lo:    coo'   :oo'           ,oo;      ,oo:               c;               
+               'o.               .loc      :oo:   ,oo.            co:    :oooo:    coo'   :oo,           ,oo;    .'lol.               c;               
+               'o.               .loo:;;;:lol;    ,ooc::::::::'   co:     ,ooo:    :oo'   :ooollllllll;  ,ooollloooc,                 c;               
+               'o.                ',,,,,,,'.      .'''''''''''.   .'.      ....    ....   .............   ........                    :;               
+               .o.                                                                                                                    :;               
+               .o.                                                                                                                    :;               
+               .o.                                                                                                                   .l'               
+                ;l,'.....''''''''''''''''''''',,,',,,,,,,,,,,,,,,,,,;;;;;;;;;;;;;;;;;;:::::::::::::::::::::::::::::::::::::::::::::::;.                
+                 ..'''''''''.......................................................                                                       
+```
 A Bukkit/Spigot plugin that is able to block certain (configurable!) commands.
 
 Features
