@@ -27,6 +27,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.regex.Matcher;
@@ -49,6 +51,13 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(this, this);
 
         ProtocolLibrary.getProtocolManager().removePacketListener(new TabCompletePacketListener(this));
+
+        getServer().getPluginManager().addPermission(
+                new Permission(
+                        getConfig().getString("bypass-permission"),
+                        "Allows to bypass Command Blocker Ultimate",
+                        PermissionDefault.OP)
+        );
     }
 
     boolean canExecute(final CommandSender sender, final String command) {
