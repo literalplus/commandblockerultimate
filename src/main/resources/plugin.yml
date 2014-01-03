@@ -3,3 +3,4 @@ version: 1.0
 authors: [xxyy]
 website: http://xxyy.github.io/
 main: io.github.xxyy.cmdblocker.CommandBlockerPlugin
+depend: [ProtocolLib]
