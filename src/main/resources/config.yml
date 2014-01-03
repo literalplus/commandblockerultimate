@@ -2,7 +2,7 @@
 
 # Define what commands should be blocked in the following property: (without leading slash)
 target-commands:
- - ?
+ - "?"
  - help
  - plugins
  - pl
