@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -72,12 +73,17 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     private String getRawCommand(final String chatMessage) {
-        return COMMAND_PATTERN.matcher(chatMessage).group(1);
+        Matcher matcher = COMMAND_PATTERN.matcher(chatMessage);
+        matcher.find();
+        if(!matcher.find() || matcher.groupCount() == 0){
+            return "";
+        }
+        return matcher.group(1);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(final PlayerCommandPreprocessEvent evt) {
-        if (canExecute(evt.getPlayer(), getRawCommand(evt.getMessage()))) {
+        if (!canExecute(evt.getPlayer(), getRawCommand(evt.getMessage()))) {
             evt.setCancelled(true);
 
             sendErrorMessageIfEnabled(evt.getPlayer());
@@ -86,7 +92,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTabComplete(final PlayerChatTabCompleteEvent evt) {
-        if (canExecute(evt.getPlayer(), getRawCommand(evt.getChatMessage()))) {
+        if (!canExecute(evt.getPlayer(), getRawCommand(evt.getChatMessage()))) {
             evt.getTabCompletions().clear();
 
             sendErrorMessageIfEnabled(evt.getPlayer());
