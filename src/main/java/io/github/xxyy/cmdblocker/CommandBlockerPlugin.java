@@ -22,7 +22,6 @@ package io.github.xxyy.cmdblocker;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -55,11 +54,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
             return true;
         }
 
-        if (sender instanceof ConsoleCommandSender) {
-            return getConfig().getBoolean("console-bypass", true);
-        } else {
-            return sender.hasPermission(getConfig().getString("bypass-permission"));
-        }
+        return sender.hasPermission(getConfig().getString("bypass-permission"));
     }
 
     private void sendErrorMessageIfEnabled(final CommandSender target) {
@@ -75,7 +70,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     private String getRawCommand(final String chatMessage) {
         Matcher matcher = COMMAND_PATTERN.matcher(chatMessage);
         matcher.find();
-        if(!matcher.find() || matcher.groupCount() == 0){
+        if (!matcher.find() || matcher.groupCount() == 0) {
             return "";
         }
         return matcher.group(1);

@@ -11,9 +11,6 @@ target-commands:
 # Define the permission that a player needs to bypass the protection:
 bypass-permission: cmdblock.bypass
 
-# Define here if the console should eb allowed to bypass the protection (recommended)
-console-bypass: true
-
 # Should the plugin send an error message if one is not allowed to execute a command?
 show-error-message: true
 
