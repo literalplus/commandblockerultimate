@@ -1,6 +1,17 @@
 name: CommandBlockerUltimate
 version: 1.01
-authors: [xxyy]
+author: xxyy
 website: http://xxyy.github.io/
 main: io.github.xxyy.cmdblocker.CommandBlockerPlugin
 depend: [ProtocolLib]
+prefix: CBU
+
+commands:
+  cbu:
+    description: Provides some tools for Command Blocker Ultimate.
+    usage: /<command> [reloadcfg]
+    permission: cmdblock.admin
+permissions:
+  cmdblock.admin: #Probably no need to configure this one
+    description: Allows to use the /cbu utility command. (Recommended access level: Staff)
+    default: false

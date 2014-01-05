@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  * Blocks certain commands.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 02.01.14
+ * @since 02.01.14 // 1.0
  */
 public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     private static Pattern COMMAND_PATTERN = Pattern.compile("^/((\\S)+)");
@@ -55,9 +55,11 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().addPermission(
                 new Permission(
                         getConfig().getString("bypass-permission"),
-                        "Allows to bypass Command Blocker Ultimate",
+                        "Allows to bypass Command Blocker Ultimate (Recommended access level: Staff)",
                         PermissionDefault.OP)
         );
+
+        getCommand("cbu").setExecutor(new CommandCBU(this));
     }
 
     boolean canExecute(final CommandSender sender, final String command) {
