@@ -22,11 +22,11 @@ public final class ConfigUpdateHelper {
 
     }
 
-    public boolean updateConfig(final Plugin plugin, final File configFile) {
+    public static boolean updateConfig(final Plugin plugin, final File configFile) {
         return updateConfig(plugin, configFile, false);
     }
 
-    private boolean updateConfig(final Plugin plugin, final File configFile, final boolean alreadyChanged) {
+    private static boolean updateConfig(final Plugin plugin, final File configFile, final boolean alreadyChanged) {
         for (ConfigUpdater configUpdater : ConfigUpdaters.values()) {
 
             if (configUpdater.needsUpdating(plugin.getConfig())) {

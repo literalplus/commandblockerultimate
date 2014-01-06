@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package io.github.xxyy.cmdblocker;
 
 import com.comphenix.protocol.ProtocolLibrary;
+import io.github.xxyy.cmdblocker.config.ConfigUpdateHelper;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +32,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,9 +51,8 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         String javaVersionString = ManagementFactory.getRuntimeMXBean().getSpecVersion();
         javaVersionString = javaVersionString.substring(2);
-        int javaVersion = -1;
         try{
-            javaVersion = Integer.parseInt(javaVersionString);
+            int javaVersion = Integer.parseInt(javaVersionString);
 
             if(javaVersion < 7){
                 getLogger().severe("This plugin requires at least Java 7. Please update your Java.");
@@ -59,11 +60,13 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
                 return;
             }
         }catch(NumberFormatException nfe){
-            getLogger().warning("Could not determine you Java Version, assuming you are running Java 7. " +
+            getLogger().warning("Could not determine your Java Version, assuming you are running Java 7. " +
                     "If you are not, please update to Java 7.");
         }
 
         saveDefaultConfig();
+        ConfigUpdateHelper.updateConfig(this, new File(getDataFolder(), "config.yml"));
+
 
         this.getServer().getPluginManager().registerEvents(this, this);
 
