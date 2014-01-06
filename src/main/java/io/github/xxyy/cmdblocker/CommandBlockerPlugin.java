@@ -31,6 +31,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.management.ManagementFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +47,22 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        String javaVersionString = ManagementFactory.getRuntimeMXBean().getSpecVersion();
+        javaVersionString = javaVersionString.substring(2);
+        int javaVersion = -1;
+        try{
+            javaVersion = Integer.parseInt(javaVersionString);
+
+            if(javaVersion < 7){
+                getLogger().severe("This plugin requires at least Java 7. Please update your Java.");
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+        }catch(NumberFormatException nfe){
+            getLogger().warning("Could not determine you Java Version, assuming you are running Java 7. " +
+                    "If you are not, please update to Java 7.");
+        }
+
         saveDefaultConfig();
 
         this.getServer().getPluginManager().registerEvents(this, this);
