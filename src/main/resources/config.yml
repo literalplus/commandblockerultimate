@@ -17,3 +17,9 @@ show-error-message: true
 # What should that message be? (Use & for color codes, HTML escape codes accepted)
 # Example: &c&lError message &euro;&auml;&#00A7;
 error-message: '&cI am sorry, but you are not permitted to execute this command.'
+
+# @since 1.02
+# Whether to prevent tab-completion for blocked commands.
+# Note: Requires ProtocolLib!
+# Default value: true
+prevent-tab: true
