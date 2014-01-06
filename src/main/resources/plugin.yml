@@ -3,7 +3,7 @@ version: 1.02
 author: xxyy
 website: http://xxyy.github.io/
 main: io.github.xxyy.cmdblocker.CommandBlockerPlugin
-depend: [ProtocolLib]
+softdepend: [ProtocolLib]
 prefix: CBU
 
 commands:

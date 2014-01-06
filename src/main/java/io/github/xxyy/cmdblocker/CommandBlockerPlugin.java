@@ -49,6 +49,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        //Check for Java 7 (Required)
         String javaVersionString = ManagementFactory.getRuntimeMXBean().getSpecVersion();
         javaVersionString = javaVersionString.substring(2);
         try{
@@ -64,21 +65,17 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
                     "If you are not, please update to Java 7.");
         }
 
+        //Do config stuffs
         saveDefaultConfig();
         ConfigUpdateHelper.updateConfig(this, new File(getDataFolder(), "config.yml"));
 
-
+        //Register command listener
         this.getServer().getPluginManager().registerEvents(this, this);
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new TabCompletePacketListener(this));
+        //Hook into ProtocolLib, if enabled and loaded
+        tryHookProtocolLib();
 
-        getServer().getPluginManager().addPermission(
-                new Permission(
-                        getConfig().getString("bypass-permission"),
-                        "Allows to bypass Command Blocker Ultimate (Recommended access level: Staff)",
-                        PermissionDefault.OP)
-        );
-
+        //Register commands
         getCommand("cbu").setExecutor(new CommandCBU(this));
     }
 
@@ -113,5 +110,29 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
             sendErrorMessageIfEnabled(evt.getPlayer());
         }
+    }
+
+    private void tryHookProtocolLib(){
+        if(!getConfig().getBoolean("prevent-tab", true)){
+            return;
+        }
+
+        if(getServer().getPluginManager().getPlugin("ProtocolLib") == null){
+            getLogger().warning("Could not hook ProtocolLib - Plugin not loaded! " +
+                    "Please check that you installed it correctly. " +
+                    "If you want this message to be omitted, set 'prevent-tab' to false in the plugin's config file. " +
+                    "Get ProtocolLib here: http://dev.bukkit.org/bukkit-plugins/protocollib/");
+            getLogger().warning("Tab-completion will NOT be prevented!");
+            return;
+        }
+
+        ProtocolLibrary.getProtocolManager().addPacketListener(new TabCompletePacketListener(this));
+
+        getServer().getPluginManager().addPermission(
+                new Permission(
+                        getConfig().getString("bypass-permission"),
+                        "Allows to bypass Command Blocker Ultimate (Recommended access level: Staff)",
+                        PermissionDefault.OP)
+        );
     }
 }
