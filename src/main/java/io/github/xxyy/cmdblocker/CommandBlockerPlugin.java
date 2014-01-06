@@ -44,8 +44,8 @@ import java.util.regex.Pattern;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 02.01.14 // 1.0
  */
-public class CommandBlockerPlugin extends JavaPlugin implements Listener {
-    private static Pattern COMMAND_PATTERN = Pattern.compile("^/((\\S)+)");
+class CommandBlockerPlugin extends JavaPlugin implements Listener {
+    private static final Pattern COMMAND_PATTERN = Pattern.compile("^/((\\S)+)");
 
     @Override
     public void onEnable() {
@@ -67,7 +67,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
         //Do config stuffs
         saveDefaultConfig();
-        ConfigUpdateHelper.updateConfig(this, new File(getDataFolder(), "config.yml"));
+        if(ConfigUpdateHelper.updateConfig(this, new File(getDataFolder(), "config.yml"))){
+            getLogger().info("Your configuration file has been updated! Check out the new options :)");
+        }
 
         //Register command listener
         this.getServer().getPluginManager().registerEvents(this, this);

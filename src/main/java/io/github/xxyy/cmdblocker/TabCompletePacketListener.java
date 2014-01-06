@@ -12,7 +12,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 03.01.14
  */
-public final class TabCompletePacketListener extends PacketAdapter {
+final class TabCompletePacketListener extends PacketAdapter {
     TabCompletePacketListener(final CommandBlockerPlugin instance){
         super(instance, PacketType.Play.Client.TAB_COMPLETE);
     }

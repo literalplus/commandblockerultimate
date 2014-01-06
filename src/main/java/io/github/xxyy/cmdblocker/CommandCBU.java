@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 05.01.14 // 1.01
  */
-public class CommandCBU implements CommandExecutor {
+class CommandCBU implements CommandExecutor {
     private final CommandBlockerPlugin plugin;
 
     CommandCBU(final CommandBlockerPlugin instance) {

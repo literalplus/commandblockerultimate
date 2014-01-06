@@ -23,16 +23,14 @@ public final class ConfigUpdateHelper {
     }
 
     public static boolean updateConfig(final Plugin plugin, final File configFile) {
-        return updateConfig(plugin, configFile, false);
-    }
-
-    private static boolean updateConfig(final Plugin plugin, final File configFile, final boolean alreadyChanged) {
+        boolean changed = false;
         for (ConfigUpdater configUpdater : ConfigUpdaters.values()) {
 
             if (configUpdater.needsUpdating(plugin.getConfig())) {
 
                 try (FileWriter fileWriter = new FileWriter(configFile, true)) {
 
+                    plugin.getLogger().info("Now updating your config file to version " + configUpdater.getVersionNumber() + "!");
                     fileWriter.write("\n# @since " + configUpdater.getVersionNumber() + "\n");
                     fileWriter.write(configUpdater.getAdditionalLines() + "\n");
 
@@ -41,10 +39,11 @@ public final class ConfigUpdateHelper {
                             "your config file to version " + configUpdater.getVersionNumber(), ioe);
                 }
 
+                changed = true;
                 plugin.reloadConfig();
             }
         }
 
-        return alreadyChanged;
+        return changed;
     }
 }
