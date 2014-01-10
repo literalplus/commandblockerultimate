@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 02.01.14 // 1.0
  */
-class CommandBlockerPlugin extends JavaPlugin implements Listener {
+public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     private static final Pattern COMMAND_PATTERN = Pattern.compile("^/((\\S)+)");
 
     @Override
