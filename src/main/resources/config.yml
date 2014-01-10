@@ -23,3 +23,9 @@ error-message: '&cI am sorry, but you are not permitted to execute this command.
 # Note: Requires ProtocolLib!
 # Default value: true
 prevent-tab: true
+
+# What strategy to use when blocking tab-complete replies from the server.
+# true: block all completions returning a targeted command (for example, if /p is typed and /pl is blocked, print error message)
+# false: just remove blocked commands from list (in the above example, other commands starting with p would still be shown without notice)
+# Default value: false
+tab-restrictive-mode: false

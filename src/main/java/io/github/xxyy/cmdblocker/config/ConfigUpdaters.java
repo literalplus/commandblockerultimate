@@ -13,7 +13,12 @@ public enum ConfigUpdaters implements ConfigUpdater{
     TO_102("1.02", "# Whether to prevent tab-completion for blocked commands.\n" +
             "# Note: Requires ProtocolLib!\n" +
             "# Default value: true\n" +
-            "prevent-tab: true"){
+            "prevent-tab: true\n" +
+            "# What strategy to use when blocking tab-complete replies from the server.\n" +
+            "# true: block all completions returning a targeted command (for example, if /p is typed and /pl is blocked, print error message)\n" +
+            "# false: just remove blocked commands from list (in the above example, other commands starting with p would still be shown without notice)\n" +
+            "# Default value: false\n" +
+            "tab-restrictive-mode: false"){
         @Override
         public boolean needsUpdating(final FileConfiguration configToCheck) {
             return !configToCheck.contains("prevent-tab");

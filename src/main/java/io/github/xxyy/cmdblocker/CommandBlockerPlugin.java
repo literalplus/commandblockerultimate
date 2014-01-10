@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package io.github.xxyy.cmdblocker;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import io.github.xxyy.cmdblocker.config.ConfigUpdateHelper;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
@@ -34,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +71,13 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
             getLogger().info("Your configuration file has been updated! Check out the new options :)");
         }
 
+        getServer().getPluginManager().addPermission(
+                new Permission(
+                        getConfig().getString("bypass-permission"),
+                        "Allows to bypass Command Blocker Ultimate (Recommended access level: Staff)",
+                        PermissionDefault.OP)
+        );
+
         //Register command listener
         this.getServer().getPluginManager().registerEvents(this, this);
 
@@ -81,12 +88,12 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         getCommand("cbu").setExecutor(new CommandCBU(this));
     }
 
-    boolean canExecute(final CommandSender sender, final String command) {
+    public boolean canExecute(final CommandSender sender, final String command) {
         return !getConfig().getStringList("target-commands").contains(command)
                 || sender.hasPermission(getConfig().getString("bypass-permission"));
     }
 
-    void sendErrorMessageIfEnabled(final CommandSender target) {
+    public void sendErrorMessageIfEnabled(final CommandSender target) {
         if (getConfig().getBoolean("show-error-message", true)) {
             target.sendMessage(
                     StringEscapeUtils.unescapeHtml(
@@ -96,7 +103,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    String getRawCommand(final String chatMessage) {
+    public String getRawCommand(final String chatMessage) {
         Matcher matcher = COMMAND_PATTERN.matcher(chatMessage);
 
         if (!matcher.find() || matcher.groupCount() == 0) {
@@ -119,22 +126,24 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
             return;
         }
 
-        if(getServer().getPluginManager().getPlugin("ProtocolLib") == null){
-            getLogger().warning("Could not hook ProtocolLib - Plugin not loaded! " +
-                    "Please check that you installed it correctly. " +
-                    "If you want this message to be omitted, set 'prevent-tab' to false in the plugin's config file. " +
-                    "Get ProtocolLib here: http://dev.bukkit.org/bukkit-plugins/protocollib/");
-            getLogger().warning("Tab-completion will NOT be prevented!");
-            return;
+        if(getServer().getPluginManager().getPlugin("ProtocolLib") != null){
+            try{
+                //The ClassLoader seems to load the class even when it's not imported - Feel free to provide a better implementation.
+                com.comphenix.protocol.ProtocolLibrary.getProtocolManager().addPacketListener(
+                        (com.comphenix.protocol.events.PacketListener) Class
+                                .forName("io.github.xxyy.cmdblocker.protocol.TabCompletePacketListener")
+                                .getConstructor(CommandBlockerPlugin.class)
+                                .newInstance(this));
+            }catch(Throwable throwable){
+                getLogger().log(Level.WARNING, "Problem when trying to hook ProtcolLib!", throwable);
+            }
         }
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new TabCompletePacketListener(this));
-
-        getServer().getPluginManager().addPermission(
-                new Permission(
-                        getConfig().getString("bypass-permission"),
-                        "Allows to bypass Command Blocker Ultimate (Recommended access level: Staff)",
-                        PermissionDefault.OP)
-        );
+        //com.comphenix.protocol.ProtocolLibrary.getProtocolManager().addPacketListener(new TabCompletePacketListener(this));
+        getLogger().warning("Could not hook ProtocolLib! " +
+                "Please check that you installed it correctly. " +
+                "If you want this message to be omitted, set 'prevent-tab' to false in the plugin's config file. " +
+                "Get ProtocolLib here: http://dev.bukkit.org/bukkit-plugins/protocollib/");
+        getLogger().warning("Tab-completion will NOT be prevented!");
     }
 }
