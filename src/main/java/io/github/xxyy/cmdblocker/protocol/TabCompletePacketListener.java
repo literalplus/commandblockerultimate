@@ -42,10 +42,15 @@ public final class TabCompletePacketListener extends PacketAdapter {
     }
 
     @Override
-    public void onPacketSending(PacketEvent event) {
+    public void onPacketSending(final PacketEvent event) {
         if (!event.isCancelled()/* && event.getPacketType().equals(PacketType.Play.Client.TAB_COMPLETE)*/) {
             //Nothing else than server TAB_COMPLETE should come our way
             //Packet: {(VarInt)Count, Matched command} http://wiki.vg/Protocol#Tab-Complete
+            final CommandBlockerPlugin plugin1 = (CommandBlockerPlugin) getPlugin();
+            if(event.getPlayer().hasPermission(plugin1.getConfig().getString("bypass-permission"))){
+                return;
+            }
+
             PacketContainer packetContainer = event.getPacket();
 
             StructureModifier<String[]> matchModifier = packetContainer.getSpecificModifier(String[].class);
@@ -53,12 +58,9 @@ public final class TabCompletePacketListener extends PacketAdapter {
             String[] matchedCommands = matchModifier.read(0);
             List<String> allowedCommands = null;
 
-            CommandBlockerPlugin plugin1 = (CommandBlockerPlugin) getPlugin();
 
             for (String matchedCommand : matchedCommands) {
-                if (!plugin1.canExecute(event.getPlayer(), plugin1.getRawCommand(matchedCommand))) {
-
-
+                if (plugin1.isBlocked(matchedCommand)) {
                     if (plugin1.getConfig().getBoolean("tab-restrictive-mode")) {
                         plugin1.sendErrorMessageIfEnabled(event.getPlayer());
                         event.setCancelled(true);

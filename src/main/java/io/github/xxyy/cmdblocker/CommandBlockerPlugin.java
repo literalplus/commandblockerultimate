@@ -89,9 +89,13 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     public boolean canExecute(final CommandSender sender, final String command) {
-        return !getConfig().getStringList("target-commands").contains(command)
-                || sender.hasPermission(getConfig().getString("bypass-permission"));
+        return !isBlocked(command) || sender.hasPermission(getConfig().getString("bypass-permission"));
     }
+
+    public boolean isBlocked(String command) {
+        return getConfig().getStringList("target-commands").contains(command);
+    }
+
 
     public void sendErrorMessageIfEnabled(final CommandSender target) {
         if (getConfig().getBoolean("show-error-message", true)) {
