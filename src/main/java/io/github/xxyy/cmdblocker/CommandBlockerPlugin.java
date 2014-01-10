@@ -138,12 +138,12 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
                                 .forName("io.github.xxyy.cmdblocker.protocol.TabCompletePacketListener")
                                 .getConstructor(CommandBlockerPlugin.class)
                                 .newInstance(this));
+                return;
             }catch(Throwable throwable){
                 getLogger().log(Level.WARNING, "Problem when trying to hook ProtcolLib!", throwable);
             }
         }
 
-        //com.comphenix.protocol.ProtocolLibrary.getProtocolManager().addPacketListener(new TabCompletePacketListener(this));
         getLogger().warning("Could not hook ProtocolLib! " +
                 "Please check that you installed it correctly. " +
                 "If you want this message to be omitted, set 'prevent-tab' to false in the plugin's config file. " +
