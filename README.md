@@ -53,11 +53,11 @@ For fully tested versions, check out the [Spigot Resource entry](http://www.spig
 
 Support
 =======
-If you have problems, just [join #lit on irc.spi.gt](http://irc.spi.gt/iris/?channels=lit) and ask whatever question you may encounter!
+If encounter any problem with this plugin, just [join #lit on irc.spi.gt](http://irc.spi.gt/iris/?channels=lit), ask and wait patiently for a reply.
 
 Contribution
 ============
-Pull Requests and Issue Reports are greatly appreciated, as long as they follow at least some level of command sense and good practice.
+Pull Requests and Issue Reports are greatly appreciated, as long as they follow at least some level of common sense and good practice.
 
 License
 =======
