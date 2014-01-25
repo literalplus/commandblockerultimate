@@ -7,6 +7,8 @@ target-commands:
  - plugins
  - pl
  - version
+ - ver
+ - about
 
 # Define the permission that a player needs to bypass the protection:
 bypass-permission: cmdblock.bypass
