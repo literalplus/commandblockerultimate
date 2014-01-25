@@ -32,6 +32,10 @@ Features
  - Messages can be freely modified!
  - Lightweight!
  - Runs on nearly every OS! (Java, you know)
+ - Blocks tab-completion of blocked commands!*
+ - !
+
+(*) You need to install [ProtocolLib](http://dev.bukkit.org/bukkit-plugins/protocollib/) for that to work
 
 Compilation
 ===========
@@ -42,6 +46,8 @@ mvn clean package
 ````
 
 Or you could just head over to my [Continous Integration Server](http://server.nowak-at.net/jenkins/job/public~cmdblkult/) and get your free executable TODAY!
+
+For fully tested versions, check out the [Spigot Resource entry](http://www.spigotmc.org/resources/command-blocker-ultimate.296/) for this plugin!
 
 (But there's more! If you download RIGHT NOW, you can get plenty of other open-source plugins and other stuff FOR FREE at https://github.com/xxyy !!!1)
 
