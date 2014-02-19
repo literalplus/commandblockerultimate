@@ -30,8 +30,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,6 +71,14 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
         //Register commands
         getCommand("cbu").setExecutor(new CommandCBU(this));
+
+        //Hey, how about metrics?
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            getLogger().info("Could not start Metrics. This error is non-crucial. Just ignore it.");
+        }
     }
 
     public boolean canExecute(final CommandSender sender, final String command) {
