@@ -9,3 +9,4 @@ target
 #IDEA
 .idea
 *.iml
+dependency-reduced-pom.xml
