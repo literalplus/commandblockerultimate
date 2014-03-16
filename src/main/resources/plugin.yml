@@ -1,5 +1,5 @@
 name: CommandBlockerUltimate
-version: ${project.version}
+version: ${full-version}-g${buildNumber}
 author: xxyy
 website: http://xxyy.github.io/
 main: io.github.xxyy.cmdblocker.CommandBlockerPlugin

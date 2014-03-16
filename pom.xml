@@ -4,9 +4,34 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+
     <groupId>io.github.xxyy</groupId>
     <artifactId>CommandBlockerUltimate</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.2.3</version>
+
+    <scm>
+        <connection>scm:git:https://github.com/xxyy/CommandBlockerUltimate</connection>
+    </scm>
+
+    <profiles>
+        <profile>
+            <id>env-production</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <properties>
+                <version-suffix>-RELEASE</version-suffix>
+            </properties>
+        </profile>
+    </profiles>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version-suffix>-SNAPSHOT</version-suffix>
+        <full-version>${project.version}${version-suffix}</full-version>
+    </properties>
 
     <repositories>
         <repository>
@@ -41,9 +66,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
         <plugins>
@@ -99,6 +121,27 @@
                             <shadedPattern>io.github.xxyy.lib.com.mcstats</shadedPattern>
                         </relocation>
                     </relocations>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <shortRevisionLength>6</shortRevisionLength>
+                    <revisionOnScmFailure>unknown</revisionOnScmFailure>
+                    <format>{0}</format>
+                    <items>
+                        <item>scmVersion</item>
+                    </items>
                 </configuration>
             </plugin>
         </plugins>
