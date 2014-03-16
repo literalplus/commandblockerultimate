@@ -81,12 +81,24 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    /**
+     * Checks whether a given {@link org.bukkit.command.CommandSender} can execute a given command.
+     *
+     * @param sender Sender to check
+     * @param command Name of the command to check, might have a slash in front.
+     * @return Whether {@code sender} can execute {@code command}, not taking aliases into account.
+     */
     public boolean canExecute(final CommandSender sender, final String command) {
         return !isBlocked(command) || sender.hasPermission(getConfig().getString("bypass-permission"));
     }
 
-    public boolean isBlocked(String command) {
-        return getConfig().getStringList("target-commands").contains(command);
+    /**
+     * Checks whether a chat commandName matches a blocked command.
+     * @param commandName Command to check, can have leading slash.
+     * @return Whether this command is blocked by configuration. Does not take aliases into account.
+     */
+    public boolean isBlocked(String commandName) {
+        return getConfig().getStringList("target-commands").contains(getRawCommand(commandName));
     }
 
 
@@ -101,7 +113,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     public String getRawCommand(final String chatMessage) {
-        Matcher matcher = COMMAND_PATTERN.matcher(chatMessage);
+        Matcher matcher = COMMAND_PATTERN.matcher(chatMessage); //Remove slash
 
         if (!matcher.find() || matcher.groupCount() == 0) {
             return "";
@@ -126,14 +138,12 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         if(getServer().getPluginManager().getPlugin("ProtocolLib") != null){
             try{
                 //The ClassLoader seems to load the class even when it's not imported - Feel free to provide a better implementation.
-                com.comphenix.protocol.ProtocolLibrary.getProtocolManager().addPacketListener(
-                        (com.comphenix.protocol.events.PacketListener) Class
-                                .forName("io.github.xxyy.cmdblocker.protocol.TabCompletePacketListener")
-                                .getConstructor(CommandBlockerPlugin.class)
-                                .newInstance(this));
+                Class.forName("io.github.xxyy.cmdblocker.protocol.TabCompletePacketListener")
+                    .getConstructor(CommandBlockerPlugin.class)
+                    .newInstance(this);
                 return;
             }catch(Throwable throwable){
-                getLogger().log(Level.WARNING, "Problem when trying to hook ProtcolLib!", throwable);
+                getLogger().log(Level.WARNING, "Problem when trying to hook ProtocolLib!", throwable);
             }
         }
 
