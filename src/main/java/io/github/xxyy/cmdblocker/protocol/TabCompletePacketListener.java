@@ -1,11 +1,15 @@
 package io.github.xxyy.cmdblocker.protocol;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListeningWhitelist;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.events.PacketListener;
+import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
 import io.github.xxyy.cmdblocker.CommandBlockerPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -17,37 +21,61 @@ import java.util.List;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 03.01.14
  */
-public final class TabCompletePacketListener extends PacketAdapter {
+public final class TabCompletePacketListener implements PacketListener {
+    public static final ListeningWhitelist SENDING_WHITELIST = ListeningWhitelist.newBuilder()
+            .types(PacketType.Play.Server.TAB_COMPLETE)
+            .gamePhase(GamePhase.PLAYING).normal().build();
+    public static final ListeningWhitelist RECEIVING_WHITELIST = ListeningWhitelist.newBuilder()
+            .types(PacketType.Play.Client.TAB_COMPLETE)
+            .gamePhase(GamePhase.PLAYING).normal().build();
+    private final CommandBlockerPlugin plugin;
+
     public TabCompletePacketListener(final CommandBlockerPlugin instance) {
-        super(instance, PacketType.Play.Client.TAB_COMPLETE, PacketType.Play.Server.TAB_COMPLETE);
+        this.plugin = instance;
+        ProtocolLibrary.getProtocolManager().addPacketListener(this);
     }
 
     @Override
     public void onPacketReceiving(PacketEvent event) {
-        if (!event.isCancelled()/* && event.getPacketType().equals(PacketType.Play.Client.TAB_COMPLETE)*/) {
+        if (!event.isCancelled()) {
+            //Nothing else than server TAB_COMPLETE should come our way
             //Packet: {Chat message} http://wiki.vg/Protocol#Tab-Complete_2
             PacketContainer packet = event.getPacket();
 
             StructureModifier<String> textModifier = packet.getSpecificModifier(String.class);
 
             String chatMessage = textModifier.read(0);
-            CommandBlockerPlugin plugin = (CommandBlockerPlugin) getPlugin();
 
-            if (!plugin.canExecute(event.getPlayer(), plugin.getRawCommand(chatMessage))) {
+            if (!this.plugin.canExecute(event.getPlayer(), chatMessage)) {
                 event.setCancelled(true);
 
-                plugin.sendErrorMessageIfEnabled(event.getPlayer());
+                this.plugin.sendErrorMessageIfEnabled(event.getPlayer());
             }
         }
     }
 
     @Override
+    public ListeningWhitelist getSendingWhitelist() {
+        return SENDING_WHITELIST;
+    }
+
+    @Override
+    public ListeningWhitelist getReceivingWhitelist() {
+        return RECEIVING_WHITELIST;
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return plugin;
+    }
+
+    @Override
     public void onPacketSending(final PacketEvent event) {
-        if (!event.isCancelled()/* && event.getPacketType().equals(PacketType.Play.Client.TAB_COMPLETE)*/) {
+        if (!event.isCancelled()) {
             //Nothing else than server TAB_COMPLETE should come our way
             //Packet: {(VarInt)Count, Matched command} http://wiki.vg/Protocol#Tab-Complete
-            final CommandBlockerPlugin plugin1 = (CommandBlockerPlugin) getPlugin();
-            if(event.getPlayer().hasPermission(plugin1.getConfig().getString("bypass-permission"))){
+
+            if (event.getPlayer().hasPermission(this.plugin.getConfig().getString("bypass-permission"))) {
                 return;
             }
 
@@ -55,14 +83,14 @@ public final class TabCompletePacketListener extends PacketAdapter {
 
             StructureModifier<String[]> matchModifier = packetContainer.getSpecificModifier(String[].class);
 
-            String[] matchedCommands = matchModifier.read(0);
+            String[] matchedCommands = matchModifier.read(0); //Commands suggested by the server
             List<String> allowedCommands = null;
 
 
             for (String matchedCommand : matchedCommands) {
-                if (plugin1.isBlocked(matchedCommand)) {
-                    if (plugin1.getConfig().getBoolean("tab-restrictive-mode")) {
-                        plugin1.sendErrorMessageIfEnabled(event.getPlayer());
+                if (this.plugin.isBlocked(matchedCommand)) { //Not using canExecute to save some permission checks (Single one done above)
+                    if (this.plugin.getConfig().getBoolean("tab-restrictive-mode")) { //Hides all replies if anything is matched
+                        this.plugin.sendErrorMessageIfEnabled(event.getPlayer());
                         event.setCancelled(true);
                         return;
                     } else {
@@ -74,11 +102,11 @@ public final class TabCompletePacketListener extends PacketAdapter {
                 }
             }
 
-            if (allowedCommands != null) {
-                if (allowedCommands.size() == 0) {
-                    plugin1.sendErrorMessageIfEnabled(event.getPlayer());
+            if (allowedCommands != null) { // null means that nothing was found
+                if (allowedCommands.size() == 0) { //Nothing is allowed
+                    this.plugin.sendErrorMessageIfEnabled(event.getPlayer());
                     event.setCancelled(true);
-                } else {
+                } else { //Write allowed commands
                     matchModifier.write(0, allowedCommands.toArray(new String[allowedCommands.size()]));
                 }
             }
