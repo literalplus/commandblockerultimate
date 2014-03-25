@@ -1,6 +1,6 @@
-package io.github.xxyy.cmdblocker.config;
+package io.github.xxyy.cmdblocker.common.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import io.github.xxyy.cmdblocker.common.ConfigAdapter;
 
 /**
  * Implementations update the configuration file to a specific specification version.
@@ -8,9 +8,8 @@ import org.bukkit.configuration.file.FileConfiguration;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 06.01.14 // 1.02
  */
-//TODO: Is this needed? Relying on ConfigUpdaters implementation detail .values() anyway
 public interface ConfigUpdater {
-    boolean needsUpdating(final FileConfiguration configToCheck);
+    boolean needsUpdating(final ConfigAdapter adapter);
     String getAdditionalLines();
     String getVersionNumber();
 }

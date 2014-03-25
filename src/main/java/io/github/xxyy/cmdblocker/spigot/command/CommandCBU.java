@@ -1,5 +1,6 @@
-package io.github.xxyy.cmdblocker;
+package io.github.xxyy.cmdblocker.spigot.command;
 
+import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,10 +12,10 @@ import org.bukkit.command.CommandSender;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 05.01.14 // 1.01
  */
-class CommandCBU implements CommandExecutor {
+public class CommandCBU implements CommandExecutor {
     private final CommandBlockerPlugin plugin;
 
-    CommandCBU(final CommandBlockerPlugin instance) {
+    public CommandCBU(final CommandBlockerPlugin instance) {
         plugin = instance;
     }
 

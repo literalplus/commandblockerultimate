@@ -1,6 +1,6 @@
-package io.github.xxyy.cmdblocker.config;
+package io.github.xxyy.cmdblocker.common.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import io.github.xxyy.cmdblocker.common.ConfigAdapter;
 
 /**
  * Provides implementations for updating config files between versions.
@@ -20,8 +20,8 @@ public enum ConfigUpdaters implements ConfigUpdater{
             "# Default value: false\n" +
             "tab-restrictive-mode: false"){
         @Override
-        public boolean needsUpdating(final FileConfiguration configToCheck) {
-            return !configToCheck.contains("prevent-tab");
+        public boolean needsUpdating(final ConfigAdapter adapter) {
+            return !adapter.contains("prevent-tab");
         }
     };
 
@@ -32,8 +32,6 @@ public enum ConfigUpdaters implements ConfigUpdater{
 
     private final String additionalLines;
     private final String versionNumber;
-
-    public abstract boolean needsUpdating(final FileConfiguration configToCheck);
 
     @Override
     public String getAdditionalLines() {

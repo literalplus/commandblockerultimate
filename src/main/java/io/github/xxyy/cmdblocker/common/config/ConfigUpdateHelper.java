@@ -1,13 +1,10 @@
-package io.github.xxyy.cmdblocker.config;
+package io.github.xxyy.cmdblocker.common.config;
 
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginLogger;
+import io.github.xxyy.cmdblocker.common.ConfigAdapter;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Manages updating of the main configuration file.
@@ -16,32 +13,33 @@ import java.util.logging.Logger;
  * @since 06.01.14 // 1.02
  */
 public final class ConfigUpdateHelper {
-    private static final Logger LOGGER = PluginLogger.getLogger(ConfigUpdateHelper.class.getName());
-
     private ConfigUpdateHelper() {
 
     }
 
-    public static boolean updateConfig(final Plugin plugin, final File configFile) {
+    public static boolean updateConfig(final ConfigAdapter adapter) {
         boolean changed = false;
         for (ConfigUpdater configUpdater : ConfigUpdaters.values()) {
 
-            if (configUpdater.needsUpdating(plugin.getConfig())) {
+            if (configUpdater.needsUpdating(adapter)) {
 
-                try (FileWriter fileWriter = new FileWriter(configFile, true)) {
+                try (FileWriter fileWriter = new FileWriter(adapter.getFile(), true)) {
 
-                    plugin.getLogger().info("Now updating your config file to version " + configUpdater.getVersionNumber() + "!");
+                    adapter.getLogger().info("Now updating your config file to version " + configUpdater.getVersionNumber() + "!");
                     fileWriter.write("\n# @since " + configUpdater.getVersionNumber() + "\n");
                     fileWriter.write(configUpdater.getAdditionalLines() + "\n");
 
                 } catch (IOException ioe) {
-                    LOGGER.log(Level.WARNING, "An unexpected Exception occurred while trying to update " +
+                    adapter.getLogger().log(Level.WARNING, "An unexpected Exception occurred while trying to update " +
                             "your config file to version " + configUpdater.getVersionNumber(), ioe);
                 }
 
                 changed = true;
-                plugin.reloadConfig();
             }
+        }
+
+        if(changed) {
+            adapter.reload();
         }
 
         return changed;
