@@ -36,6 +36,7 @@ import org.mcstats.Metrics;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * CommandBlocker Ultimate.
@@ -174,6 +175,11 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         @Override
         public boolean contains(String path) {
             return getConfig().contains(path);
+        }
+
+        @Override
+        public Logger getLogger() {
+            return CommandBlockerPlugin.this.getLogger();
         }
 
         @Override
