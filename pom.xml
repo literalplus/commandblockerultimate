@@ -59,6 +59,7 @@
         <minecraft.version>1.7.9</minecraft.version>
         <spigot.version>${minecraft.version}-R0.2-SNAPSHOT</spigot.version>
         <java.version>1.7</java.version>
+        <bungee.version>1.7-SNAPSHOT</bungee.version>
     </properties>
 
     <repositories>
@@ -104,6 +105,13 @@
                 <artifactId>metrics</artifactId>
                 <version>R6</version>
             </dependency>
+
+            <dependency>
+                <groupId>net.md-5</groupId>
+                <artifactId>bungeecord-api</artifactId>
+                <version>${bungee.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>cbu-common</artifactId>
