@@ -1,6 +1,6 @@
-package io.github.xxyy.cmdblocker.spigot.command;
+package spigot.command;
 
-import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
+import spigot.CommandBlockerPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

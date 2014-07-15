@@ -17,12 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package io.github.xxyy.cmdblocker.spigot;
+package spigot;
 
 import io.github.xxyy.cmdblocker.common.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.GenericConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.ConfigUpdateHelper;
-import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -32,6 +31,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
+import spigot.command.CommandCBU;
 
 import java.io.File;
 import java.io.IOException;

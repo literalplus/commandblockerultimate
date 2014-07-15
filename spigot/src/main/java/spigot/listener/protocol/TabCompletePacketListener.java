@@ -1,4 +1,4 @@
-package io.github.xxyy.cmdblocker.spigot.listener.protocol;
+package spigot.listener.protocol;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -9,7 +9,7 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
 import io.github.xxyy.cmdblocker.common.ConfigAdapter;
-import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
+import spigot.CommandBlockerPlugin;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
@@ -22,12 +22,13 @@ import java.util.List;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 03.01.14
  */
+@SuppressWarnings("UnusedDeclaration") //Reflection!
 public final class TabCompletePacketListener implements PacketListener {
-    public static final ListeningWhitelist SENDING_WHITELIST = ListeningWhitelist.newBuilder()
+    private static final ListeningWhitelist SENDING_WHITELIST = ListeningWhitelist.newBuilder()
             .types(PacketType.Play.Server.TAB_COMPLETE)
             .gamePhase(GamePhase.PLAYING).normal().build();
 
-    public static final ListeningWhitelist RECEIVING_WHITELIST = ListeningWhitelist.newBuilder()
+    private static final ListeningWhitelist RECEIVING_WHITELIST = ListeningWhitelist.newBuilder()
             .types(PacketType.Play.Client.TAB_COMPLETE)
             .gamePhase(GamePhase.PLAYING).normal().build();
 

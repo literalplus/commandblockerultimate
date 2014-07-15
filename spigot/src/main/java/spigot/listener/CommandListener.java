@@ -1,6 +1,6 @@
-package io.github.xxyy.cmdblocker.spigot.listener;
+package spigot.listener;
 
-import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
+import spigot.CommandBlockerPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

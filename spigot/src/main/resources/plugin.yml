@@ -1,5 +1,5 @@
 name: CommandBlockerUltimate (Spigot)
-version: ${full-version}-g${buildNumber}
+version: ${project.version}
 author: xxyy
 website: http://j.nowak-at.net/cmdblk
 main: io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin
