@@ -99,6 +99,7 @@
                 <directory>${project.basedir}/../</directory>
                 <includes>
                     <include>LICENSE</include>
+                    <include>README.md</include>
                 </includes>
             </resource>
         </resources>
