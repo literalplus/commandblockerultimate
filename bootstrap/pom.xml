@@ -11,6 +11,22 @@
 
     <artifactId>cbu-bootstrap</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.mcstats.bukkit</groupId>
+            <artifactId>metrics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.xxyy.cmdblocker</groupId>
+            <artifactId>cbu-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.xxyy.cmdblocker</groupId>
+            <artifactId>cbu-spigot</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -18,10 +34,19 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.2</version>
 
+                <executions>
+                    <execution>
+                        <id>best-shade</id>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
                 <configuration>
                     <artifactSet>
                         <includes>
-                            <include>${project.groupId}:*</include>
+                            <include>${project.groupId}</include>
                             <include>org.mcstats.bukkit</include>
                         </includes>
                     </artifactSet>
@@ -68,6 +93,17 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>${project.basedir}/../</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <finalName>CommandBlockerUltimate-${project.version}</finalName>
     </build>
 
 </project>

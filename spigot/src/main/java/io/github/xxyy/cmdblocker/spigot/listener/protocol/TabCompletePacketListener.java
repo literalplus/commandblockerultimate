@@ -1,4 +1,4 @@
-package spigot.listener.protocol;
+package io.github.xxyy.cmdblocker.spigot.listener.protocol;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -9,7 +9,7 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
 import io.github.xxyy.cmdblocker.common.ConfigAdapter;
-import spigot.CommandBlockerPlugin;
+import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;

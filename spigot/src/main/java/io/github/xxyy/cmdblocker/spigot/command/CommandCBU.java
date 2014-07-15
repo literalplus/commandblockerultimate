@@ -1,10 +1,10 @@
-package spigot.command;
+package io.github.xxyy.cmdblocker.spigot.command;
 
-import spigot.CommandBlockerPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 
 /**
  * Represents the /cbu command which is an utility command for CBU.

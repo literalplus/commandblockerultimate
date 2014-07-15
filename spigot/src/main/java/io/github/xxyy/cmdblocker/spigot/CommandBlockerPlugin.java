@@ -17,11 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package spigot;
+package io.github.xxyy.cmdblocker.spigot;
 
 import io.github.xxyy.cmdblocker.common.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.GenericConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.ConfigUpdateHelper;
+import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -31,8 +32,8 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
-import spigot.command.CommandCBU;
-import spigot.listener.CommandListener;
+import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
+import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,8 @@ import java.util.logging.Logger;
  * @since 02.01.14 // 1.0
  */
 public class CommandBlockerPlugin extends JavaPlugin implements Listener {
+
+    public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
     private Config configAdapter = new Config();
 
@@ -81,6 +84,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         } catch (IOException e) {
             getLogger().info("Could not start Metrics. This error is non-crucial. Just ignore it.");
         }
+
+        getLogger().info("CommandBlockerUltimate "+ PLUGIN_VERSION_STRING + " is licensed under the GNU General Public License " +
+                "Version 2. See the LICENSE file included in its .jar archive for details.");
     }
 
     /**
