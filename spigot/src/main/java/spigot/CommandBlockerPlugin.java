@@ -32,6 +32,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 import spigot.command.CommandCBU;
+import spigot.listener.CommandListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         );
 
         //Register command listener
-        this.getServer().getPluginManager().registerEvents(this, this);
+        this.getServer().getPluginManager().registerEvents(new CommandListener(this), this);
 
         //Hook into ProtocolLib, if enabled and loaded
         tryHookProtocolLib();
