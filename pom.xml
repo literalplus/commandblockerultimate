@@ -74,6 +74,17 @@
             <id>mcstats-repo</id>
             <url>http://repo.mcstats.org/content/repositories/public</url>
         </repository>
+        <repository>
+            <id>cubespace-repo</id>
+            <!--<url>http://nexus.cube-space.net/content/groups/public/</url>-->
+            <url>http://server.nowak-at.net/repo/cube-space-repo/</url>
+            <!--
+                 The remote repo is down at the time of writing, using proxy for now.
+                 If you're reading this and the remote is back up, you can assume that
+                 I forgot to change this back. Make a PR if it bugs you and/or my proxy
+                 is offline. Thanks!
+             -->
+        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -97,6 +108,11 @@
                 <groupId>${project.groupId}</groupId>
                 <artifactId>cbu-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.cubespace</groupId>
+                <artifactId>Yamler-Core</artifactId>
+                <version>2.2.3-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

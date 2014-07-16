@@ -19,10 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package io.github.xxyy.cmdblocker.spigot;
 
-import io.github.xxyy.cmdblocker.common.ConfigAdapter;
-import io.github.xxyy.cmdblocker.common.GenericConfigAdapter;
-import io.github.xxyy.cmdblocker.common.config.ConfigUpdateHelper;
+import io.github.xxyy.cmdblocker.common.config.CBUConfig;
 import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
+import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
+import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
+import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -32,13 +33,10 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
-import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
-import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * CommandBlocker Ultimate.
@@ -49,21 +47,22 @@ import java.util.logging.Logger;
  */
 public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
+    //Create plugin version from manifest (see cbu-bootstrap/pom.xml -> maven-jar-plugin,buildnumber-maven-plugin for details)
+    //Don't need to read this every time since we don't need the individual properties anyway --> performance
     public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
-    private Config configAdapter = new Config();
+    private CBUConfig configAdapter;
 
     @Override
     public void onEnable() {
         //Do config stuffs
-        saveDefaultConfig();
-        if (ConfigUpdateHelper.updateConfig(this.configAdapter)) {
-            getLogger().info("Your configuration file has been updated! Check out the new options :)");
-        }
+        this.configAdapter = createConfig();
+        this.configAdapter.tryInit(getLogger()); //Prints error if loading failed
 
+        //Register permission (Not sure if this is used anywhere though)
         getServer().getPluginManager().addPermission(
                 new Permission(
-                        getConfig().getString(ConfigAdapter.BYPASS_PERMISSION),
+                        getConfigAdapter().getBypassPermission(),
                         "Allows to bypass Command Blocker Ultimate (Recommended access level: Staff)",
                         PermissionDefault.OP)
         );
@@ -85,8 +84,12 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
             getLogger().info("Could not start Metrics. This error is non-crucial. Just ignore it.");
         }
 
-        getLogger().info("CommandBlockerUltimate "+ PLUGIN_VERSION_STRING + " is licensed under the GNU General Public License " +
+        getLogger().info("CommandBlockerUltimate " + PLUGIN_VERSION_STRING + " is licensed under the GNU General Public License " +
                 "Version 2. See the LICENSE file included in its .jar archive for details.");
+    }
+
+    private CBUConfig createConfig() {
+        return new CBUConfig(new File(getDataFolder(), "config.yml"));
     }
 
     /**
@@ -98,7 +101,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * @return Whether {@code sender} can execute {@code command}, not taking aliases into account.
      */
     private boolean canExecute(final CommandSender sender, final String command) {
-        if(configAdapter.isBlocked(command) && !sender.hasPermission(getConfig().getString(ConfigAdapter.BYPASS_PERMISSION))){
+        if (configAdapter.isBlocked(command) && !sender.hasPermission(getConfigAdapter().getBypassPermission())) {
             sendErrorMessageIfEnabled(sender);
             return false;
         }
@@ -106,10 +109,10 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     public void sendErrorMessageIfEnabled(final CommandSender target) {
-        if (getConfig().getBoolean(ConfigAdapter.SHOW_ERROR_MESSAGE, true)) {
+        if (getConfigAdapter().isShowErrorMessage()) {
             target.sendMessage(
                     StringEscapeUtils.unescapeHtml(
-                            ChatColor.translateAlternateColorCodes('&', getConfig().getString(ConfigAdapter.ACCESS_DENIED_MESSAGE))
+                            ChatColor.translateAlternateColorCodes('&', getConfigAdapter().getErrorMessage())
                     )
             );
         }
@@ -118,8 +121,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     /**
      * Handles a cancellable event and decides if that chat message contains a blocked command.
      * If it does, the event is cancelled and an error message is printed.
-     * @param evt What to cancel
-     * @param sender Who wrote the message
+     *
+     * @param evt         What to cancel
+     * @param sender      Who wrote the message
      * @param chatMessage The message written, including the slash.
      */
     public void handleEvent(Cancellable evt, CommandSender sender, String chatMessage) {
@@ -128,12 +132,31 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    public ConfigAdapter getConfigAdapter(){
+    /**
+     * Returns the current config adapter used by the plugin.
+     * <b>Warning:</b> The adapter might be replaced at any time, so make sure to always get the latest one!
+     * @return the plugin's current config adapter
+     */
+    public CBUConfig getConfigAdapter() {
         return configAdapter;
     }
 
+    /**
+     * Replaces the current config adapter by a fresh one with current values from the configuration file.
+     * This is used instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
+     * instead of breaking the plugin by assuming the default values.
+     * If the current config file is invalid, an exception is thrown and the adapter is not replaced.
+     * @throws InvalidConfigurationException Propagated from {@link CBUConfig#init()} - If you get this, you can
+     *                                          safely assume that thew adapter has not been replaced.
+     */
+    public void replaceConfigAdapter() throws InvalidConfigurationException {
+        CBUConfig newAdapter = createConfig();
+        newAdapter.init();
+        this.configAdapter = newAdapter;
+    }
+
     private void tryHookProtocolLib() {
-        if (!getConfig().getBoolean(ConfigAdapter.PREVENT_TAB, true)) {
+        if (!getConfigAdapter().isPreventTab()) {
             return;
         }
 
@@ -154,44 +177,5 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
                 "If you want this message to be omitted, set 'prevent-tab' to false in the plugin's config file. " +
                 "Get ProtocolLib here: http://dev.bukkit.org/bukkit-plugins/protocollib/");
         getLogger().warning("Tab-completion will NOT be prevented!");
-    }
-
-    public class Config extends GenericConfigAdapter {
-
-        private File configFile;
-
-        protected Config() {
-            this.configFile = new File(getDataFolder(), "config.yml");
-        }
-
-        @Override
-        public File getFile() {
-            return configFile;
-        }
-
-        @Override
-        public boolean isBlocked(String commandName) {
-            return getConfig().getStringList(TARGET_COMMANDS).contains(getRawCommand(commandName));
-        }
-
-        @Override
-        public boolean getBoolean(String path, boolean def) {
-            return getConfig().getBoolean(path, def);
-        }
-
-        @Override
-        public boolean contains(String path) {
-            return getConfig().contains(path);
-        }
-
-        @Override
-        public Logger getLogger() {
-            return CommandBlockerPlugin.this.getLogger();
-        }
-
-        @Override
-        public void reload() {
-            reloadConfig();
-        }
     }
 }
