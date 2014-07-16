@@ -1,0 +1,5 @@
+name: CommandBlockerUltimate_Bungee
+version: ${project.version}
+main: io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin
+author: xxyy
+depends: [Yamler]
