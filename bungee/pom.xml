@@ -15,5 +15,9 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.xxyy.cmdblocker</groupId>
+            <artifactId>cbu-common</artifactId>
+        </dependency>
     </dependencies>
 </project>
