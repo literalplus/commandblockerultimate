@@ -18,7 +18,27 @@ public final class CommandHelper {
      * @return raw command of that
      */
     public static String getRawCommand(String chatMessage) {
-        int spaceIndex = chatMessage.indexOf(" ");
-        return spaceIndex == -1 ? chatMessage.substring(1) : chatMessage.substring(1, spaceIndex - 1);
+        int spaceIndex = chatMessage.indexOf(" "); //For finding the executed command's name
+        if (spaceIndex == -1) { //If no space found
+            chatMessage = chatMessage.substring(1); //Just remove slash
+        } else { //If we have a space
+            chatMessage = chatMessage.substring(1, spaceIndex - 1); //Get the first word of the message and remove slash
+        }
+
+        return removeModPrefix(chatMessage); //Return the raw command name!
+    }
+
+    /**
+     * Removes the Minecraft "mod prefix" from a command name.
+     * For example, when passed "bukkit:kill", this method returns "kill".
+     * @param commandName Raw command name, without slash or arguments. See {@link #getRawCommand(String)}.
+     * @return The raw raw command name, without prefix.
+     */
+    public static String removeModPrefix(String commandName) {
+        int colonIndex = commandName.indexOf(":"); //For removing those minecraft plugin/mod prefixes, e.g. bukkit:kill -> kill
+        if(colonIndex != -1) { //If we have a colon
+            commandName = commandName.substring(colonIndex + 1); //Remove prefix including the colon
+        }
+        return commandName;
     }
 }
