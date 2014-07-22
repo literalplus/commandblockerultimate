@@ -19,8 +19,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Path(ConfigAdapter.TARGET_COMMANDS_PATH)
     @Comments({"Define what commands should be blocked in the following property: (without leading slash)",
-            "If you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)",
-            "Note that overriden commands will not be blocked (e.g. if you have Essentials, 'msg' will block 'essentials:msg', but not 'bukkit:tell')"})
+            "If you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)"})
     private List<String> targetCommands = Lists.newArrayList("help", "plugins", "version");
 
     @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
