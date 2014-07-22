@@ -57,12 +57,6 @@ public class CBUConfig extends Config implements ConfigAdapter {
         CONFIG_FILE = configFile;
     }
 
-    /**
-     * Tries to initialize this config by calling {@link #init()}.
-     * If an exception occurs, it is logged to {@code logger} with details on how to get help from this plugin's author.
-     * @param logger Logger to print to
-     * @return whether the configuration was initialized successfully.
-     */
     @Override
     public boolean tryInitialize(Logger logger) {
         try {
