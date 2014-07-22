@@ -1,14 +1,11 @@
 #  Command Blocker Ultimate config file
 
 # Define what commands should be blocked in the following property: (without leading slash)
+# If you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)
 target-commands:
- - "?"
  - help
  - plugins
- - pl
  - version
- - ver
- - about
 
 # Define the permission that a player needs to bypass the protection:
 bypass-permission: cmdblock.bypass

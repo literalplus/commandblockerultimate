@@ -18,8 +18,9 @@ import java.util.logging.Logger;
 public class CBUConfig extends Config implements ConfigAdapter {
 
     @Path(ConfigAdapter.TARGET_COMMANDS_PATH)
-    @Comment("Define what commands should be blocked in the following property: (without leading slash)")
-    private List<String> targetCommands = Lists.newArrayList("?", "help", "plugins", "pl", "version", "ver", "about");
+    @Comments({"Define what commands should be blocked in the following property: (without leading slash)",
+            "If you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)"})
+    private List<String> targetCommands = Lists.newArrayList("help", "plugins", "version");
 
     @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
     @Comment("Define the permission that a player needs to bypass the protection: (Default: cmdblock.bypass)")
@@ -86,7 +87,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
-        for(String requestedCommand : ImmutableList.copyOf(targetCommands)) {
+        for (String requestedCommand : ImmutableList.copyOf(targetCommands)) {
             targetCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }
