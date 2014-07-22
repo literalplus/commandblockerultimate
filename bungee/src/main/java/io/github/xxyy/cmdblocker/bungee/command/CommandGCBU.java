@@ -26,7 +26,7 @@ public class CommandGCBU extends Command {
         if (args.length == 0) {
             sender.sendMessage(new ComponentBuilder("CommandBlockerUltimate ").color(ChatColor.DARK_AQUA)
                     .append(CommandBlockerPlugin.PLUGIN_VERSION_STRING).color(ChatColor.AQUA).create());
-            sender.sendMessage(new ComponentBuilder(" Licensed under GNU GPL v3.").color(ChatColor.DARK_AQUA).create());
+            sender.sendMessage(new ComponentBuilder(" Licensed under GNU GPL v2.").color(ChatColor.DARK_AQUA).create());
             sender.sendMessage(new ComponentBuilder(" Get the source at https://github.com/xxyy/commandblockerultimate").color(ChatColor.DARK_AQUA).create());
             return;
         }
@@ -39,8 +39,8 @@ public class CommandGCBU extends Command {
                 sender.sendMessage(new ComponentBuilder("Your configuration file is invalid! See the server log for more details." +
                 "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue." +
                 "If not, you can get help at http://irc.spi.gt/iris/channels=lit").color(ChatColor.RED).create());
-                sender.sendMessage(new ComponentBuilder("To protect your server from breaking, we have restored your previous configuration" +
-                        "for the time being - It will be lost if you restart or reload your server. Execute this command again if you" +
+                sender.sendMessage(new ComponentBuilder("To protect your server from breaking, we have restored your previous configuration " +
+                        "for the time being - It will be lost if you restart or reload your server. Execute this command again if you " +
                         "think you've fixed your config file.").color(ChatColor.YELLOW).create());
                 return;
             }
