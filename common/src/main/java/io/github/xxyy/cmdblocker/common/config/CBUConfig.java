@@ -1,5 +1,6 @@
 package io.github.xxyy.cmdblocker.common.config;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.cubespace.Yamler.Config.*;
 
@@ -85,7 +86,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
-        for(String requestedCommand : targetCommands) {
+        for(String requestedCommand : ImmutableList.copyOf(targetCommands)) {
             targetCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }

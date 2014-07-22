@@ -1,5 +1,6 @@
 package io.github.xxyy.cmdblocker.spigot.config;
 
+import com.google.common.collect.ImmutableList;
 import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
@@ -73,7 +74,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
-        for(String requestedCommand : targetCommands) {
+        for(String requestedCommand : ImmutableList.copyOf(targetCommands)) {
             targetCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
         }
     }
