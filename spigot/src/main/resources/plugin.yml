@@ -14,4 +14,4 @@ commands:
 permissions:
   cmdblock.admin: #Probably no need to configure this one
     description: "Allows to use the /cbu utility command. (Recommended access level: Staff)"
-    default: false
+    default: op
