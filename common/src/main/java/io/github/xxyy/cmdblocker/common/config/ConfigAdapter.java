@@ -34,6 +34,14 @@ public interface ConfigAdapter {
     void initialize() throws InvalidConfigException;
 
     /**
+     * Resolves aliases in the block list of this adapter.
+     * This is done beforehand to avoid having to do an expensive search every time {@link #isBlocked(String)} is called.
+     * This method should normally be called shortly after the server has enabled all plugins to allow it to register all plugin's aliases.
+     * @param aliasResolver Resolver to use in order to resolve aliases
+     */
+    void resolveAliases(AliasResolver aliasResolver);
+
+    /**
      * @param commandName Command name to check
      * @return whether the given command is blocked.
      */

@@ -1,5 +1,6 @@
 package io.github.xxyy.cmdblocker.spigot.config;
 
+import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -68,6 +69,13 @@ public class SpigotCBUConfig implements ConfigAdapter {
         errorMessage = config.getString(ConfigAdapter.ERROR_MESSAGE_PATH, "&cI am sorry, but you are not permitted to execute this command.");
         preventTab = config.getBoolean(ConfigAdapter.PREVENT_TAB_PATH, true);
         tabRestrictiveMode = config.getBoolean(ConfigAdapter.TAB_RESTRICTIVE_MODE_PATH, false);
+    }
+
+    @Override
+    public void resolveAliases(AliasResolver aliasResolver) {
+        for(String requestedCommand : targetCommands) {
+            targetCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
+        }
     }
 
     @Override

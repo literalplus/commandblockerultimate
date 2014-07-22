@@ -1,10 +1,10 @@
 package io.github.xxyy.cmdblocker.common.config;
 
+import com.google.common.collect.Sets;
 import net.cubespace.Yamler.Config.*;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +18,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Path(ConfigAdapter.TARGET_COMMANDS_PATH)
     @Comment("Define what commands should be blocked in the following property: (without leading slash)")
-    private List<String> targetCommands = Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about");
+    private Set<String> targetCommands = Sets.newHashSet("?", "help", "plugins", "pl", "version", "ver", "about");
 
     @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
     @Comment("Define the permission that a player needs to bypass the protection: (Default: cmdblock.bypass)")
@@ -60,9 +60,9 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Override
     public boolean tryInitialize(Logger logger) {
         try {
-            super.init(); //This does not call #initialize() to avoid another try-catch block
+            this.initialize(); //This does not call #initialize() to avoid another try-catch block
             this.save(); //Save, just in case any new options were added
-        } catch (InvalidConfigurationException e) {
+        } catch (InvalidConfigException | InvalidConfigurationException e) {
             logger.log(Level.WARNING, "Encountered exception!", e);
             logger.warning("Could not load configuration file. Please double-check your YAML syntax with http://yaml-online-parser.appspot.com/.");
             logger.warning("The plugin might (will) not function in the way you want it to (since it doesn't know what you want)");
@@ -80,6 +80,13 @@ public class CBUConfig extends Config implements ConfigAdapter {
             super.init();
         } catch (InvalidConfigurationException e) {
             throw new InvalidConfigException(e);
+        }
+    }
+
+    @Override
+    public void resolveAliases(AliasResolver aliasResolver) {
+        for(String requestedCommand : targetCommands) {
+            targetCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }
 
