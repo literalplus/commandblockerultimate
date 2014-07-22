@@ -24,7 +24,7 @@ public class CommandCBU implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate "+CommandBlockerPlugin.PLUGIN_VERSION_STRING);
-            sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v3.");
+            sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v2.");
             sender.sendMessage(ChatColor.DARK_AQUA + " Get the source at https://github.com/xxyy/commandblockerultimate");
             return false;
         }
