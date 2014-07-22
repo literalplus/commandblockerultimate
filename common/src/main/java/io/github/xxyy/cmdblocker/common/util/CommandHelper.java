@@ -18,6 +18,8 @@ public final class CommandHelper {
      * @return raw command of that
      */
     public static String getRawCommand(String chatMessage) {
+        chatMessage = chatMessage.toLowerCase(); //Bukkit saves all command in lower case
+
         int spaceIndex = chatMessage.indexOf(" "); //For finding the executed command's name
         if (spaceIndex == -1) { //If no space found
             chatMessage = chatMessage.substring(1); //Just remove slash
