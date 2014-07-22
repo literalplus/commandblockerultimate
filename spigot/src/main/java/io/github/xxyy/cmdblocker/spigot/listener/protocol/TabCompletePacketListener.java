@@ -8,6 +8,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 import org.bukkit.plugin.Plugin;
 
@@ -84,7 +85,7 @@ public final class TabCompletePacketListener implements PacketListener {
 
 
             for (String matchedCommand : matchedCommands) {
-                if (this.plugin.getConfigAdapter().isBlocked(matchedCommand)) { //Not using canExecute to save some permission checks (Single one done above)
+                if (this.plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(matchedCommand))) { //Not using canExecute to save some permission checks (Single one done above)
                     if (this.plugin.getConfigAdapter().isTabRestrictiveMode()) { //Hides all replies if anything is matched
                         this.plugin.sendErrorMessageIfEnabled(event.getPlayer());
                         event.setCancelled(true);
