@@ -37,8 +37,8 @@ public class CommandCBU implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "Your configuration file is invalid! See the server log for more details.");
                 sender.sendMessage(ChatColor.RED + "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue.");
                 sender.sendMessage(ChatColor.RED + "If not, you can get help at http://irc.spi.gt/iris/channels=lit");
-                sender.sendMessage(ChatColor.YELLOW + "To protect your server from breaking, we have restored your previous configuration" +
-                        "for the time being - It will be lost if you restart or reload your server. Execute this command again if you" +
+                sender.sendMessage(ChatColor.YELLOW + "To protect your server from breaking, we have restored your previous configuration " +
+                        "for the time being - It will be lost if you restart or reload your server. Execute this command again if you " +
                         "think you've fixed your config file.");
                 return true;
             }
