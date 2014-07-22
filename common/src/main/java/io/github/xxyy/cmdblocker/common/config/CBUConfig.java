@@ -14,32 +14,33 @@ import java.util.logging.Logger;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 16.7.14
  */
-public class CBUConfig extends Config {
-    @Path("target-commands")
+public class CBUConfig extends Config implements ConfigAdapter {
+
+    @Path(ConfigAdapter.TARGET_COMMANDS_PATH)
     @Comment("Define what commands should be blocked in the following property: (without leading slash)")
     private List<String> targetCommands = Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about");
 
-    @Path("bypass-permission")
+    @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
     @Comment("Define the permission that a player needs to bypass the protection: (Default: cmdblock.bypass)")
     private String bypassPermission = "cmdblock.bypass";
 
-    @Path("show-error-message")
+    @Path(ConfigAdapter.SHOW_ERROR_MESSAGE_PATH)
     @Comment("Should the plugin send an error message if one is not allowed to execute/tab-complete a command? (Default: true)")
     private boolean showErrorMessage = true;
 
-    @Path("error-message")
+    @Path(ConfigAdapter.ERROR_MESSAGE_PATH)
     @Comments({"What should that message be? (Use & for color codes, HTML escape codes accepted)",
             "Example: &c&lError message &euro;&auml;&#00A7;"})
     private String errorMessage = "&cI am sorry, but you are not permitted to execute this command.";
 
-    @Path("prevent-tab")
+    @Path(ConfigAdapter.PREVENT_TAB_PATH)
     @Comments({"@since 1.02",
             "Whether to prevent tab-completion for blocked commands.",
             "Note: Requires ProtocolLib on Spigot!",
             "Default value: true"})
     private boolean preventTab = true;
 
-    @Path("tab-restrictive-mode")
+    @Path(TAB_RESTRICTIVE_MODE_PATH)
     @Comments({"What strategy to use when blocking tab-complete replies from the server.",
             "true: block all completions returning a targeted command (for example, if /p is typed and /pl is blocked, print error message)",
             "false: just remove blocked commands from list (in the above example, other commands starting with p would still be shown without notice)\n",
@@ -62,9 +63,10 @@ public class CBUConfig extends Config {
      * @param logger Logger to print to
      * @return whether the configuration was initialized successfully.
      */
-    public boolean tryInit(Logger logger) {
+    @Override
+    public boolean tryInitialize(Logger logger) {
         try {
-            this.init();
+            super.init(); //This does not call #initialize() to avoid another try-catch block
             this.save(); //Save, just in case any new options were added
         } catch (InvalidConfigurationException e) {
             logger.log(Level.WARNING, "Encountered exception!", e);
@@ -78,31 +80,41 @@ public class CBUConfig extends Config {
         return true;
     }
 
+    @Override
+    public void initialize() throws InvalidConfigException {
+        try {
+            super.init();
+        } catch (InvalidConfigurationException e) {
+            throw new InvalidConfigException(e);
+        }
+    }
+
+    @Override
     public boolean isBlocked(String commandName) {
         return targetCommands.contains(commandName);
     }
 
-    public String getRawCommand(String chatMessage) {
-        int spaceIndex = chatMessage.indexOf(" ");
-        return spaceIndex == -1 ? chatMessage : chatMessage.substring(0, spaceIndex - 1);
-    }
-
+    @Override
     public String getBypassPermission() {
         return bypassPermission;
     }
 
+    @Override
     public boolean isShowErrorMessage() {
         return showErrorMessage;
     }
 
+    @Override
     public String getErrorMessage() {
         return errorMessage;
     }
 
+    @Override
     public boolean isPreventTab() {
         return preventTab;
     }
 
+    @Override
     public boolean isTabRestrictiveMode() {
         return tabRestrictiveMode;
     }
