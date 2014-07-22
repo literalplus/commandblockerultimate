@@ -65,6 +65,7 @@ public class CBUConfig extends Config {
     public boolean tryInit(Logger logger) {
         try {
             this.init();
+            this.save(); //Save, just in case any new options were added
         } catch (InvalidConfigurationException e) {
             logger.log(Level.WARNING, "Encountered exception!", e);
             logger.warning("Could not load configuration file. Please double-check your YAML syntax with http://yaml-online-parser.appspot.com/.");
