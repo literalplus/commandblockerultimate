@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 16.7.14
  */
-public class CBUConfig extends Config {
+public class CBUConfig extends Config implements ConfigAdapter {
     @Path("target-commands")
     @Comment("Define what commands should be blocked in the following property: (without leading slash)")
     private List<String> targetCommands = Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about");
@@ -56,15 +56,17 @@ public class CBUConfig extends Config {
         CONFIG_FILE = configFile;
     }
 
+    @Override
+    public boolean tryInitialize(Logger logger) {
     /**
      * Tries to initialize this config by calling {@link #init()}.
      * If an exception occurs, it is logged to {@code logger} with details on how to get help from this plugin's author.
      * @param logger Logger to print to
      * @return whether the configuration was initialized successfully.
      */
-    public boolean tryInit(Logger logger) {
+    public boolean tryInitialize(Logger logger) {
         try {
-            this.init();
+            super.init(); //This does not call #initialize() to avoid another try-catch block
             this.save(); //Save, just in case any new options were added
         } catch (InvalidConfigurationException e) {
             logger.log(Level.WARNING, "Encountered exception!", e);
@@ -78,31 +80,41 @@ public class CBUConfig extends Config {
         return true;
     }
 
+    @Override
+    public void initialize() throws InvalidConfigException {
+        try {
+            super.init();
+        } catch (InvalidConfigurationException e) {
+            throw new InvalidConfigException(e);
+        }
+    }
+
+    @Override
     public boolean isBlocked(String commandName) {
         return targetCommands.contains(commandName);
     }
 
-    public String getRawCommand(String chatMessage) {
-        int spaceIndex = chatMessage.indexOf(" ");
-        return spaceIndex == -1 ? chatMessage : chatMessage.substring(0, spaceIndex - 1);
-    }
-
+    @Override
     public String getBypassPermission() {
         return bypassPermission;
     }
 
+    @Override
     public boolean isShowErrorMessage() {
         return showErrorMessage;
     }
 
+    @Override
     public String getErrorMessage() {
         return errorMessage;
     }
 
+    @Override
     public boolean isPreventTab() {
         return preventTab;
     }
 
+    @Override
     public boolean isTabRestrictiveMode() {
         return tabRestrictiveMode;
     }

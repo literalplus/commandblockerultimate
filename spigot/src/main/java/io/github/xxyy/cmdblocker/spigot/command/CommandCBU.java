@@ -1,11 +1,11 @@
 package io.github.xxyy.cmdblocker.spigot.command;
 
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
+import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 
 /**
  * Represents the /cbu command which is an utility command for CBU.
@@ -32,7 +32,7 @@ public class CommandCBU implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reloadcfg")) {
             try {
                 plugin.replaceConfigAdapter(); //Replace config adapter with newly-read file
-            } catch (InvalidConfigurationException e) {
+            } catch (InvalidConfigException e) {
                 e.printStackTrace(); //Oops, the sender did something wrong...Send them a huge block of text to make sure they notice
                 sender.sendMessage(ChatColor.RED + "Your configuration file is invalid! See the server log for more details.");
                 sender.sendMessage(ChatColor.RED + "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue.");
