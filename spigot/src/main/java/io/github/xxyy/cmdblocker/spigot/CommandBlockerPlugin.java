@@ -25,8 +25,8 @@ import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
+import io.github.xxyy.cmdblocker.spigot.config.SpigotCBUConfig;
 import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -91,8 +91,15 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
                 "Version 2. See the LICENSE file included in its .jar archive for details.");
     }
 
-    private CBUConfig createConfig() {
-        return new CBUConfig(new File(getDataFolder(), "config.yml"));
+    private ConfigAdapter createConfig() {
+        if(getServer().getPluginManager().getPlugin("Yamler") != null) {
+            return new CBUConfig(new File(getDataFolder(), "config.yml"));
+        } else {
+            getLogger().warning("Using default config adapter!");
+            getLogger().warning("It is recommended that you install Yamler, because that allows the config to be a lot " +
+                    "more flexible and straightforward to use.");
+            return new SpigotCBUConfig(this);
+        }
     }
 
     /**
@@ -149,11 +156,13 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * This is used instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
      * instead of breaking the plugin by assuming the default values.
      * If the current config file is invalid, an exception is thrown and the adapter is not replaced.
-     * @throws InvalidConfigurationException Propagated from {@link CBUConfig#initialize()} - If you get this, you can
+     * Note that this method doesn't work with {@link SpigotCBUConfig} since Bukkit's configuration API doesn't allow
+     * handling of syntax errors.
+     * @throws InvalidConfigException Propagated from {@link CBUConfig#initialize()} - If you get this, you can
      *                                          safely assume that thew adapter has not been replaced.
      */
     public void replaceConfigAdapter() throws InvalidConfigException {
-        CBUConfig newAdapter = createConfig();
+        ConfigAdapter newAdapter = createConfig();
         newAdapter.initialize();
         this.configAdapter = newAdapter;
     }

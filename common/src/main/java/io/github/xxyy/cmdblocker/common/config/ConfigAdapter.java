@@ -10,6 +10,15 @@ import java.util.logging.Logger;
  * @since 16.7.14
  */
 public interface ConfigAdapter {
+
+    //Path definitions
+    public static final String SHOW_ERROR_MESSAGE_PATH = "show-error-message";
+    public static final String TARGET_COMMANDS_PATH = "target-commands";
+    public static final String BYPASS_PERMISSION_PATH = "bypass-permission";
+    public static final String ERROR_MESSAGE_PATH = "error-message";
+    public static final String PREVENT_TAB_PATH = "prevent-tab";
+    public static final String TAB_RESTRICTIVE_MODE_PATH = "tab-restrictive-mode";
+
     /**
      * Tries to initialize this config adapter.
      * If an exception occurs, it is logged to {@code logger} with details on how to get help from this plugin's author.
