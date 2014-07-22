@@ -43,7 +43,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Path(TAB_RESTRICTIVE_MODE_PATH)
     @Comments({"What strategy to use when blocking tab-complete replies from the server.",
             "true: block all completions returning a targeted command (for example, if /p is typed and /pl is blocked, print error message)",
-            "false: just remove blocked commands from list (in the above example, other commands starting with p would still be shown without notice)\n",
+            "false: just remove blocked commands from list (in the above example, other commands starting with p would still be shown without notice)",
             "Default value: false"})
     private boolean tabRestrictiveMode = false;
 
