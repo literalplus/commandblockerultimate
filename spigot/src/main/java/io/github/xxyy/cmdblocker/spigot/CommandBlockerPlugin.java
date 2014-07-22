@@ -20,6 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package io.github.xxyy.cmdblocker.spigot;
 
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
+import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
 import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
@@ -51,13 +54,13 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     //Don't need to read this every time since we don't need the individual properties anyway --> performance
     public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
-    private CBUConfig configAdapter;
+    private ConfigAdapter configAdapter;
 
     @Override
     public void onEnable() {
         //Do config stuffs
         this.configAdapter = createConfig();
-        this.configAdapter.tryInit(getLogger()); //Prints error if loading failed
+        this.configAdapter.tryInitialize(getLogger()); //Prints error if loading failed
 
         //Register permission (Not sure if this is used anywhere though)
         getServer().getPluginManager().addPermission(
@@ -127,7 +130,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * @param chatMessage The message written, including the slash.
      */
     public void handleEvent(Cancellable evt, CommandSender sender, String chatMessage) {
-        if (!canExecute(sender, configAdapter.getRawCommand(chatMessage))) {
+        if (!canExecute(sender, CommandHelper.getRawCommand(chatMessage))) {
             evt.setCancelled(true);
         }
     }
@@ -137,7 +140,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * <b>Warning:</b> The adapter might be replaced at any time, so make sure to always get the latest one!
      * @return the plugin's current config adapter
      */
-    public CBUConfig getConfigAdapter() {
+    public ConfigAdapter getConfigAdapter() {
         return configAdapter;
     }
 
@@ -146,12 +149,12 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * This is used instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
      * instead of breaking the plugin by assuming the default values.
      * If the current config file is invalid, an exception is thrown and the adapter is not replaced.
-     * @throws InvalidConfigurationException Propagated from {@link CBUConfig#init()} - If you get this, you can
+     * @throws InvalidConfigurationException Propagated from {@link CBUConfig#initialize()} - If you get this, you can
      *                                          safely assume that thew adapter has not been replaced.
      */
-    public void replaceConfigAdapter() throws InvalidConfigurationException {
+    public void replaceConfigAdapter() throws InvalidConfigException {
         CBUConfig newAdapter = createConfig();
-        newAdapter.init();
+        newAdapter.initialize();
         this.configAdapter = newAdapter;
     }
 
