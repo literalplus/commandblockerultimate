@@ -18,11 +18,14 @@ import java.util.Map;
  * @since 22.7.14
  */
 public class SpigotAliasResolver implements AliasResolver {
-    private final Map<String, Command> commandMap;
+    private Map<String, Command> commandMap;
     private final Plugin plugin;
 
     public SpigotAliasResolver(Plugin plugin) {
         this.plugin = plugin;
+    }
+
+    public void refreshMap() {
         this.commandMap = stealCommandMap(plugin);
     }
 

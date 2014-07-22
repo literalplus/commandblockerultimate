@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package io.github.xxyy.cmdblocker.spigot;
 
-import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
@@ -57,7 +56,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
     private ConfigAdapter configAdapter;
-    private AliasResolver aliasResolver = new SpigotAliasResolver(this);
+    private SpigotAliasResolver aliasResolver = new SpigotAliasResolver(this);
 
     @Override
     public void onEnable() {
@@ -68,6 +67,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         getServer().getScheduler().runTaskLater(this, new Runnable() { //When will Java 8 finally be standard? So looking forward to that day
             @Override
             public void run() {
+                aliasResolver.refreshMap();
                 configAdapter.resolveAliases(aliasResolver); //This needs to be done after all plugins have loaded to catch all aliases
             }
         }, 0L); //Scheduler only begins work after all plugins are loaded
