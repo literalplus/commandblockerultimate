@@ -1,10 +1,10 @@
 package io.github.xxyy.cmdblocker.common.config;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import net.cubespace.Yamler.Config.*;
 
 import java.io.File;
-import java.util.Set;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +18,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Path(ConfigAdapter.TARGET_COMMANDS_PATH)
     @Comment("Define what commands should be blocked in the following property: (without leading slash)")
-    private Set<String> targetCommands = Sets.newHashSet("?", "help", "plugins", "pl", "version", "ver", "about");
+    private List<String> targetCommands = Lists.newArrayList("?", "help", "plugins", "pl", "version", "ver", "about");
 
     @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
     @Comment("Define the permission that a player needs to bypass the protection: (Default: cmdblock.bypass)")
