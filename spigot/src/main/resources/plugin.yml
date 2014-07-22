@@ -3,7 +3,7 @@ version: ${project.version}
 author: xxyy
 website: http://j.nowak-at.net/cmdblk
 main: io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin
-softdepend: [ProtocolLib]
+softdepend: [ProtocolLib, Yamler]
 prefix: CBU
 
 commands:
