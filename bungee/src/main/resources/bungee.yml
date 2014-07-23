@@ -1,4 +1,4 @@
-name: CommandBlockerUltimate_Bungee
+name: CommandBlockerUltimate
 version: ${project.version}
 main: io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin
 author: xxyy

@@ -41,7 +41,7 @@ public class CommandBlockerPlugin extends Plugin {
                 aliasResolver.refreshMap();
                 configAdapter.resolveAliases(aliasResolver);
             }
-        }, 30, TimeUnit.SECONDS); //If any plugins takes longer than this to load, the author is doing something severely wrong
+        }, 5, TimeUnit.SECONDS); //If any plugins takes longer than this to load, the author is doing something severely wrong
 
         //Register listeners
         getProxy().getPluginManager().registerListener(this, new CommandListener(this));
