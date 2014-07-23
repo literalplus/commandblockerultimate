@@ -1,6 +1,7 @@
 package io.github.xxyy.cmdblocker.bungee.listener;
 
 import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -35,7 +36,7 @@ public class TabCompleteListener implements Listener {
         while(it.hasNext()) {
             String suggestion = it.next();
 
-            if(plugin.getConfigAdapter().isBlocked(suggestion)) {
+            if(plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(suggestion))) {
                 if(plugin.getConfigAdapter().isTabRestrictiveMode()) {
                     evt.setCancelled(true);
                     plugin.sendErrorMessageIfEnabled(sender);
