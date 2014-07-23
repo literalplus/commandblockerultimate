@@ -67,7 +67,6 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         getServer().getScheduler().runTaskLater(this, new Runnable() { //When will Java 8 finally be standard? So looking forward to that day
             @Override
             public void run() {
-                aliasResolver.refreshMap();
                 configAdapter.resolveAliases(aliasResolver); //This needs to be done after all plugins have loaded to catch all aliases
             }
         }, 0L); //Scheduler only begins work after all plugins are loaded
@@ -175,6 +174,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         ConfigAdapter newAdapter = createConfig();
         newAdapter.initialize();
         this.configAdapter = newAdapter;
+        configAdapter.resolveAliases(aliasResolver);
     }
 
     private void tryHookProtocolLib() {

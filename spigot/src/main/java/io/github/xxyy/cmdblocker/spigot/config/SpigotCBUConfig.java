@@ -74,6 +74,8 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
+        aliasResolver.refreshMap();
+
         for(String requestedCommand : ImmutableList.copyOf(targetCommands)) {
             targetCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
         }

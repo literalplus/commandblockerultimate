@@ -87,6 +87,8 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
+        aliasResolver.refreshMap();
+
         for (String requestedCommand : ImmutableList.copyOf(targetCommands)) {
             targetCommands.addAll(aliasResolver.resolve(requestedCommand));
         }

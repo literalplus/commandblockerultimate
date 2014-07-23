@@ -25,6 +25,7 @@ public class SpigotAliasResolver implements AliasResolver {
         this.plugin = plugin;
     }
 
+    @Override
     public void refreshMap() {
         this.commandMap = stealCommandMap(plugin);
     }

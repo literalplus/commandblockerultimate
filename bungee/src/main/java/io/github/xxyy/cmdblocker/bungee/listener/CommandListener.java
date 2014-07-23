@@ -1,6 +1,7 @@
 package io.github.xxyy.cmdblocker.bungee.listener;
 
 import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -46,7 +47,7 @@ public class CommandListener implements Listener {
     }
 
     private void checkCommand(CommandSender sender, String command, Cancellable evt) {
-        if (plugin.getConfigAdapter().isBlocked(plugin.getConfigAdapter().getRawCommand(command))) {
+        if (plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(command))) {
             evt.setCancelled(true);
 
             plugin.sendErrorMessageIfEnabled(sender);

@@ -37,6 +37,7 @@ public interface ConfigAdapter {
      * Resolves aliases in the block list of this adapter.
      * This is done beforehand to avoid having to do an expensive search every time {@link #isBlocked(String)} is called.
      * This method should normally be called shortly after the server has enabled all plugins to allow it to register all plugin's aliases.
+     * This method will {@link AliasResolver#refreshMap() refresh the resolver's map automatically}.
      * @param aliasResolver Resolver to use in order to resolve aliases
      */
     void resolveAliases(AliasResolver aliasResolver);

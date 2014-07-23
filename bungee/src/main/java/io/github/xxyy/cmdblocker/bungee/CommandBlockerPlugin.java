@@ -1,6 +1,7 @@
 package io.github.xxyy.cmdblocker.bungee;
 
 import io.github.xxyy.cmdblocker.bungee.command.CommandGCBU;
+import io.github.xxyy.cmdblocker.bungee.config.BungeeAliasResolver;
 import io.github.xxyy.cmdblocker.bungee.listener.CommandListener;
 import io.github.xxyy.cmdblocker.bungee.listener.TabCompleteListener;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
@@ -12,6 +13,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Bungee plugin class for CommandBlockerUltimate.
@@ -25,12 +27,21 @@ public class CommandBlockerPlugin extends Plugin {
     public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
     private CBUConfig configAdapter;
+    private BungeeAliasResolver aliasResolver = new BungeeAliasResolver(this);
 
     @Override
     public void onEnable() {
         //Do config stuffs
         this.configAdapter = createConfig();
-        this.configAdapter.tryInit(getLogger()); //Prints error if loading failed
+        this.configAdapter.tryInitialize(getLogger()); //Prints error if loading failed
+
+        getProxy().getScheduler().schedule(this, new Runnable() { //Hacky way to execute code after all plugins have been loaded
+            @Override
+            public void run() {
+                aliasResolver.refreshMap();
+                configAdapter.resolveAliases(aliasResolver);
+            }
+        }, 30, TimeUnit.SECONDS); //If any plugins takes longer than this to load, the author is doing something severely wrong
 
         //Register listeners
         getProxy().getPluginManager().registerListener(this, new CommandListener(this));
@@ -77,5 +88,6 @@ public class CommandBlockerPlugin extends Plugin {
         CBUConfig newAdapter = createConfig();
         newAdapter.init();
         this.configAdapter = newAdapter;
+        configAdapter.resolveAliases(aliasResolver);
     }
 }

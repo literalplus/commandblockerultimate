@@ -15,4 +15,9 @@ public interface AliasResolver {
      * @return A List of all aliases and the name of requested command, <b>excluding {@code commandName}</b> or an empty List if none were found
      */
     List<String> resolve(String commandName);
+
+    /**
+     * Refreshes this resolver's internal data. (Data is normally acquired through reflecting the server's command map)
+     */
+    void refreshMap();
 }
