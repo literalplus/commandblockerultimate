@@ -17,12 +17,17 @@
             <artifactId>metrics</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.xxyy.cmdblocker</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>cbu-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.xxyy.cmdblocker</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>cbu-spigot</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>cbu-bungee</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
