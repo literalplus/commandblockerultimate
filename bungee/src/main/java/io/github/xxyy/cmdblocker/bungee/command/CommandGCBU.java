@@ -28,6 +28,7 @@ public class CommandGCBU extends Command {
                     .append(CommandBlockerPlugin.PLUGIN_VERSION_STRING).color(ChatColor.AQUA).create());
             sender.sendMessage(new ComponentBuilder(" Licensed under GNU GPL v2.").color(ChatColor.DARK_AQUA).create());
             sender.sendMessage(new ComponentBuilder(" Get the source at https://github.com/xxyy/commandblockerultimate").color(ChatColor.DARK_AQUA).create());
+            sender.sendMessage(new ComponentBuilder("/gcbu [reloadcfg]").create());
             return;
         }
 
