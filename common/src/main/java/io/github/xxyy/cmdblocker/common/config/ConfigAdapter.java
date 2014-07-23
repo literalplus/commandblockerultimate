@@ -1,6 +1,7 @@
 package io.github.xxyy.cmdblocker.common.config;
 
 import java.util.logging.Logger;
+import java.util.Collection;
 
 /**
  * Represents a configuration adapter (in most cases a YAML file) that is used to fetch CommandBlockerUltimate
@@ -47,6 +48,12 @@ public interface ConfigAdapter {
      * @return whether the given command is blocked.
      */
     boolean isBlocked(String commandName);
+
+    /**
+     * Gets a Collection of blocked commands, including resolved aliases. All values are in lower case.
+     * @return A collection of blocked commands
+     */
+    Collection<String> getBlockedCommands();
 
     String getBypassPermission();
 

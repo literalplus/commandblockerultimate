@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.cubespace.Yamler.Config.*;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,8 +20,9 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Path(ConfigAdapter.TARGET_COMMANDS_PATH)
     @Comments({"Define what commands should be blocked in the following property: (without leading slash)",
-            "If you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)"})
-    private List<String> targetCommands = Lists.newArrayList("help", "plugins", "version");
+            "With Spigot/Bukkit, if you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)",
+            "On BungeeCord, only BungeeCord command aliases can be blocked - If you want to block Spigot/Bukkit, you'll have to write all aliases down."})
+    private List<String> blockedCommands = Lists.newArrayList("help", "plugins", "version");
 
     @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
     @Comment("Define the permission that a player needs to bypass the protection: (Default: cmdblock.bypass)")
@@ -79,7 +81,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Override
     public void initialize() throws InvalidConfigException {
         try {
-            super.init();
+            this.init();
         } catch (InvalidConfigurationException e) {
             throw new InvalidConfigException(e);
         }
@@ -89,14 +91,19 @@ public class CBUConfig extends Config implements ConfigAdapter {
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
 
-        for (String requestedCommand : ImmutableList.copyOf(targetCommands)) {
-            targetCommands.addAll(aliasResolver.resolve(requestedCommand));
+        for (String requestedCommand : ImmutableList.copyOf(blockedCommands)) {
+            blockedCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }
 
     @Override
     public boolean isBlocked(String commandName) {
-        return targetCommands.contains(commandName);
+        return blockedCommands.contains(commandName);
+    }
+
+    @Override
+    public Collection<String> getBlockedCommands() {
+        return blockedCommands;
     }
 
     @Override

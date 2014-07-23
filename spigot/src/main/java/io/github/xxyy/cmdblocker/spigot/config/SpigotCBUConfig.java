@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -25,7 +26,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     private final JavaPlugin plugin;
 
-    private List<String> targetCommands;
+    private List<String> blockedCommands;
 
     private String bypassPermission;
 
@@ -60,9 +61,9 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
         //Load options to cache
         if(config.contains(ConfigAdapter.TARGET_COMMANDS_PATH)) {
-            targetCommands = config.getStringList(ConfigAdapter.TARGET_COMMANDS_PATH);
+            blockedCommands = config.getStringList(ConfigAdapter.TARGET_COMMANDS_PATH);
         } else {
-            targetCommands = Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about"); //Y u no default, getStringList()
+            blockedCommands = Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about"); //Y u no default, getStringList()
         }
 
         bypassPermission = config.getString(ConfigAdapter.BYPASS_PERMISSION_PATH, "cmdblock.bypass");
@@ -76,14 +77,19 @@ public class SpigotCBUConfig implements ConfigAdapter {
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
 
-        for(String requestedCommand : ImmutableList.copyOf(targetCommands)) {
-            targetCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
+        for(String requestedCommand : ImmutableList.copyOf(blockedCommands)) {
+            blockedCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
         }
     }
 
     @Override
     public boolean isBlocked(String commandName) {
-        return targetCommands.contains(commandName);
+        return blockedCommands.contains(commandName);
+    }
+
+    @Override
+    public Collection<String> getBlockedCommands() {
+        return blockedCommands;
     }
 
     @Override

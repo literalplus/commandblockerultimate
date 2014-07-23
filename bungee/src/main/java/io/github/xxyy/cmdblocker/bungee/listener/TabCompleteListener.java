@@ -10,6 +10,8 @@ import net.md_5.bungee.event.EventHandler;
 import java.util.Iterator;
 
 /**
+ * Listens for tab-complete events and removes BungeeCord commands.
+ *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 16.7.14
  */
