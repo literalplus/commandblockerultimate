@@ -19,17 +19,21 @@
 
 package io.github.xxyy.cmdblocker.bungee.listener;
 
-import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.TabCompleteEvent;
+import net.md_5.bungee.api.event.TabCompleteResponseEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
+
+import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
- * Listens for tab-complete events and removes BungeeCord commands.
+ * Listens for tab-complete events and removes BungeeCord (and Bukkit!) replies.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 16.7.14
@@ -41,30 +45,55 @@ public class TabCompleteListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onTabComplete(TabCompleteEvent evt) {
-        CommandSender sender = null;
+        if (evt.isCancelled()) {
+            return;
+        }
 
+        CommandSender sender = null;
         if (evt.getSender() instanceof CommandSender) {
             sender = (CommandSender) evt.getSender();
-
-            if(sender.hasPermission(plugin.getConfigAdapter().getBypassPermission())) {
-                return; //Don't need to check if sender has bypass
-            }
         }
 
-        Iterator<String> it = evt.getSuggestions().iterator();
-        while(it.hasNext()) {
+        evt.setCancelled(removeBlocked(evt.getSuggestions(), sender));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTabCompleteResponse(TabCompleteResponseEvent evt) {
+        if (evt.isCancelled()) {
+            return;
+        }
+
+        CommandSender messageRecipient = null;
+        if (evt.getReceiver() instanceof CommandSender) {
+            messageRecipient = (CommandSender) evt.getReceiver();
+        }
+
+        evt.setCancelled(removeBlocked(evt.getSuggestions(), messageRecipient));
+    }
+
+    //Returns whether the event is to be cancelled
+    private boolean removeBlocked(List<String> suggestions, CommandSender messageRecipient) {
+        if (messageRecipient != null &&
+                messageRecipient.hasPermission(plugin.getConfigAdapter().getBypassPermission())) {
+            return false; //Don't need to recipient if sender has bypass
+        }
+
+        Iterator<String> it = suggestions.iterator();
+        while (it.hasNext()) {
             String suggestion = it.next();
 
-            if(plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(suggestion))) {
-                if(plugin.getConfigAdapter().isTabRestrictiveMode()) {
-                    evt.setCancelled(true);
-                    plugin.sendErrorMessageIfEnabled(sender);
+            if (plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(suggestion))) {
+                if (plugin.getConfigAdapter().isTabRestrictiveMode()) {
+                    plugin.sendErrorMessageIfEnabled(messageRecipient);
+                    return true;
+                } else {
+                    it.remove(); //Remove suggestion from mutable list
                 }
-            } else {
-                it.remove(); //Remove suggestion from mutable list
             }
         }
+
+        return false;
     }
 }

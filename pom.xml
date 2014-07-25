@@ -78,11 +78,11 @@
         <minecraft.version>1.7.9</minecraft.version>
         <spigot.version>${minecraft.version}-R0.2-SNAPSHOT</spigot.version>
         <java.version>1.7</java.version>
-        <bungee.version>1.7-SNAPSHOT</bungee.version>
+        <bungee.version>1.8-SNAPSHOT</bungee.version>
     </properties>
 
     <repositories>
-        <repository> <!-- Spigot, BungeeCord -->
+        <repository> <!-- Spigot -->
             <id>md5-repo</id>
             <url>http://repo.md-5.net/content/repositories/public/</url>
         </repository>
