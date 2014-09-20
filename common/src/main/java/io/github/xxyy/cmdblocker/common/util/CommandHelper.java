@@ -24,7 +24,7 @@ public final class CommandHelper {
         if (spaceIndex == -1) { //If no space found
             chatMessage = chatMessage.substring(1); //Just remove slash
         } else { //If we have a space
-            chatMessage = chatMessage.substring(1, spaceIndex - 1); //Get the first word of the message and remove slash
+            chatMessage = chatMessage.substring(1, spaceIndex); //Get the first word of the message and remove slash
         }
 
         return removeModPrefix(chatMessage); //Return the raw command name!
