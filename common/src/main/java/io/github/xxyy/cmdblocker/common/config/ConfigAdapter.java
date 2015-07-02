@@ -32,12 +32,12 @@ import java.util.Collection;
 public interface ConfigAdapter {
 
     //Path definitions
-    public static final String SHOW_ERROR_MESSAGE_PATH = "show-error-message";
-    public static final String TARGET_COMMANDS_PATH = "target-commands";
-    public static final String BYPASS_PERMISSION_PATH = "bypass-permission";
-    public static final String ERROR_MESSAGE_PATH = "error-message";
-    public static final String PREVENT_TAB_PATH = "prevent-tab";
-    public static final String TAB_RESTRICTIVE_MODE_PATH = "tab-restrictive-mode";
+    String SHOW_ERROR_MESSAGE_PATH = "show-error-message";
+    String TARGET_COMMANDS_PATH = "target-commands";
+    String BYPASS_PERMISSION_PATH = "bypass-permission";
+    String ERROR_MESSAGE_PATH = "error-message";
+    String PREVENT_TAB_PATH = "prevent-tab";
+    String TAB_RESTRICTIVE_MODE_PATH = "tab-restrictive-mode";
 
     /**
      * Tries to initialize this config adapter.
