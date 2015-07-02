@@ -1,10 +1,11 @@
 package io.github.xxyy.cmdblocker.spigot.config;
 
 import com.google.common.collect.ImmutableList;
-import io.github.xxyy.cmdblocker.common.config.AliasResolver;
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.Plugin;
+
+import io.github.xxyy.cmdblocker.common.config.AliasResolver;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,13 +35,13 @@ public class SpigotAliasResolver implements AliasResolver {
     public List<String> resolve(String commandName) {
         String rawName = CommandHelper.removeModPrefix(commandName).toLowerCase();
         Command foundCommand;
-        if(commandMap != null) { //If we have the internal command map, we might as well use it
+        if (commandMap != null) { //If we have the internal command map, we might as well use it
             foundCommand = commandMap.get(commandName); //Versions with prefixes and aliases are stored too
         } else {
             foundCommand = plugin.getServer().getPluginCommand(commandName); //Bukkit is filtering internal commands so we can't get those here
         }
 
-        if(foundCommand == null) {
+        if (foundCommand == null) {
             return ImmutableList.of();
         }
 
@@ -57,6 +58,14 @@ public class SpigotAliasResolver implements AliasResolver {
             Field commandMapField = plugin.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
             Object commandMap = commandMapField.get(plugin.getServer());
+
+            if (!commandMap.getClass().getSimpleName().equals("SimpleCommandMap")) { //This is dirty
+                plugin.getLogger().warning(String.format("Detected non-standard command map - Aliases may fail to " +
+                        "resolve. It is possible that it has been replaced by a plugin or you are using an incompatible " +
+                        "fork. Found this command map: %s", commandMap.getClass().getName()));
+                plugin.getLogger().warning(String.format("Server software: %s %s",
+                        plugin.getServer().getName(), plugin.getServer().getBukkitVersion()));
+            }
 
             Field actualMapField = commandMap.getClass().getDeclaredField("knownCommands"); //class SimpleCommandMap
             actualMapField.setAccessible(true);
