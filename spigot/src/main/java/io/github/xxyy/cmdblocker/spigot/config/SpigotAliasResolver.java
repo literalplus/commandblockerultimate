@@ -22,6 +22,7 @@ package io.github.xxyy.cmdblocker.spigot.config;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
@@ -38,6 +39,7 @@ import java.util.Map;
  * @since 22.7.14
  */
 public class SpigotAliasResolver implements AliasResolver {
+    private static final String SIMPLE_COMMAND_MAP_NAME = "org.bukkit.command.SimpleCommandMap";
     private Map<String, Command> commandMap;
     private final Plugin plugin;
 
@@ -77,16 +79,53 @@ public class SpigotAliasResolver implements AliasResolver {
             Field commandMapField = plugin.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
             Object commandMap = commandMapField.get(plugin.getServer());
+            Class<?> simpleCommandMapClazz = null;
 
-            if (!commandMap.getClass().getSimpleName().equals("SimpleCommandMap")) { //This is dirty
+            /*
+                This is for compatibility with PerWorldPlugins: http://dev.bukkit.org/bukkit-plugins/perworldplugins/
+                They replace Bukkit's SimpleCommandMap with their own fake version, but still keep it extending the
+                one we know. So if we search the class' inheritance hierarchy, we should eventually get to a
+                SimpleCommandMap, which has what we need. They also thankfully copy all the fields over to their
+                version.
+                 */
+            Class<?> clazz = commandMap.getClass();
+            do {
+                if (clazz.getName().equals(SIMPLE_COMMAND_MAP_NAME)) {
+                    simpleCommandMapClazz = clazz;
+                    break;
+                }
+            } while ((clazz = clazz.getSuperclass()) != null); //Object.class.getSuperclass() -> null
+
+            if (simpleCommandMapClazz == null) { //This is just error messages and helping with reporting custom command maps
                 plugin.getLogger().warning(String.format("Detected non-standard command map - Aliases may fail to " +
                         "resolve. It is possible that it has been replaced by a plugin or you are using an incompatible " +
-                        "fork. Found this command map: %s", commandMap.getClass().getName()));
-                plugin.getLogger().warning(String.format("Server software: %s %s",
-                        plugin.getServer().getName(), plugin.getServer().getBukkitVersion()));
+                        "fork. Found custom command map of class %s.", commandMap.getClass().getName()));
+                plugin.getLogger().warning(String.format("Server software: %s %s %s",
+                        plugin.getServer().getName(), plugin.getServer().getBukkitVersion(), plugin.getServer().getVersion()));
+
+                StringBuilder pluginListBuilder = new StringBuilder("Installed plugins: ");
+                for(Plugin installedPlugin : plugin.getServer().getPluginManager().getPlugins()) {
+                    pluginListBuilder.append("{{ ")
+                            .append(installedPlugin.isEnabled() ? "+ " : "- ")
+                            .append(installedPlugin.getName())
+                            .append(" by ").append(installedPlugin.getDescription().getAuthors())
+                            .append(" version ").append(installedPlugin.getDescription().getVersion())
+                            .append(" -> ").append(installedPlugin.getDescription().getWebsite())
+                            .append(" }}, ");
+                }
+                plugin.getLogger().warning(pluginListBuilder.toString());
+
+                simpleCommandMapClazz = commandMap.getClass(); //We can still try, right?
+
+                try {
+                    Plugin enemyPlugin = JavaPlugin.getProvidingPlugin(commandMap.getClass()); //This throws exceptions in various cases
+                    plugin.getLogger().warning(String.format("Plugin providing the unexpected class: %s", enemyPlugin.getName()));
+                } catch (IllegalStateException | IllegalArgumentException e) {
+                    plugin.getLogger().warning("Unexpected class is not provided by a plugin, possibly using a heavily-modified fork!");
+                }
             }
 
-            Field actualMapField = commandMap.getClass().getDeclaredField("knownCommands"); //class SimpleCommandMap
+            Field actualMapField = simpleCommandMapClazz.getDeclaredField("knownCommands"); //class SimpleCommandMap
             actualMapField.setAccessible(true);
             @SuppressWarnings("unchecked")
             Map<String, Command> actualMap = (Map<String, Command>) actualMapField.get(commandMap);
@@ -94,8 +133,9 @@ public class SpigotAliasResolver implements AliasResolver {
             return actualMap;
         } catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
             e.printStackTrace();
-            plugin.getLogger().warning("Could not get CraftBukkit command map! That probably means that they changed their internals." +
-                    "Please contact the plugin author at devnull@nowak-at.net or http://irc.spi.gt/iris/?channels=lit ! Thank you!");
+            plugin.getLogger().warning("Could not get CraftBukkit command map! That could mean that they changed their " +
+                    "internals. Please file an issue at https://github.com/xxyy/commandblockerultimate/issues with your " +
+                    "server log and plugin list! Thank you!");
             plugin.getLogger().warning("This means that we can't get aliases for Bukkit and Minecraft built-in commands. Sorry for that!");
         }
 
