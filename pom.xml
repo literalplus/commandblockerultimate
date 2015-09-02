@@ -97,7 +97,7 @@
         <repository> <!-- Yamler -->
             <id>cubespace-repo</id>
             <!--<url>http://nexus.cube-space.net/content/groups/public/</url>-->
-            <url>http://server.nowak-at.net/repo/cube-space-repo/</url>
+            <url>http://server.nowak-at.net/repo/ext-release-local/</url>
             <!--
                  The remote repo is down at the time of writing, using proxy for now.
                  If you're reading this and the remote is back up, you can assume that
@@ -139,7 +139,7 @@
             <dependency>
                 <groupId>net.cubespace</groupId>
                 <artifactId>Yamler-Core</artifactId>
-                <version>2.2.3-SNAPSHOT</version>
+                <version>2.3.0</version>
             </dependency>
 
             <dependency>
