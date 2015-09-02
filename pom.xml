@@ -47,6 +47,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/xxyy/CommandBlockerUltimate</connection>
+        <developerConnection>scm:git:git@github.com:xxyy/commandblockerultimate.git</developerConnection>
     </scm>
 
     <licenses>
