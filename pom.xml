@@ -117,7 +117,7 @@
             <dependency>
                 <groupId>com.comphenix.protocol</groupId>
                 <artifactId>ProtocolLib</artifactId>
-                <version>3.6.4-SNAPSHOT</version>
+                <version>3.6.4</version>
             </dependency>
             <dependency>
                 <groupId>org.mcstats.bukkit</groupId>
