@@ -43,6 +43,10 @@
 
     <distributionManagement>
         <downloadUrl>http://server.nowak-at.net/jenkins/job/public~cmdblkult/</downloadUrl>
+        <repository>
+            <id>xxyy-repo</id>
+            <url>http://repo.nowak-at.net/xxyy-public</url>
+        </repository>
     </distributionManagement>
 
     <scm>
