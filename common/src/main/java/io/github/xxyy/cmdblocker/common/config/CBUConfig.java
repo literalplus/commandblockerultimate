@@ -19,12 +19,16 @@
 
 package io.github.xxyy.cmdblocker.common.config;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import net.cubespace.Yamler.Config.*;
+import net.cubespace.Yamler.Config.Comment;
+import net.cubespace.Yamler.Config.Comments;
+import net.cubespace.Yamler.Config.Config;
+import net.cubespace.Yamler.Config.InvalidConfigurationException;
+import net.cubespace.Yamler.Config.Path;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +45,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Comments({"Define what commands should be blocked in the following property: (without leading slash)",
             "With Spigot/Bukkit, if you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)",
             "On BungeeCord, only BungeeCord command aliases can be blocked - If you want to block Spigot/Bukkit, you'll have to write all aliases down."})
-    private List<String> blockedCommands = Lists.newArrayList("help", "plugins", "version");
+    private List<String> blockedCommands = Arrays.asList("help", "plugins", "version");
 
     @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
     @Comment("Define the permission that a player needs to bypass the protection: (Default: cmdblock.bypass)")
@@ -110,7 +114,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
 
-        for (String requestedCommand : ImmutableList.copyOf(blockedCommands)) {
+        for (String requestedCommand : Collections.unmodifiableList(blockedCommands)) {
             blockedCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }
