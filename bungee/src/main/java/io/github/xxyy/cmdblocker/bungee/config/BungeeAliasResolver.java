@@ -20,9 +20,10 @@
 package io.github.xxyy.cmdblocker.bungee.config;
 
 import com.google.common.collect.ImmutableList;
-import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+
+import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -80,7 +81,7 @@ public class BungeeAliasResolver implements AliasResolver {
         } catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
             e.printStackTrace();
             plugin.getLogger().warning("Could not get BungeeCord command map! That probably means that they changed their internals." +
-                    "Please contact the plugin author at devnull@nowak-at.net or http://irc.spi.gt/iris/?channels=lit ! Thank you!");
+                    "Please open an issue at https://github.com/xxyy/commandblockerultimate/issues! Thank you!");
             plugin.getLogger().warning("This means that we can't get aliases for commands. Sorry for that!");
         }
 

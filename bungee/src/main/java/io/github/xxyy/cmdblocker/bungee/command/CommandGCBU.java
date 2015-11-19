@@ -19,12 +19,13 @@
 
 package io.github.xxyy.cmdblocker.bungee.command;
 
-import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Command;
+
+import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
 
 /**
  * Command for managing BungeeCord CommandBlockerUltimate.
@@ -58,7 +59,7 @@ public class CommandGCBU extends Command {
                 e.printStackTrace(); //Oops, the sender did something wrong...Send them a huge block of text to make sure they notice
                 sender.sendMessage(new ComponentBuilder("Your configuration file is invalid! See the server log for more details." +
                 "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue." +
-                "If not, you can get help at http://irc.spi.gt/iris/channels=lit").color(ChatColor.RED).create());
+                "If not, you can get help at https://github.com/xxyy/commandblockerultimate/issues").color(ChatColor.RED).create());
                 sender.sendMessage(new ComponentBuilder("To protect your server from breaking, we have restored your previous configuration " +
                         "for the time being - It will be lost if you restart or reload your server. Execute this command again if you " +
                         "think you've fixed your config file.").color(ChatColor.YELLOW).create());

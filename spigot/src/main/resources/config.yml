@@ -1,4 +1,5 @@
 #  Command Blocker Ultimate config file
+#  Get help at https://github.com/xxyy/commandblockerultimate/issues
 
 # Define what commands should be blocked in the following property: (without leading slash)
 # If you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)

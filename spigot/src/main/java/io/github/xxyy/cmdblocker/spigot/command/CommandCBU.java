@@ -19,12 +19,13 @@
 
 package io.github.xxyy.cmdblocker.spigot.command;
 
-import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
-import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 
 /**
  * Represents the /cbu command which is an utility command for CBU.
@@ -55,7 +56,7 @@ public class CommandCBU implements CommandExecutor {
                 e.printStackTrace(); //Oops, the sender did something wrong...Send them a huge block of text to make sure they notice
                 sender.sendMessage(ChatColor.RED + "Your configuration file is invalid! See the server log for more details.");
                 sender.sendMessage(ChatColor.RED + "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue.");
-                sender.sendMessage(ChatColor.RED + "If not, you can get help at http://irc.spi.gt/iris/channels=lit");
+                sender.sendMessage(ChatColor.RED + "If not, you can get help at https://github.com/xxyy/commandblockerultimate/issues");
                 sender.sendMessage(ChatColor.YELLOW + "To protect your server from breaking, we have restored your previous configuration " +
                         "for the time being - It will be lost if you restart or reload your server. Execute this command again if you " +
                         "think you've fixed your config file.");

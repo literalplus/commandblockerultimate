@@ -93,8 +93,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
             logger.log(Level.WARNING, "Encountered exception!", e);
             logger.warning("Could not load configuration file. Please double-check your YAML syntax with http://yaml-online-parser.appspot.com/.");
             logger.warning("The plugin might (will) not function in the way you want it to (since it doesn't know what you want)");
-            logger.warning("If you don't understand this error, try asking in #lit on irc.spi.gt. (Please don't leave a second after asking)");
-            logger.warning("WebChat: http://irc.spi.gt/iris/?channels=lit");
+            logger.warning("If you don't understand this error, try opening an issue at https://github.com/xxyy/commandblockerultimate/issues");
             return false;
         }
 
