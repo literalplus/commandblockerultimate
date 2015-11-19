@@ -41,14 +41,15 @@ public class CommandCBU implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate "+CommandBlockerPlugin.PLUGIN_VERSION_STRING);
+        if (args.length == 0){
+            sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate " + CommandBlockerPlugin.PLUGIN_VERSION_STRING);
             sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v2.");
             sender.sendMessage(ChatColor.DARK_AQUA + " Get the source at https://github.com/xxyy/commandblockerultimate");
+            sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu <reloadcfg>");
             return false;
         }
 
-        if (args[0].equalsIgnoreCase("reloadcfg")) {
+        if (args[0].equalsIgnoreCase("reloadcfg")){
             try {
                 plugin.replaceConfigAdapter(); //Replace config adapter with newly-read file
             } catch (Exception e) { //Apparently, Yamler throws all kinds of exceptions
@@ -65,6 +66,9 @@ public class CommandCBU implements CommandExecutor {
             sender.sendMessage(ChatColor.GREEN + "The configuration file has been reloaded successfully.");
 
             return true;
+        } else {
+            sender.sendMessage(ChatColor.RED + "Unknown action: /" + label + " " + args[0]);
+            sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu <reloadcfg>");
         }
 
         return false;

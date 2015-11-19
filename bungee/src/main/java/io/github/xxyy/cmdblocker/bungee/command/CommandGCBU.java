@@ -19,7 +19,6 @@
 
 package io.github.xxyy.cmdblocker.bungee.command;
 
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -48,7 +47,7 @@ public class CommandGCBU extends Command {
                     .append(CommandBlockerPlugin.PLUGIN_VERSION_STRING).color(ChatColor.AQUA).create());
             sender.sendMessage(new ComponentBuilder(" Licensed under GNU GPL v2.").color(ChatColor.DARK_AQUA).create());
             sender.sendMessage(new ComponentBuilder(" Get the source at https://github.com/xxyy/commandblockerultimate").color(ChatColor.DARK_AQUA).create());
-            sender.sendMessage(new ComponentBuilder("/gcbu [reloadcfg]").create());
+            sender.sendMessage(new ComponentBuilder("/gcbu <reloadcfg>").create());
             return;
         }
 
@@ -67,6 +66,9 @@ public class CommandGCBU extends Command {
             }
             //Phew, no exception. Inform the sender that everything went well
             sender.sendMessage(new ComponentBuilder("The configuration file has been reloaded successfully.").color(ChatColor.GREEN).create());
+        } else {
+            sender.sendMessage(new ComponentBuilder("Unknown action: /gcbu "+args[0]).color(ChatColor.RED).create());
+            sender.sendMessage(new ComponentBuilder("Usage: /gcbu <reloadcfg>").color(ChatColor.YELLOW).create());
         }
     }
 }
