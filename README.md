@@ -45,7 +45,7 @@ git clone https://github.com/xxyy/commandblockerultimate.git
 mvn clean package
 ````
 
-Or you could just head over to my [Continuous Integration Server](http://server.nowak-at.net/jenkins/job/public~cmdblkult/) and get your free executable TODAY!
+Or you could just head over to my [Continuous Integration Server](http://ci.nowak-at.net/job/public~cmdblkult/) and get your free executable TODAY!
 
 For fully tested versions, check out the [Spigot Resource entry](http://www.spigotmc.org/resources/command-blocker-ultimate.296/) for this plugin!
 
