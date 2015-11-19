@@ -28,9 +28,9 @@ import net.cubespace.Yamler.Config.Path;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,7 +115,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
 
-        for (String requestedCommand : Collections.unmodifiableList(blockedCommands)) {
+        for (String requestedCommand : new ArrayList<>(blockedCommands)) {
             blockedCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }

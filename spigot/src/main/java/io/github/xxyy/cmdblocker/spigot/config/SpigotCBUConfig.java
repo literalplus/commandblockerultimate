@@ -19,7 +19,6 @@
 
 package io.github.xxyy.cmdblocker.spigot.config;
 
-import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +27,7 @@ import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -98,7 +98,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
 
-        for(String requestedCommand : ImmutableList.copyOf(blockedCommands)) {
+        for(String requestedCommand : new ArrayList<>(blockedCommands)) {
             blockedCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
         }
     }
