@@ -35,9 +35,17 @@ public class CommandHelperTest {
     public void testGetRawCommand() {
         assertThat(CommandHelper.getRawCommand("/help"), is("help"));
         assertThat(CommandHelper.getRawCommand("/help test"), is("help"));
-        assertThat(CommandHelper.getRawCommand("/minecraft:help"), is("help"));
-        assertThat(CommandHelper.getRawCommand("/minecraft:help test"), is("help"));
-        assertThat(CommandHelper.getRawCommand("/bukkit:help"), is("help"));
-        assertThat(CommandHelper.getRawCommand("/bukkit:help something multiple arguments wow"), is("help"));
+        assertThat(CommandHelper.getRawCommand("/minecraft:help"), is("minecraft:help"));
+        assertThat(CommandHelper.getRawCommand("/minecraft:help test"), is("minecraft:help"));
+        assertThat(CommandHelper.getRawCommand("/bukkit:help"), is("bukkit:help"));
+        assertThat(CommandHelper.getRawCommand("/bukkit:help something multiple arguments wow"), is("bukkit:help"));
+    }
+
+    @Test
+    public void testRemoveModPrefix() {
+        assertThat(CommandHelper.removeModPrefix("help"), is("help"));
+        assertThat(CommandHelper.removeModPrefix("minecraft:help"), is("help"));
+        assertThat(CommandHelper.removeModPrefix("bukkit:help"), is("help"));
+        assertThat(CommandHelper.removeModPrefix("hey look i have spaces:help"), is("help"));
     }
 }

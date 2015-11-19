@@ -46,7 +46,7 @@ public final class CommandHelper {
             chatMessage = chatMessage.substring(1, spaceIndex); //Get the first word of the message and remove slash
         }
 
-        return removeModPrefix(chatMessage); //Return the raw command name!
+        return chatMessage; //Return the raw command name!
     }
 
     /**

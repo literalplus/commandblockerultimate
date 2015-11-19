@@ -19,8 +19,8 @@
 
 package io.github.xxyy.cmdblocker.common.config;
 
-import java.util.logging.Logger;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 /**
  * Represents a configuration adapter (in most cases a YAML file) that is used to fetch CommandBlockerUltimate
@@ -42,6 +42,7 @@ public interface ConfigAdapter {
     /**
      * Tries to initialize this config adapter.
      * If an exception occurs, it is logged to {@code logger} with details on how to get help from this plugin's author.
+     *
      * @param logger Logger to print to
      * @return whether the configuration was initialized successfully.
      */
@@ -49,6 +50,7 @@ public interface ConfigAdapter {
 
     /**
      * Initializes this config adapter, loading all values into cache.
+     *
      * @throws InvalidConfigException if the underlying configuration is invalid for some reason (e.g. syntax error)
      */
     void initialize() throws InvalidConfigException;
@@ -58,11 +60,15 @@ public interface ConfigAdapter {
      * This is done beforehand to avoid having to do an expensive search every time {@link #isBlocked(String)} is called.
      * This method should normally be called shortly after the server has enabled all plugins to allow it to register all plugin's aliases.
      * This method will {@link AliasResolver#refreshMap() refresh the resolver's map automatically}.
+     *
      * @param aliasResolver Resolver to use in order to resolve aliases
      */
     void resolveAliases(AliasResolver aliasResolver);
 
     /**
+     * Checks whether a given command, or derivatives of given command (e.g. {@code me} for {@code minecraft:me}) are
+     * blocked.
+     *
      * @param commandName Command name to check
      * @return whether the given command is blocked.
      */
@@ -70,6 +76,7 @@ public interface ConfigAdapter {
 
     /**
      * Gets a Collection of blocked commands, including resolved aliases. All values are in lower case.
+     *
      * @return A collection of blocked commands
      */
     Collection<String> getBlockedCommands();

@@ -20,11 +20,13 @@
 package io.github.xxyy.cmdblocker.spigot.config;
 
 import com.google.common.collect.ImmutableList;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -103,7 +105,8 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     @Override
     public boolean isBlocked(String commandName) {
-        return blockedCommands.contains(commandName);
+        return blockedCommands.contains(commandName) ||
+                blockedCommands.contains(CommandHelper.removeModPrefix(commandName));
     }
 
     @Override

@@ -25,6 +25,8 @@ import net.cubespace.Yamler.Config.Config;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.cubespace.Yamler.Config.Path;
 
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -120,7 +122,8 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public boolean isBlocked(String commandName) {
-        return blockedCommands.contains(commandName);
+        return blockedCommands.contains(commandName) ||
+                blockedCommands.contains(CommandHelper.removeModPrefix(commandName)); //e.g. minecraft:me
     }
 
     @Override
