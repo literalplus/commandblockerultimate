@@ -55,7 +55,7 @@ public class CommandGCBU extends Command {
         if (args[0].equalsIgnoreCase("reloadcfg")) {
             try {
                 plugin.replaceConfigAdapter(); //Replace config adapter with newly-read file
-            } catch (InvalidConfigurationException e) {
+            } catch (Exception e) { //Apparently, Yamler throws all kind sof exceptions
                 e.printStackTrace(); //Oops, the sender did something wrong...Send them a huge block of text to make sure they notice
                 sender.sendMessage(new ComponentBuilder("Your configuration file is invalid! See the server log for more details." +
                 "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue." +

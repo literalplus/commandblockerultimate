@@ -52,7 +52,7 @@ public class CommandCBU implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reloadcfg")) {
             try {
                 plugin.replaceConfigAdapter(); //Replace config adapter with newly-read file
-            } catch (InvalidConfigException e) {
+            } catch (Exception e) { //Apparently, Yamler throws all kinds of exceptions
                 e.printStackTrace(); //Oops, the sender did something wrong...Send them a huge block of text to make sure they notice
                 sender.sendMessage(ChatColor.RED + "Your configuration file is invalid! See the server log for more details.");
                 sender.sendMessage(ChatColor.RED + "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue.");
