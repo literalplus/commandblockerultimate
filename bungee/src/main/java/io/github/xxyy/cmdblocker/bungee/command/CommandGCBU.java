@@ -62,6 +62,9 @@ public class CommandGCBU extends Command {
                 sender.sendMessage(new ComponentBuilder("To protect your server from breaking, we have restored your previous configuration " +
                         "for the time being - It will be lost if you restart or reload your server. Execute this command again if you " +
                         "think you've fixed your config file.").color(ChatColor.YELLOW).create());
+                sender.sendMessage(new ComponentBuilder("Check the FAQ at " +
+                        "https://github.com/xxyy/commandblockerultimate/wiki/Frequently-Asked-Questions for some " +
+                        "common problems.").color(ChatColor.YELLOW).create());
                 return;
             }
             //Phew, no exception. Inform the sender that everything went well
