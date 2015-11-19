@@ -36,14 +36,14 @@
 
     <ciManagement>
         <system>jenkins</system>
-        <url>http://server.nowak-at.net/jenkins/job/public~cmdblkult/</url>
+        <url>https://ci.nowak-at.net/job/public~cmdblkult/</url>
     </ciManagement>
 
     <distributionManagement>
-        <downloadUrl>http://server.nowak-at.net/jenkins/job/public~cmdblkult/</downloadUrl>
+        <downloadUrl>https://ci.nowak-at.net/job/public~cmdblkult/</downloadUrl>
         <repository>
             <id>xxyy-repo</id>
-            <url>http://repo.nowak-at.net/xxyy-public</url>
+            <url>https://repo.nowak-at.net/xxyy-public</url>
         </repository>
     </distributionManagement>
 
