@@ -86,8 +86,12 @@
 
     <repositories>
         <repository> <!-- Spigot -->
-            <id>md5-repo</id>
-            <url>http://repo.md-5.net/content/repositories/public/</url>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository> <!-- BungeeCord API -->
+            <id>sonatype-oss-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
         <repository> <!-- ProtocolLib -->
             <id>dmulloy2-repo</id>
@@ -100,7 +104,7 @@
         <repository> <!-- Yamler -->
             <id>cubespace-repo</id>
             <!--<url>http://nexus.cube-space.net/content/groups/public/</url>-->
-            <url>http://repo.nowak-at.net/ext-release-local/</url>
+            <url>https://repo.nowak-at.net/ext-release-local/</url>
             <!--
                  The remote repo is down at the time of writing, using proxy for now.
                  If you're reading this and the remote is back up, you can assume that
