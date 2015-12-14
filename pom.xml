@@ -64,7 +64,7 @@
             <id>xxyy</id>
             <name>Philipp Nowak</name>
             <email>devnull@nowak-at.net</email>
-            <url>http://xxyy.github.io/</url>
+            <url>https://l1t.li/</url>
             <roles>
                 <role>developer</role>
                 <role>maintainer</role>
@@ -100,7 +100,7 @@
         <repository> <!-- Yamler -->
             <id>cubespace-repo</id>
             <!--<url>http://nexus.cube-space.net/content/groups/public/</url>-->
-            <url>http://ci.nowak-at.net/ext-release-local/</url>
+            <url>http://repo.nowak-at.net/ext-release-local/</url>
             <!--
                  The remote repo is down at the time of writing, using proxy for now.
                  If you're reading this and the remote is back up, you can assume that
