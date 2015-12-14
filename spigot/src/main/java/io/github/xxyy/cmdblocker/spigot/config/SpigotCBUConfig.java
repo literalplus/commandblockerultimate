@@ -28,15 +28,16 @@ import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
  * This is an alternative implementation of {@link io.github.xxyy.cmdblocker.common.config.CBUConfig} using the default
  * Spigot YamlConfiguration API. This class is used as a fallback if Yamler is not available.
- *
+ * <p/>
  * Some comfort features, such as not reloading the file on a syntax error and automatic updating of the file are not
  * implemented because that would add unnecessary extra complexity and those are available out-of-the-box with Yamler.
  *
@@ -47,7 +48,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     private final JavaPlugin plugin;
 
-    private List<String> blockedCommands;
+    private Set<String> blockedCommands;
 
     private String bypassPermission;
 
@@ -81,10 +82,11 @@ public class SpigotCBUConfig implements ConfigAdapter {
                 "options won't be in your configuration file!");
 
         //Load options to cache
-        if(config.contains(ConfigAdapter.TARGET_COMMANDS_PATH)) {
-            blockedCommands = config.getStringList(ConfigAdapter.TARGET_COMMANDS_PATH);
+        blockedCommands = new HashSet<>();
+        if (config.contains(ConfigAdapter.TARGET_COMMANDS_PATH)){
+            blockedCommands.addAll(config.getStringList(ConfigAdapter.TARGET_COMMANDS_PATH));
         } else {
-            blockedCommands = Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about"); //Y u no default, getStringList()
+            Collections.addAll(blockedCommands, "?", "help", "plugins", "pl", "version", "ver", "about");
         }
 
         bypassPermission = config.getString(ConfigAdapter.BYPASS_PERMISSION_PATH, "cmdblock.bypass");
@@ -98,7 +100,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
 
-        for(String requestedCommand : new ArrayList<>(blockedCommands)) {
+        for (String requestedCommand : new ArrayList<>(blockedCommands)) {
             blockedCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
         }
     }
