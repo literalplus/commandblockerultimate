@@ -105,7 +105,6 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         if(getServer().getPluginManager().getPlugin("Yamler") != null) {
             return new CBUConfig(new File(getDataFolder(), "config.yml"));
         } else {
-            getLogger().warning("Using default config adapter!");
             getLogger().warning("It is recommended that you install Yamler, because that allows the config to be a lot " +
                     "more flexible and straightforward to use.");
             return new SpigotCBUConfig(this);
