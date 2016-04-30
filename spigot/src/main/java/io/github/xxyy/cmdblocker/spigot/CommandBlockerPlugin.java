@@ -116,8 +116,8 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * Checks whether a given {@link org.bukkit.command.CommandSender} can execute a given command
      * and sends an error message if they cannot.
      *
-     * @param sender  Sender to check
-     * @param command Name of the command to check, might have a slash in front.
+     * @param sender  the sender to check for
+     * @param command the raw name of the command to check
      * @return Whether {@code sender} can execute {@code command}, not taking aliases into account.
      */
     private boolean canExecute(final CommandSender sender, final String command) {
@@ -159,7 +159,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
     private String unescapeCommandMessage(final String message, final CommandSender target, final String command) {
         return StringEscapeUtils.unescapeHtml(
-                ChatColor.translateAlternateColorCodes('&', message)
+                ChatColor.translateAlternateColorCodes('&',
+                        message.replace("<command>", command).replace("<name>", target.getName())
+                )
         );
     }
 

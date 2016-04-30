@@ -15,6 +15,7 @@ bypass-permission: cmdblock.bypass
 show-error-message: true
 
 # What should that message be? (Use & for color codes, HTML escape codes accepted)
+# <command> will be replaced with the blocked command's name
 # Example: &c&lError message &euro;&auml;&#00A7;
 error-message: '&cI am sorry, but you are not permitted to execute this command.'
 
@@ -37,8 +38,9 @@ notify-bypass: false
 
 # @since 1.4.0
 # The message to display when executing an otherwise blocked command (permitted users only, see notify-bypass)
-# Example: '&cThis command is blocked. Executing anyways since you have permission.'
-bypass-message: '&c[CBU] This command is blocked. Executing anyways since you have permission.'
+# <command> will be replaced with the blocked command's name
+# Example: '&c/<command> is blocked. Executing anyways since you have permission.'
+bypass-message: '&c[CBU] /<command> is blocked. Executing anyways since you have permission.'
 
 # @since 1.4.0
 # The message to display when somebody tries to tab-complete a command that's blocked and

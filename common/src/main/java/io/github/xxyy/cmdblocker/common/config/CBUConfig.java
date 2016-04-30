@@ -60,6 +60,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Path(ConfigAdapter.ERROR_MESSAGE_PATH)
     @Comments({"What should that message be? (Use & for color codes, HTML escape codes accepted)",
+            "<command> will be replaced with the blocked command's name",
             "Example: &c&lError message &euro;&auml;&#00A7;"})
     private String errorMessage = "&cI am sorry, but you are not permitted to execute this command.";
 
@@ -86,6 +87,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Path(BYPASS_MESSAGE_PATH)
     @Comments({"@since 1.4.0",
             "The message to display when executing an otherwise blocked command (permitted users only, see notify-bypass)",
+            "<command> will be replaced with the blocked command's name",
             "Example: '&c/<command> is blocked. Executing anyways since you have permission.'"})
     private String bypassMessage = "&c[CBU] This command is blocked. Executing anyways since you have permission.";
 

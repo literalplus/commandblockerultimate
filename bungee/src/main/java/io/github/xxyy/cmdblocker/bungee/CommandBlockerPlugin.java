@@ -131,7 +131,9 @@ public class CommandBlockerPlugin extends Plugin {
 
     private BaseComponent[] unescapeCommandMessage(String message, CommandSender sender, String command) {
         return TextComponent.fromLegacyText( //Make JSON thing from text
-                ChatColor.translateAlternateColorCodes('&', message) //And translate colors
+                ChatColor.translateAlternateColorCodes('&', //translate colors
+                        message.replace("<command>", command).replace("<name>", sender.getName())
+                )
         );
     }
 
