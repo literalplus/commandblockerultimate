@@ -84,9 +84,10 @@ public class TabCompleteListener implements Listener {
         while (it.hasNext()) {
             String suggestion = it.next();
 
-            if (plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(suggestion))) {
+            String rawCommand = CommandHelper.getRawCommand(suggestion);
+            if (plugin.getConfigAdapter().isBlocked(rawCommand)) {
                 if (plugin.getConfigAdapter().isTabRestrictiveMode()) {
-                    plugin.sendErrorMessageIfEnabled(messageRecipient);
+                    plugin.sendTabErrorMessageIfEnabled(messageRecipient);
                     return true;
                 } else {
                     it.remove(); //Remove suggestion from mutable list

@@ -58,6 +58,11 @@ public class SpigotCBUConfig implements ConfigAdapter {
     private boolean preventTab;
     private boolean tabRestrictiveMode;
 
+    private boolean notifyBypass;
+    private String bypassMessage;
+
+    private String tabErrorMessage;
+
     public SpigotCBUConfig(JavaPlugin plugin) {
         this.plugin = plugin;
     }
@@ -91,9 +96,16 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
         bypassPermission = config.getString(ConfigAdapter.BYPASS_PERMISSION_PATH, "cmdblock.bypass");
         showErrorMessage = config.getBoolean(ConfigAdapter.SHOW_ERROR_MESSAGE_PATH, true);
-        errorMessage = config.getString(ConfigAdapter.ERROR_MESSAGE_PATH, "&cI am sorry, but you are not permitted to execute this command.");
+        errorMessage = config.getString(ConfigAdapter.ERROR_MESSAGE_PATH,
+                "&cI am sorry, but you are not permitted to execute this command.");
         preventTab = config.getBoolean(ConfigAdapter.PREVENT_TAB_PATH, true);
         tabRestrictiveMode = config.getBoolean(ConfigAdapter.TAB_RESTRICTIVE_MODE_PATH, false);
+
+        notifyBypass = config.getBoolean(ConfigAdapter.NOTIFY_BYPASS_PATH, false);
+        bypassMessage = config.getString(ConfigAdapter.BYPASS_MESSAGE_PATH,
+                "&c[CBU] This command is blocked. Executing anyways since you have permission.");
+        tabErrorMessage = config.getString(ConfigAdapter.TAB_ERROR_MESSAGE_PATH,
+                "&cI am sorry, but I cannot let you do this, Dave.");
     }
 
     @Override
@@ -139,5 +151,20 @@ public class SpigotCBUConfig implements ConfigAdapter {
     @Override
     public boolean isTabRestrictiveMode() {
         return tabRestrictiveMode;
+    }
+
+    @Override
+    public boolean isNotifyBypass() {
+        return notifyBypass;
+    }
+
+    @Override
+    public String getBypassMessage() {
+        return bypassMessage;
+    }
+
+    @Override
+    public String getTabErrorMessage() {
+        return tabErrorMessage;
     }
 }

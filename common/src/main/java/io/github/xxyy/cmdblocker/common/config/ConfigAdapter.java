@@ -38,6 +38,9 @@ public interface ConfigAdapter {
     String ERROR_MESSAGE_PATH = "error-message";
     String PREVENT_TAB_PATH = "prevent-tab";
     String TAB_RESTRICTIVE_MODE_PATH = "tab-restrictive-mode";
+    String NOTIFY_BYPASS_PATH = "notify-bypass";
+    String BYPASS_MESSAGE_PATH = "bypass-message";
+    String TAB_ERROR_MESSAGE_PATH = "tab-error-message";
 
     /**
      * Tries to initialize this config adapter.
@@ -81,13 +84,54 @@ public interface ConfigAdapter {
      */
     Collection<String> getBlockedCommands();
 
+    /**
+     * @return the permission a player must have to execute blocked commands
+     */
     String getBypassPermission();
 
+    /**
+     * @return whether the plugin will show error messages when somebody is not permitted to execute a blocked command
+     */
     boolean isShowErrorMessage();
 
+    /**
+     * @return the error message displayed when somebody tries to execute a blocked command
+     */
     String getErrorMessage();
 
+    /**
+     * @return whether to block tab-completion for blocked commands
+     */
     boolean isPreventTab();
 
+    /**
+     * <p>What strategy to use when blocking tab-complete replies from the server.</p>
+     * <p>
+     *     true: block all completions returning a targeted command
+     *     (for example, if /p is typed and /pl is blocked, print error message)
+     * </p>
+     * <p>
+     *     false: just remove blocked commands from list
+     *     (in the above example, other commands starting with p would still be shown without notice)
+     * </p>
+     *
+     * @return whether tab restrictive mode is enabled
+     */
     boolean isTabRestrictiveMode();
+
+    /**
+     * @return whether to display a message to the command sender when bypassing CBU
+     */
+    boolean isNotifyBypass();
+
+    /**
+     * @return the message displayed when bypassing CBU
+     * @see #isNotifyBypass()
+     */
+    String getBypassMessage();
+
+    /**
+     * @return the message displayed when somebody tries to tab-complete a blocked command in restrictive mode
+     */
+    String getTabErrorMessage();
 }

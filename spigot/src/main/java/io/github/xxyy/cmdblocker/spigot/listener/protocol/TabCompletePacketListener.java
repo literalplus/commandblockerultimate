@@ -27,9 +27,10 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
+import org.bukkit.plugin.Plugin;
+
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -106,7 +107,7 @@ public final class TabCompletePacketListener implements PacketListener {
             for (String matchedCommand : matchedCommands) {
                 if (this.plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(matchedCommand))) { //Not using canExecute to save some permission checks (Single one done above)
                     if (this.plugin.getConfigAdapter().isTabRestrictiveMode()) { //Hides all replies if anything is matched
-                        this.plugin.sendErrorMessageIfEnabled(event.getPlayer());
+                        this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
                         event.setCancelled(true);
                         return;
                     } else {
@@ -120,7 +121,7 @@ public final class TabCompletePacketListener implements PacketListener {
 
             if (allowedCommands != null) { // null means that nothing was found
                 if (allowedCommands.size() == 0) { //Nothing is allowed
-                    this.plugin.sendErrorMessageIfEnabled(event.getPlayer());
+                    this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
                     event.setCancelled(true);
                 } else { //Write allowed commands
                     matchModifier.write(0, allowedCommands.toArray(new String[allowedCommands.size()]));

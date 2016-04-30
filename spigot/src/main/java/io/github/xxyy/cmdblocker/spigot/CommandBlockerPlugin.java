@@ -19,15 +19,6 @@
 
 package io.github.xxyy.cmdblocker.spigot;
 
-import io.github.xxyy.cmdblocker.common.config.CBUConfig;
-import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
-import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
-import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
-import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
-import io.github.xxyy.cmdblocker.spigot.config.SpigotAliasResolver;
-import io.github.xxyy.cmdblocker.spigot.config.SpigotCBUConfig;
-import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -37,6 +28,16 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
+
+import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
+import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
+import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
+import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
+import io.github.xxyy.cmdblocker.spigot.config.SpigotAliasResolver;
+import io.github.xxyy.cmdblocker.spigot.config.SpigotCBUConfig;
+import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,21 +121,46 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * @return Whether {@code sender} can execute {@code command}, not taking aliases into account.
      */
     private boolean canExecute(final CommandSender sender, final String command) {
-        if (configAdapter.isBlocked(command) && !sender.hasPermission(getConfigAdapter().getBypassPermission())) {
-            sendErrorMessageIfEnabled(sender);
-            return false;
+        if (configAdapter.isBlocked(command)){
+            if (!sender.hasPermission(getConfigAdapter().getBypassPermission())){
+                sendErrorMessageIfEnabled(sender, command);
+                return false;
+            } else {
+                sendBypassMessageIfEnabled(sender, command);
+                return true;
+            }
         }
         return true;
     }
 
-    public void sendErrorMessageIfEnabled(final CommandSender target) {
+    public void sendTabErrorMessageIfEnabled(final CommandSender target) {
         if (getConfigAdapter().isShowErrorMessage()) {
             target.sendMessage(
-                    StringEscapeUtils.unescapeHtml(
-                            ChatColor.translateAlternateColorCodes('&', getConfigAdapter().getErrorMessage())
-                    )
+                    unescapeCommandMessage(getConfigAdapter().getTabErrorMessage(), target, "<command>")
             );
         }
+    }
+
+    private void sendBypassMessageIfEnabled(final CommandSender target, final String command) {
+        if(getConfigAdapter().isNotifyBypass()) {
+            target.sendMessage(
+                    unescapeCommandMessage(getConfigAdapter().getBypassMessage(), target, command)
+            );
+        }
+    }
+
+    private void sendErrorMessageIfEnabled(final CommandSender target, final String command) {
+        if (getConfigAdapter().isShowErrorMessage()) {
+            target.sendMessage(
+                    unescapeCommandMessage(getConfigAdapter().getErrorMessage(), target, command)
+            );
+        }
+    }
+
+    private String unescapeCommandMessage(final String message, final CommandSender target, final String command) {
+        return StringEscapeUtils.unescapeHtml(
+                ChatColor.translateAlternateColorCodes('&', message)
+        );
     }
 
     /**

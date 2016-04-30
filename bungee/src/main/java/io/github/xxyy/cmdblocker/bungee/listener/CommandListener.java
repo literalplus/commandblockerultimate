@@ -19,15 +19,11 @@
 
 package io.github.xxyy.cmdblocker.bungee.listener;
 
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.plugin.Cancellable;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 
 /**
@@ -45,32 +41,10 @@ public class CommandListener implements Listener {
 
     @EventHandler
     public void onChat(ChatEvent evt) {
-        if (!evt.isCommand()) {
+        if (!evt.isCommand()){
             return;
         }
 
-        checkCommand(evt, evt.getSender(), evt.getMessage());
-    }
-
-    private void checkCommand(Cancellable evt, Connection connection, String command) {
-        CommandSender sender = null;
-        boolean hasPermission = true;
-
-        if (connection instanceof CommandSender) {
-            sender = (CommandSender) connection;
-            hasPermission = sender.hasPermission(plugin.getConfigAdapter().getBypassPermission());
-        }
-
-        if(!hasPermission) { //Has bypass permission, actually. Too long var name though
-            checkCommand(sender, command, evt);
-        }
-    }
-
-    private void checkCommand(CommandSender sender, String command, Cancellable evt) {
-        if (plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(command))) {
-            evt.setCancelled(true);
-
-            plugin.sendErrorMessageIfEnabled(sender);
-        }
+        evt.setCancelled(plugin.handleCommandExecution(evt.getMessage(), evt.getSender()));
     }
 }

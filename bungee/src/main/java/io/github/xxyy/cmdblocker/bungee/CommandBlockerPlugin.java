@@ -19,17 +19,21 @@
 
 package io.github.xxyy.cmdblocker.bungee;
 
+import net.cubespace.Yamler.Config.InvalidConfigurationException;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.Connection;
+import net.md_5.bungee.api.plugin.Plugin;
+
 import io.github.xxyy.cmdblocker.bungee.command.CommandGCBU;
 import io.github.xxyy.cmdblocker.bungee.config.BungeeAliasResolver;
 import io.github.xxyy.cmdblocker.bungee.listener.CommandListener;
 import io.github.xxyy.cmdblocker.bungee.listener.TabCompleteListener;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -77,18 +81,64 @@ public class CommandBlockerPlugin extends Plugin {
         return new CBUConfig(new File(getDataFolder(), "config.yml"));
     }
 
-    public void sendErrorMessageIfEnabled(CommandSender sender) {
-        if (getConfigAdapter().isShowErrorMessage() && sender != null) {
-            sender.sendMessage( //Send message
-                    TextComponent.fromLegacyText( //Make JSON thing from text
-                            ChatColor.translateAlternateColorCodes('&', getConfigAdapter().getErrorMessage()) //And translate colors
-                    ));
+    /**
+     * Checks whether a command sender is permitted to execute a command and sends notification messages to them if
+     * those are enabled.
+     *
+     * @param command    the command to check
+     * @param connection the connection attempting to execute that command
+     * @return whether the execution should be cancelled
+     */
+    public boolean handleCommandExecution(String command, Connection connection) {
+        CommandSender commandSender = (connection instanceof CommandSender) ? (CommandSender) connection : null;
+
+        String rawCommand = CommandHelper.getRawCommand(command);
+        if (getConfigAdapter().isBlocked(rawCommand)){
+            if (commandSender != null && //if they have the bypass permission, allow execution
+                    commandSender.hasPermission(getConfigAdapter().getBypassPermission())){
+                sendBypassMessageIfEnabled(commandSender, rawCommand);
+            } else { //if they don't, cancel it
+                sendErrorMessageIfEnabled(commandSender, rawCommand);
+                return true;
+            }
         }
+        return false;
+    }
+
+    public void sendTabErrorMessageIfEnabled(CommandSender sender) {
+        if (getConfigAdapter().isShowErrorMessage() && sender != null){
+            sender.sendMessage( //Send message
+                    unescapeCommandMessage(getConfigAdapter().getTabErrorMessage(), sender, "<command>")
+            );
+        }
+    }
+
+    private void sendErrorMessageIfEnabled(CommandSender sender, String command) {
+        if (getConfigAdapter().isShowErrorMessage() && sender != null){
+            sender.sendMessage( //Send message
+                    unescapeCommandMessage(getConfigAdapter().getErrorMessage(), sender, command)
+            );
+        }
+    }
+
+    private void sendBypassMessageIfEnabled(CommandSender sender, String command) {
+        if (getConfigAdapter().isShowErrorMessage() && sender != null){
+            sender.sendMessage( //Send message
+                    unescapeCommandMessage(getConfigAdapter().getBypassMessage(), sender, command)
+            );
+        }
+    }
+
+    private BaseComponent[] unescapeCommandMessage(String message, CommandSender sender, String command) {
+        return TextComponent.fromLegacyText( //Make JSON thing from text
+                ChatColor.translateAlternateColorCodes('&', message) //And translate colors
+        );
     }
 
     /**
      * Returns the current config adapter used by the plugin.
      * <b>Warning:</b> The adapter might be replaced at any time, so make sure to always get the latest one!
+     *
      * @return the plugin's current config adapter
      */
     public CBUConfig getConfigAdapter() {
@@ -100,8 +150,9 @@ public class CommandBlockerPlugin extends Plugin {
      * This is used instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
      * instead of breaking the plugin by assuming the default values.
      * If the current config file is invalid, an exception is thrown and the adapter is not replaced.
+     *
      * @throws net.cubespace.Yamler.Config.InvalidConfigurationException Propagated from {@link CBUConfig#init()} - If you get this, you can
-     *                                          safely assume that thew adapter has not been replaced.
+     *                                                                   safely assume that thew adapter has not been replaced.
      */
     public void replaceConfigAdapter() throws InvalidConfigurationException {
         CBUConfig newAdapter = createConfig();

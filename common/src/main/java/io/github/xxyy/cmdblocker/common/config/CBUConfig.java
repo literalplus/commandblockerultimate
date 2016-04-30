@@ -77,12 +77,31 @@ public class CBUConfig extends Config implements ConfigAdapter {
             "Default value: false"})
     private boolean tabRestrictiveMode = false;
 
+    @Path(NOTIFY_BYPASS_PATH)
+    @Comments({"@since 1.4.0",
+            "Whether to display a message when executing an otherwise blocked command to permitted users",
+            "Default value: false"})
+    private boolean notifyBypass = false;
+
+    @Path(BYPASS_MESSAGE_PATH)
+    @Comments({"@since 1.4.0",
+            "The message to display when executing an otherwise blocked command (permitted users only, see notify-bypass)",
+            "Example: '&c/<command> is blocked. Executing anyways since you have permission.'"})
+    private String bypassMessage = "&c[CBU] This command is blocked. Executing anyways since you have permission.";
+
+    @Path(TAB_ERROR_MESSAGE_PATH)
+    @Comments({"@since 1.4.0",
+            "The message to display when somebody tries to tab-complete a command that's blocked and",
+            "tab-restrictive-mode is enabled.",
+            "Example: '&cI am sorry, but you cannot see completions for this.'"})
+    private String tabErrorMessage = "&cI am sorry, but I cannot let you do this, Dave.";
+
     public CBUConfig(File configFile) {
         CONFIG_HEADER = new String[]{
                 "Configuration file for CommandBlockerUltimate. CommandBlockerUltimate is licensed under " +
-                        "a GNU GPL v2 license (see the LICENSE file in the plugin jar for details)." +
+                        "the GNU GPL v2 license (see the LICENSE file in the plugin jar for details)." +
                         "Find its source at https://github.com/xxyy/commandblockerultimate." +
-                        "If you need help configuring, drop by #lit on irc.spi.gt (http://irc.spi.gt/iris/?channels=lit)."
+                        "If you need help configuring, open an issue at GitHub. (link above)"
         };
         CONFIG_FILE = configFile;
     }
@@ -155,5 +174,20 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Override
     public boolean isTabRestrictiveMode() {
         return tabRestrictiveMode;
+    }
+
+    @Override
+    public boolean isNotifyBypass() {
+        return notifyBypass;
+    }
+
+    @Override
+    public String getBypassMessage() {
+        return bypassMessage;
+    }
+
+    @Override
+    public String getTabErrorMessage() {
+        return tabErrorMessage;
     }
 }
