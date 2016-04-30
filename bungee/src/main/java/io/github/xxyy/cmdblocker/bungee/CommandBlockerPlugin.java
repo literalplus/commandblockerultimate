@@ -122,7 +122,7 @@ public class CommandBlockerPlugin extends Plugin {
     }
 
     private void sendBypassMessageIfEnabled(CommandSender sender, String command) {
-        if (getConfigAdapter().isShowErrorMessage() && sender != null){
+        if (getConfigAdapter().isNotifyBypass() && sender != null){
             sender.sendMessage( //Send message
                     unescapeCommandMessage(getConfigAdapter().getBypassMessage(), sender, command)
             );
