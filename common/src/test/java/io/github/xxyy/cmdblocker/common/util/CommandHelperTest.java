@@ -41,6 +41,15 @@ public class CommandHelperTest {
         assertThat(CommandHelper.getRawCommand("/bukkit:help something multiple arguments wow"), is("bukkit:help"));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void getRawCommand__startsWithSlash() {
+        //given
+        String chatMessage = " some mesage starting with a space and not a slash";
+        //when
+        CommandHelper.getRawCommand(chatMessage);
+        //then an IAE is thrown
+    }
+
     @Test
     public void testRemoveModPrefix() {
         assertThat(CommandHelper.removeModPrefix("help"), is("help"));

@@ -19,6 +19,8 @@
 
 package io.github.xxyy.cmdblocker.common.util;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Static utility class which helps dealing with commands and related.
  *
@@ -31,33 +33,40 @@ public final class CommandHelper {
     }
 
     /**
-     * Turns a chat message, as entered by a player in Minecraft (this is obviously an unintended coincidence), into
-     * a raw command name, as used by the CommandBlockerUltimate config file.
-     * @param chatMessage The chat message to parse
-     * @return raw command of that
+     * Turns a chat message, as entered by a player in Minecraft into a raw command name, as used
+     * by the CommandBlockerUltimate config file.
+     *
+     * @param chatMessage the chat message to parse, starting with a slash ('/')
+     * @return raw command of the message, in lower case
+     * @throws IllegalArgumentException if the command does not start with a slash
      */
     public static String getRawCommand(String chatMessage) {
-        chatMessage = chatMessage.toLowerCase(); //Bukkit saves all command in lower case
+        Preconditions.checkArgument(chatMessage.charAt(0) == '/',
+                "getRawCommand('%s') requires a command, starting with a slash, to be passed!",
+                chatMessage);
+        String result;
 
         int spaceIndex = chatMessage.indexOf(" "); //For finding the executed command's name
         if (spaceIndex == -1) { //If no space found
-            chatMessage = chatMessage.substring(1); //Just remove slash
+            result = chatMessage.substring(1); //Just remove slash
         } else { //If we have a space
-            chatMessage = chatMessage.substring(1, spaceIndex); //Get the first word of the message and remove slash
+            result = chatMessage.substring(1, spaceIndex); //Get the first word of the message and remove slash
         }
 
-        return chatMessage; //Return the raw command name!
+        return result.toLowerCase(); //Bukkit saves commands in lower case
     }
 
     /**
-     * Removes the Minecraft "mod prefix" from a command name.
-     * For example, when passed "bukkit:kill", this method returns "kill".
-     * @param commandName Raw command name, without slash or arguments. See {@link #getRawCommand(String)}.
+     * Removes the Minecraft "mod prefix" from a command name. For example, when passed
+     * "bukkit:kill", this method returns "kill".
+     *
+     * @param commandName Raw command name, without slash or arguments. See {@link
+     *                    #getRawCommand(String)}.
      * @return The raw raw command name, without prefix.
      */
     public static String removeModPrefix(String commandName) {
         int colonIndex = commandName.indexOf(":"); //For removing those minecraft plugin/mod prefixes, e.g. bukkit:kill -> kill
-        if(colonIndex != -1) { //If we have a colon
+        if (colonIndex != -1) { //If we have a colon
             commandName = commandName.substring(colonIndex + 1); //Remove prefix including the colon
         }
         return commandName;

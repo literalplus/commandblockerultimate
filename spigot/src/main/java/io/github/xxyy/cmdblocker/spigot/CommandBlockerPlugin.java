@@ -173,7 +173,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * @param chatMessage The message written, including the slash.
      */
     public void handleEvent(Cancellable evt, CommandSender sender, String chatMessage) {
-        if (!canExecute(sender, CommandHelper.getRawCommand(chatMessage))) {
+        if (chatMessage.startsWith("/") && !canExecute(sender, CommandHelper.getRawCommand(chatMessage))) {
             evt.setCancelled(true);
         }
     }

@@ -77,7 +77,7 @@ public class TabCompleteListener implements Listener {
     private boolean removeBlocked(List<String> suggestions, CommandSender messageRecipient) {
         if (messageRecipient != null &&
                 messageRecipient.hasPermission(plugin.getConfigAdapter().getBypassPermission())) {
-            return false; //Don't need to recipient if sender has bypass
+            return false; //Don't need to check if sender has bypass permission
         }
 
         Iterator<String> it = suggestions.iterator();
