@@ -57,11 +57,16 @@ public class TabCompleteListener implements Listener {
             sender = (CommandSender) evt.getSender();
         }
 
-        if(!plugin.canAccessWithMessage(evt.getCursor(), sender)) {
+        if(isBaseCommandBlockedWithMessage(evt, sender)) {
             return;
         }
 
         evt.setCancelled(removeBlocked(evt.getSuggestions(), sender));
+    }
+
+    private boolean isBaseCommandBlockedWithMessage(TabCompleteEvent evt, CommandSender sender) {
+        return plugin.getConfigAdapter().isPreventTab() &&
+                !plugin.canAccessWithMessage(evt.getCursor(), sender);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
