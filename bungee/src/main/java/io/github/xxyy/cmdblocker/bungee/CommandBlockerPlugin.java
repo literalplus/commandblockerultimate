@@ -19,6 +19,7 @@
 
 package io.github.xxyy.cmdblocker.bungee;
 
+import com.google.common.base.Preconditions;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -82,39 +83,50 @@ public class CommandBlockerPlugin extends Plugin {
     }
 
     /**
-     * Checks whether a command sender is permitted to execute a command and sends notification messages to them if
-     * those are enabled.
+     * Checks whether a command sender is permitted to execute a command and sends notification
+     * messages to them if those are enabled.
      *
      * @param command    the command to check
      * @param connection the connection attempting to execute that command
      * @return whether the execution should be cancelled
      */
     public boolean handleCommandExecution(String command, Connection connection) {
-        CommandSender commandSender = (connection instanceof CommandSender) ? (CommandSender) connection : null;
+        return connection instanceof CommandSender &&
+                canAccessWithMessage(command, (CommandSender) connection);
+    }
 
+    public boolean canAccessWithMessage(String command, CommandSender commandSender) {
+        Preconditions.checkNotNull(command, "command");
+        Preconditions.checkNotNull(commandSender, "commandSender");
+        if(!isCommand(command)) {
+            return true;
+        }
         String rawCommand = CommandHelper.getRawCommand(command);
-        if (getConfigAdapter().isBlocked(rawCommand)){
-            if (commandSender != null && //if they have the bypass permission, allow execution
-                    commandSender.hasPermission(getConfigAdapter().getBypassPermission())){
+        if (getConfigAdapter().isBlocked(rawCommand)) {
+            if (commandSender.hasPermission(getConfigAdapter().getBypassPermission())) {
                 sendBypassMessageIfEnabled(commandSender, rawCommand);
             } else { //if they don't, cancel it
                 sendErrorMessageIfEnabled(commandSender, rawCommand);
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
+    }
+
+    public boolean isCommand(String command) {
+        return command.startsWith("/");
     }
 
     public void sendTabErrorMessageIfEnabled(CommandSender sender) {
-        if (getConfigAdapter().isShowErrorMessage() && sender != null){
+        if (getConfigAdapter().isShowErrorMessage() && sender != null) {
             sender.sendMessage( //Send message
                     unescapeCommandMessage(getConfigAdapter().getTabErrorMessage(), sender, "<command>")
             );
         }
     }
 
-    private void sendErrorMessageIfEnabled(CommandSender sender, String command) {
-        if (getConfigAdapter().isShowErrorMessage() && sender != null){
+    public void sendErrorMessageIfEnabled(CommandSender sender, String command) {
+        if (getConfigAdapter().isShowErrorMessage() && sender != null) {
             sender.sendMessage( //Send message
                     unescapeCommandMessage(getConfigAdapter().getErrorMessage(), sender, command)
             );
@@ -122,7 +134,7 @@ public class CommandBlockerPlugin extends Plugin {
     }
 
     private void sendBypassMessageIfEnabled(CommandSender sender, String command) {
-        if (getConfigAdapter().isNotifyBypass() && sender != null){
+        if (getConfigAdapter().isNotifyBypass() && sender != null) {
             sender.sendMessage( //Send message
                     unescapeCommandMessage(getConfigAdapter().getBypassMessage(), sender, command)
             );
@@ -138,8 +150,8 @@ public class CommandBlockerPlugin extends Plugin {
     }
 
     /**
-     * Returns the current config adapter used by the plugin.
-     * <b>Warning:</b> The adapter might be replaced at any time, so make sure to always get the latest one!
+     * Returns the current config adapter used by the plugin. <b>Warning:</b> The adapter might be
+     * replaced at any time, so make sure to always get the latest one!
      *
      * @return the plugin's current config adapter
      */
@@ -148,13 +160,15 @@ public class CommandBlockerPlugin extends Plugin {
     }
 
     /**
-     * Replaces the current config adapter by a fresh one with current values from the configuration file.
-     * This is used instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
-     * instead of breaking the plugin by assuming the default values.
-     * If the current config file is invalid, an exception is thrown and the adapter is not replaced.
+     * Replaces the current config adapter by a fresh one with current values from the configuration
+     * file. This is used instead of {@link CBUConfig#reload()} to allow server owners to react and
+     * fix their configuration file instead of breaking the plugin by assuming the default values.
+     * If the current config file is invalid, an exception is thrown and the adapter is not
+     * replaced.
      *
-     * @throws net.cubespace.Yamler.Config.InvalidConfigurationException Propagated from {@link CBUConfig#init()} - If you get this, you can
-     *                                                                   safely assume that thew adapter has not been replaced.
+     * @throws InvalidConfigurationException Propagated from {@link CBUConfig#init()} - If you get
+     *                                       this, you can safely assume that thew adapter has not
+     *                                       been replaced.
      */
     public void replaceConfigAdapter() throws InvalidConfigurationException {
         CBUConfig newAdapter = createConfig();

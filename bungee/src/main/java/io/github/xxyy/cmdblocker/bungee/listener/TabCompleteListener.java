@@ -27,6 +27,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
 import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
+import io.github.xxyy.cmdblocker.common.config.CBUConfig;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.util.Iterator;
@@ -56,6 +57,10 @@ public class TabCompleteListener implements Listener {
             sender = (CommandSender) evt.getSender();
         }
 
+        if(!plugin.canAccessWithMessage(evt.getCursor(), sender)) {
+            return;
+        }
+
         evt.setCancelled(removeBlocked(evt.getSuggestions(), sender));
     }
 
@@ -76,7 +81,7 @@ public class TabCompleteListener implements Listener {
     //Returns whether the event is to be cancelled
     private boolean removeBlocked(List<String> suggestions, CommandSender messageRecipient) {
         if (messageRecipient != null &&
-                messageRecipient.hasPermission(plugin.getConfigAdapter().getBypassPermission())) {
+                messageRecipient.hasPermission(config().getBypassPermission())) {
             return false; //Don't need to check if sender has bypass permission
         }
 
@@ -84,9 +89,8 @@ public class TabCompleteListener implements Listener {
         while (it.hasNext()) {
             String suggestion = it.next();
 
-            String rawCommand = CommandHelper.getRawCommand(suggestion);
-            if (plugin.getConfigAdapter().isBlocked(rawCommand)) {
-                if (plugin.getConfigAdapter().isTabRestrictiveMode()) {
+            if (isBlockedCommand(suggestion)) {
+                if (config().isTabRestrictiveMode()) {
                     plugin.sendTabErrorMessageIfEnabled(messageRecipient);
                     return true;
                 } else {
@@ -96,5 +100,14 @@ public class TabCompleteListener implements Listener {
         }
 
         return false;
+    }
+
+    private boolean isBlockedCommand(String suggestion) {
+        return plugin.isCommand(suggestion) &&
+                config().isBlocked(CommandHelper.getRawCommand(suggestion));
+    }
+
+    private CBUConfig config() {
+        return plugin.getConfigAdapter();
     }
 }
