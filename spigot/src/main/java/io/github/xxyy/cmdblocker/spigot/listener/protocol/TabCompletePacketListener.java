@@ -29,6 +29,7 @@ import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
 import org.bukkit.plugin.Plugin;
 
+import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 
@@ -67,6 +68,8 @@ public final class TabCompletePacketListener implements PacketListener {
             PacketContainer packet = event.getPacket();
             StructureModifier<String> textModifier = packet.getSpecificModifier(String.class);
 
+            //We need to check the initial chat message, since tab completions themselves don't
+            //include the command they're for by default
             this.plugin.handleEvent(event, event.getPlayer(), /* chatMessage */ textModifier.read(0));
         }
     }
@@ -92,7 +95,7 @@ public final class TabCompletePacketListener implements PacketListener {
             //Nothing else than server TAB_COMPLETE should come our way
             //Packet: {(VarInt)Count, Matched command} http://wiki.vg/Protocol#Tab-Complete
 
-            if (event.getPlayer().hasPermission(this.plugin.getConfigAdapter().getBypassPermission())) {
+            if (event.getPlayer().hasPermission(config().getBypassPermission())) {
                 return;
             }
 
@@ -105,8 +108,8 @@ public final class TabCompletePacketListener implements PacketListener {
 
 
             for (String matchedCommand : matchedCommands) {
-                if (this.plugin.getConfigAdapter().isBlocked(CommandHelper.getRawCommand(matchedCommand))) { //Not using canExecute to save some permission checks (Single one done above)
-                    if (this.plugin.getConfigAdapter().isTabRestrictiveMode()) { //Hides all replies if anything is matched
+                if (isBlockedCommand(matchedCommand)) { //Not using canExecute to save some permission checks (Single one done above)
+                    if (config().isTabRestrictiveMode()) { //Hides all replies if anything is matched
                         this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
                         event.setCancelled(true);
                         return;
@@ -128,5 +131,13 @@ public final class TabCompletePacketListener implements PacketListener {
                 }
             }
         }
+    }
+
+    private boolean isBlockedCommand(String matchedCommand) {
+        return matchedCommand.startsWith("/") && config().isBlocked(CommandHelper.getRawCommand(matchedCommand));
+    }
+
+    private ConfigAdapter config() {
+        return this.plugin.getConfigAdapter();
     }
 }
