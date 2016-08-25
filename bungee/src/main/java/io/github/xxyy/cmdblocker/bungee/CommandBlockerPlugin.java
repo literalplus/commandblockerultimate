@@ -91,8 +91,8 @@ public class CommandBlockerPlugin extends Plugin {
      * @return whether the execution should be cancelled
      */
     public boolean handleCommandExecution(String command, Connection connection) {
-        return connection instanceof CommandSender &&
-                canAccessWithMessage(command, (CommandSender) connection);
+        return !(connection instanceof CommandSender) ||
+                !canAccessWithMessage(command, (CommandSender) connection);
     }
 
     public boolean canAccessWithMessage(String command, CommandSender commandSender) {
@@ -125,7 +125,7 @@ public class CommandBlockerPlugin extends Plugin {
         }
     }
 
-    public void sendErrorMessageIfEnabled(CommandSender sender, String command) {
+    private void sendErrorMessageIfEnabled(CommandSender sender, String command) {
         if (getConfigAdapter().isShowErrorMessage() && sender != null) {
             sender.sendMessage( //Send message
                     unescapeCommandMessage(getConfigAdapter().getErrorMessage(), sender, command)
