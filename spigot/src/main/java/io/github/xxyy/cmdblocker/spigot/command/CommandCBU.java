@@ -49,7 +49,7 @@ public class CommandCBU implements CommandExecutor {
             return handleReloadConfig(sender);
         } else if (args[0].equalsIgnoreCase("block")) {
             return handleBlock(sender, args);
-        } else if (args[0].equalsIgnoreCase("unblock")) {
+        } else if (args[0].equalsIgnoreCase("free")) {
             return handleUnblock(sender, args);
         } else {
             sender.sendMessage(ChatColor.RED + "Unknown action: /" + label + " " + args[0]);
@@ -61,15 +61,15 @@ public class CommandCBU implements CommandExecutor {
 
     private boolean sendBannerMessageTo(CommandSender sender) {
         sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate " + CommandBlockerPlugin.PLUGIN_VERSION_STRING);
-        sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v2.");
-        sender.sendMessage(ChatColor.DARK_AQUA + " Get the source at https://github.com/xxyy/commandblockerultimate");
+        sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v2. (Source: https://git.io/fesVwQ)");
         sendUsageMessageTo(sender);
         return true;
     }
 
     private void sendUsageMessageTo(CommandSender sender) {
-        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu reloadcfg - Reloads config file");
-        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu block [command] - Blocks a command on-the-fly");
+        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu reloadcfg         - Reloads config file");
+        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu block [command]  - Blocks a command on the fly");
+        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu free [command]  - Unblocks a command on the fly");
     }
 
     private boolean handleReloadConfig(CommandSender sender) {
