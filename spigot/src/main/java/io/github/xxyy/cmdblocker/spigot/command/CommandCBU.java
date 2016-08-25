@@ -41,39 +41,95 @@ public class CommandCBU implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length == 0){
-            sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate " + CommandBlockerPlugin.PLUGIN_VERSION_STRING);
-            sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v2.");
-            sender.sendMessage(ChatColor.DARK_AQUA + " Get the source at https://github.com/xxyy/commandblockerultimate");
-            sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu <reloadcfg>");
-            return false;
+        if (args.length == 0) {
+            return sendBannerMessageTo(sender);
         }
 
-        if (args[0].equalsIgnoreCase("reloadcfg")){
-            try {
-                plugin.replaceConfigAdapter(); //Replace config adapter with newly-read file
-            } catch (Exception e) { //Apparently, Yamler throws all kinds of exceptions
-                e.printStackTrace(); //Oops, the sender did something wrong...Send them a huge block of text to make sure they notice
-                sender.sendMessage(ChatColor.RED + "Your configuration file is invalid! See the server log for more details.");
-                sender.sendMessage(ChatColor.RED + "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue.");
-                sender.sendMessage(ChatColor.RED + "If not, you can get help at https://github.com/xxyy/commandblockerultimate/issues");
-                sender.sendMessage(ChatColor.YELLOW + "To protect your server from breaking, we have restored your previous configuration " +
-                        "for the time being - It will be lost if you restart or reload your server. Execute this command again if you " +
-                        "think you've fixed your config file.");
-                sender.sendMessage(ChatColor.YELLOW + "Check the FAQ at " +
-                        "https://github.com/xxyy/commandblockerultimate/wiki/Frequently-Asked-Questions for some " +
-                        "common problems.");
-                return true;
-            }
-            //Phew, no exception. Inform the sender that everything went well
-            sender.sendMessage(ChatColor.GREEN + "The configuration file has been reloaded successfully.");
-
-            return true;
+        if (args[0].equalsIgnoreCase("reloadcfg")) {
+            return handleReloadConfig(sender);
+        } else if (args[0].equalsIgnoreCase("block")) {
+            return handleBlock(sender, args);
+        } else if (args[0].equalsIgnoreCase("unblock")) {
+            return handleUnblock(sender, args);
         } else {
             sender.sendMessage(ChatColor.RED + "Unknown action: /" + label + " " + args[0]);
-            sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu <reloadcfg>");
+            sendUsageMessageTo(sender);
         }
 
-        return false;
+        return true;
+    }
+
+    private boolean sendBannerMessageTo(CommandSender sender) {
+        sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate " + CommandBlockerPlugin.PLUGIN_VERSION_STRING);
+        sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v2.");
+        sender.sendMessage(ChatColor.DARK_AQUA + " Get the source at https://github.com/xxyy/commandblockerultimate");
+        sendUsageMessageTo(sender);
+        return true;
+    }
+
+    private void sendUsageMessageTo(CommandSender sender) {
+        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu reloadcfg - Reloads config file");
+        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu block [command] - Blocks a command on-the-fly");
+    }
+
+    private boolean handleReloadConfig(CommandSender sender) {
+        try {
+            plugin.replaceConfigAdapter();
+        } catch (Exception e) { //Apparently, Yamler throws all kinds of exceptions
+            return handleConfigLoadError(sender, e);
+        }
+        sender.sendMessage(ChatColor.GREEN + "The configuration file has been reloaded successfully.");
+        return true;
+    }
+
+    private boolean handleConfigLoadError(CommandSender sender, Exception e) {
+        e.printStackTrace(); //Oops, the sender did something wrong...Send them a huge block of text to make sure they notice
+        sender.sendMessage(ChatColor.RED + "Your configuration file is invalid! See the server log for more details.");
+        sender.sendMessage(ChatColor.RED + "Maybe http://yaml-online-parser.appspot.com/ can help you diagnose your issue.");
+        sender.sendMessage(ChatColor.RED + "If not, you can get help at https://github.com/xxyy/commandblockerultimate/issues");
+        sender.sendMessage(ChatColor.YELLOW + "To protect your server from breaking, we have restored your previous configuration " +
+                "for the time being - It will be lost if you restart or reload your server. Execute this command again if you " +
+                "think you've fixed your config file.");
+        sender.sendMessage(ChatColor.YELLOW + "Check the FAQ at " +
+                "https://github.com/xxyy/commandblockerultimate/wiki/Frequently-Asked-Questions for some " +
+                "common problems.");
+        return true;
+    }
+
+    private boolean handleBlock(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            return sendTooFewArgumentsMessageTo(sender);
+        }
+        plugin.getConfigAdapter().getBlockedCommands().add(args[1]);
+        sender.sendMessage(ChatColor.GREEN + "Added /" + args[1] + " to blocked commands.");
+        attemptSaveAndNotifyOnFailure(sender);
+        return true;
+    }
+
+    private boolean sendTooFewArgumentsMessageTo(CommandSender sender) {
+        sender.sendMessage("Too few arguments!");
+        sendUsageMessageTo(sender);
+        return true;
+    }
+
+    private boolean handleUnblock(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            return sendTooFewArgumentsMessageTo(sender);
+        }
+        boolean wasBlocked = plugin.getConfigAdapter().getBlockedCommands().remove(args[1]);
+        if (wasBlocked) {
+            sender.sendMessage(ChatColor.GREEN + "Removed /" + args[1] + " from blocked commands.");
+        } else {
+            sender.sendMessage(ChatColor.RED + "/" + args[1] + " is not curently blocked.");
+        }
+        attemptSaveAndNotifyOnFailure(sender);
+        return true;
+    }
+
+    private void attemptSaveAndNotifyOnFailure(CommandSender sender) {
+        if (!plugin.getConfigAdapter().trySave()) {
+            sender.sendMessage(ChatColor.RED + "However, the change could not be saved because of " +
+                    "an error. See the server log for details.");
+        }
     }
 }
