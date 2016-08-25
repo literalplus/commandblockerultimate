@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +49,8 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Comments({"Define what commands should be blocked in the following property: (without leading slash)",
             "With Spigot/Bukkit, if you specify a command, its aliases will be blocked also. (Example: 'tell' will also block 'msg', 'bukkit:tell', etc.)",
             "On BungeeCord, only BungeeCord command aliases can be blocked - If you want to block Spigot/Bukkit, you'll have to write all aliases down."})
-    private Set<String> blockedCommands = new HashSet<>(Arrays.asList("help", "plugins", "version"));
+    private List<String> rawTargetCommands = new ArrayList<>(Arrays.asList("help", "plugins", "version"));
+    private transient Set<String> blockedCommands = new HashSet<>(rawTargetCommands); //has aliases
 
     @Path(ConfigAdapter.BYPASS_PERMISSION_PATH)
     @Comment("Define the permission that a player needs to bypass the protection: (Default: cmdblock.bypass)")
@@ -147,8 +149,9 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
+        blockedCommands.clear();
 
-        for (String requestedCommand : new ArrayList<>(blockedCommands)) {
+        for (String requestedCommand : new ArrayList<>(rawTargetCommands)) {
             blockedCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }
@@ -167,10 +170,12 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Override
     public void addBlockedCommand(String command) {
         getBlockedCommands().add(command);
+        rawTargetCommands.add(command);
     }
 
     @Override
     public boolean removeBlockedCommand(String command) {
+        rawTargetCommands.remove(command);
         return getBlockedCommands().remove(command);
     }
 

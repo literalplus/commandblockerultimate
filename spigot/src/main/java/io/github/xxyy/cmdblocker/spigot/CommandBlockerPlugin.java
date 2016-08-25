@@ -29,6 +29,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
+import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
@@ -226,5 +227,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
                 "If you want this message to be omitted, set 'prevent-tab' to false in the plugin's config file. " +
                 "Get ProtocolLib here: http://dev.bukkit.org/bukkit-plugins/protocollib/");
         getLogger().warning("Tab-completion will NOT be prevented!");
+    }
+
+    public AliasResolver getAliasResolver() {
+        return aliasResolver;
     }
 }

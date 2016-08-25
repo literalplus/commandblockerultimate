@@ -128,10 +128,15 @@ public class SpigotCBUConfig implements ConfigAdapter {
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
+        blockedCommands.clear();
 
-        for (String requestedCommand : new ArrayList<>(blockedCommands)) {
-            blockedCommands.addAll(aliasResolver.resolve(requestedCommand)); //resolve() doesn't include the argument
+        for (String requestedCommand : new ArrayList<>(rawTargetCommands)) {
+            resolveAliasesOf(requestedCommand, aliasResolver);
         }
+    }
+
+    private void resolveAliasesOf(String requestedCommand, AliasResolver aliasResolver) {
+        blockedCommands.addAll(aliasResolver.resolve(requestedCommand));
     }
 
     @Override

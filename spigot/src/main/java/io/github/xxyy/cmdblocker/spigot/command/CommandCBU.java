@@ -24,6 +24,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 
 /**
@@ -100,10 +101,15 @@ public class CommandCBU implements CommandExecutor {
         if (args.length < 2) {
             return sendTooFewArgumentsMessageTo(sender);
         }
-        plugin.getConfigAdapter().addBlockedCommand(args[1]);
+        config().addBlockedCommand(args[1]);
+        config().resolveAliases(plugin.getAliasResolver());
         sender.sendMessage(ChatColor.GREEN + "Added /" + args[1] + " to blocked commands.");
         attemptSaveAndNotifyOnFailure(sender);
         return true;
+    }
+
+    private ConfigAdapter config() {
+        return plugin.getConfigAdapter();
     }
 
     private boolean sendTooFewArgumentsMessageTo(CommandSender sender) {
@@ -116,18 +122,23 @@ public class CommandCBU implements CommandExecutor {
         if (args.length < 2) {
             return sendTooFewArgumentsMessageTo(sender);
         }
-        boolean wasBlocked = plugin.getConfigAdapter().removeBlockedCommand(args[1]);
-        if (wasBlocked) {
-            sender.sendMessage(ChatColor.GREEN + "Removed /" + args[1] + " from blocked commands.");
-        } else {
-            sender.sendMessage(ChatColor.RED + "/" + args[1] + " is not curently blocked.");
-        }
+        boolean wasBlocked = config().removeBlockedCommand(args[1]);
+        config().resolveAliases(plugin.getAliasResolver());
+        notifyUnblockResult(sender, args[1], wasBlocked);
         attemptSaveAndNotifyOnFailure(sender);
         return true;
     }
 
+    private void notifyUnblockResult(CommandSender sender, String commandName, boolean wasBlocked) {
+        if (wasBlocked) {
+            sender.sendMessage(ChatColor.GREEN + "Removed /" + commandName + " from blocked commands.");
+        } else {
+            sender.sendMessage(ChatColor.RED + "/" + commandName + " is not curently blocked.");
+        }
+    }
+
     private void attemptSaveAndNotifyOnFailure(CommandSender sender) {
-        if (!plugin.getConfigAdapter().trySave()) {
+        if (!config().trySave()) {
             sender.sendMessage(ChatColor.RED + "However, the change could not be saved because of " +
                     "an error. See the server log for details.");
         }
