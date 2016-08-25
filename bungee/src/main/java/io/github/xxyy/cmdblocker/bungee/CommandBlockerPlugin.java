@@ -63,7 +63,6 @@ public class CommandBlockerPlugin extends Plugin {
         getProxy().getScheduler().schedule(this, new Runnable() { //Hacky way to execute code after all plugins have been loaded
             @Override
             public void run() {
-                aliasResolver.refreshMap();
                 configAdapter.resolveAliases(aliasResolver);
             }
         }, 5, TimeUnit.SECONDS); //If any plugins takes longer than this to load, the author is doing something severely wrong

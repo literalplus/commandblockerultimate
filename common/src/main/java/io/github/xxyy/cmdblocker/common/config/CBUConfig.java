@@ -130,6 +130,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     public void initialize() throws InvalidConfigException {
         try {
             this.init();
+            blockedCommands.addAll(rawTargetCommands); //if aliases are not resolved
         } catch (InvalidConfigurationException e) {
             throw new InvalidConfigException(e);
         }
@@ -170,6 +171,9 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public void addBlockedCommand(String command) {
+        if(rawTargetCommands.contains(command)) {
+            return;
+        }
         getBlockedCommands().add(command);
         rawTargetCommands.add(command);
     }
