@@ -41,10 +41,6 @@ public class CommandListener implements Listener {
 
     @EventHandler
     public void onChat(ChatEvent evt) {
-        if (!evt.isCommand()){
-            return;
-        }
-
         evt.setCancelled(plugin.handleCommandExecution(evt.getMessage(), evt.getSender()));
     }
 }
