@@ -134,6 +134,17 @@ public class CBUConfig extends Config implements ConfigAdapter {
     }
 
     @Override
+    public boolean trySave() {
+        try {
+            save();
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public void resolveAliases(AliasResolver aliasResolver) {
         aliasResolver.refreshMap();
 

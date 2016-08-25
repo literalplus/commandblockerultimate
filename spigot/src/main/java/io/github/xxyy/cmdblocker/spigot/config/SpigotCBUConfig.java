@@ -88,24 +88,45 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
         //Load options to cache
         blockedCommands = new HashSet<>();
-        if (config.contains(ConfigAdapter.TARGET_COMMANDS_PATH)){
-            blockedCommands.addAll(config.getStringList(ConfigAdapter.TARGET_COMMANDS_PATH));
+        if (config.contains(TARGET_COMMANDS_PATH)){
+            blockedCommands.addAll(config.getStringList(TARGET_COMMANDS_PATH));
         } else {
             Collections.addAll(blockedCommands, "?", "help", "plugins", "pl", "version", "ver", "about");
         }
 
-        bypassPermission = config.getString(ConfigAdapter.BYPASS_PERMISSION_PATH, "cmdblock.bypass");
-        showErrorMessage = config.getBoolean(ConfigAdapter.SHOW_ERROR_MESSAGE_PATH, true);
-        errorMessage = config.getString(ConfigAdapter.ERROR_MESSAGE_PATH,
+        bypassPermission = config.getString(BYPASS_PERMISSION_PATH, "cmdblock.bypass");
+        showErrorMessage = config.getBoolean(SHOW_ERROR_MESSAGE_PATH, true);
+        errorMessage = config.getString(ERROR_MESSAGE_PATH,
                 "&cI am sorry, but you are not permitted to execute this command.");
-        preventTab = config.getBoolean(ConfigAdapter.PREVENT_TAB_PATH, true);
-        tabRestrictiveMode = config.getBoolean(ConfigAdapter.TAB_RESTRICTIVE_MODE_PATH, false);
+        preventTab = config.getBoolean(PREVENT_TAB_PATH, true);
+        tabRestrictiveMode = config.getBoolean(TAB_RESTRICTIVE_MODE_PATH, false);
 
-        notifyBypass = config.getBoolean(ConfigAdapter.NOTIFY_BYPASS_PATH, false);
-        bypassMessage = config.getString(ConfigAdapter.BYPASS_MESSAGE_PATH,
+        notifyBypass = config.getBoolean(NOTIFY_BYPASS_PATH, false);
+        bypassMessage = config.getString(BYPASS_MESSAGE_PATH,
                 "&c[CBU] This command is blocked. Executing anyways since you have permission.");
-        tabErrorMessage = config.getString(ConfigAdapter.TAB_ERROR_MESSAGE_PATH,
+        tabErrorMessage = config.getString(TAB_ERROR_MESSAGE_PATH,
                 "&cI am sorry, but I cannot let you do this, Dave.");
+    }
+
+    @Override
+    public boolean trySave() {
+        save();
+        return true;
+    }
+
+    @Override
+    public void save() {
+        FileConfiguration config = plugin.getConfig();
+        config.set(TARGET_COMMANDS_PATH, blockedCommands);
+        config.set(BYPASS_PERMISSION_PATH, bypassPermission);
+        config.set(SHOW_ERROR_MESSAGE_PATH, showErrorMessage);
+        config.set(ERROR_MESSAGE_PATH, errorMessage);
+        config.set(PREVENT_TAB_PATH, preventTab);
+        config.set(TAB_RESTRICTIVE_MODE_PATH, tabRestrictiveMode);
+        config.set(NOTIFY_BYPASS_PATH, notifyBypass);
+        config.set(BYPASS_MESSAGE_PATH, bypassMessage);
+        config.set(TAB_ERROR_MESSAGE_PATH, tabErrorMessage);
+        plugin.saveConfig();
     }
 
     @Override
