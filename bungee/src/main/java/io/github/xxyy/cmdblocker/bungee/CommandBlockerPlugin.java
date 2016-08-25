@@ -32,6 +32,7 @@ import io.github.xxyy.cmdblocker.bungee.command.CommandGCBU;
 import io.github.xxyy.cmdblocker.bungee.config.BungeeAliasResolver;
 import io.github.xxyy.cmdblocker.bungee.listener.CommandListener;
 import io.github.xxyy.cmdblocker.bungee.listener.TabCompleteListener;
+import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
@@ -175,5 +176,9 @@ public class CommandBlockerPlugin extends Plugin {
         newAdapter.init();
         this.configAdapter = newAdapter;
         configAdapter.resolveAliases(aliasResolver);
+    }
+
+    public AliasResolver getAliasResolver() {
+        return aliasResolver;
     }
 }
