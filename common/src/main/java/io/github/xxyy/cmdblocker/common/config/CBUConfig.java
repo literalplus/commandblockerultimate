@@ -152,6 +152,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
         blockedCommands.clear();
 
         for (String requestedCommand : new ArrayList<>(rawTargetCommands)) {
+            blockedCommands.add(requestedCommand);
             blockedCommands.addAll(aliasResolver.resolve(requestedCommand));
         }
     }
