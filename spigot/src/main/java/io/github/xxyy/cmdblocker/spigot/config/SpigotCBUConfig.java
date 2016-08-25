@@ -85,6 +85,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
         plugin.saveDefaultConfig();
         plugin.getLogger().warning("Using the simplified configuration adapter! When CommandBlockerUltimate updates, new " +
                 "options won't be in your configuration file!");
+        plugin.reloadConfig();
 
         //Load options to cache
         blockedCommands = new HashSet<>();
