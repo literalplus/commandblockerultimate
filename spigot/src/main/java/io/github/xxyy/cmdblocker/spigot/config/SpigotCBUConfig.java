@@ -88,7 +88,6 @@ public class SpigotCBUConfig implements ConfigAdapter {
         blockedCommands = new HashSet<>();
         config.addDefault(TARGET_COMMANDS_PATH, Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about"));
         rawTargetCommands = config.getStringList(TARGET_COMMANDS_PATH);
-        blockedCommands.addAll(rawTargetCommands);
 
         bypassPermission = config.getString(BYPASS_PERMISSION_PATH, "cmdblock.bypass");
         showErrorMessage = config.getBoolean(SHOW_ERROR_MESSAGE_PATH, true);
@@ -136,6 +135,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
     }
 
     private void resolveAliasesOf(String requestedCommand, AliasResolver aliasResolver) {
+        blockedCommands.add(requestedCommand);
         blockedCommands.addAll(aliasResolver.resolve(requestedCommand));
     }
 
