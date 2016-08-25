@@ -80,12 +80,11 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     @Override
     public void initialize() throws InvalidConfigException {
-        FileConfiguration config = plugin.getConfig();
-
         plugin.saveDefaultConfig();
         plugin.getLogger().warning("Using the simplified configuration adapter! When CommandBlockerUltimate updates, new " +
                 "options won't be in your configuration file!");
         plugin.reloadConfig();
+        FileConfiguration config = plugin.getConfig();
 
         //Load options to cache
         blockedCommands = new HashSet<>();
