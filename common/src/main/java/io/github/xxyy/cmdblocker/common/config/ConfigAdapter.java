@@ -102,6 +102,22 @@ public interface ConfigAdapter {
     Collection<String> getBlockedCommands();
 
     /**
+     * Adds a blocked command to this adapter's set of blocked commands. If the command is already
+     * in the set, this method does nothing.
+     *
+     * @param command the command to add
+     */
+    void addBlockedCommand(String command);
+
+    /**
+     * Removes a blocked command from this adapter's set of blocked commands.
+     *
+     * @param command the command to remove
+     * @return whether the set contained given command
+     */
+    boolean removeBlockedCommand(String command);
+
+    /**
      * @return the permission a player must have to execute blocked commands
      */
     String getBypassPermission();

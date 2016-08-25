@@ -100,7 +100,7 @@ public class CommandCBU implements CommandExecutor {
         if (args.length < 2) {
             return sendTooFewArgumentsMessageTo(sender);
         }
-        plugin.getConfigAdapter().getBlockedCommands().add(args[1]);
+        plugin.getConfigAdapter().addBlockedCommand(args[1]);
         sender.sendMessage(ChatColor.GREEN + "Added /" + args[1] + " to blocked commands.");
         attemptSaveAndNotifyOnFailure(sender);
         return true;
@@ -116,7 +116,7 @@ public class CommandCBU implements CommandExecutor {
         if (args.length < 2) {
             return sendTooFewArgumentsMessageTo(sender);
         }
-        boolean wasBlocked = plugin.getConfigAdapter().getBlockedCommands().remove(args[1]);
+        boolean wasBlocked = plugin.getConfigAdapter().removeBlockedCommand(args[1]);
         if (wasBlocked) {
             sender.sendMessage(ChatColor.GREEN + "Removed /" + args[1] + " from blocked commands.");
         } else {

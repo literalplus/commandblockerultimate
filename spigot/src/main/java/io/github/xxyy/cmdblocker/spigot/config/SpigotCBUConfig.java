@@ -28,18 +28,21 @@ import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * This is an alternative implementation of {@link io.github.xxyy.cmdblocker.common.config.CBUConfig} using the default
- * Spigot YamlConfiguration API. This class is used as a fallback if Yamler is not available.
+ * This is an alternative implementation of {@link io.github.xxyy.cmdblocker.common.config.CBUConfig}
+ * using the default Spigot YamlConfiguration API. This class is used as a fallback if Yamler is not
+ * available.
  * <p/>
- * Some comfort features, such as not reloading the file on a syntax error and automatic updating of the file are not
- * implemented because that would add unnecessary extra complexity and those are available out-of-the-box with Yamler.
+ * Some comfort features, such as not reloading the file on a syntax error and automatic updating of
+ * the file are not implemented because that would add unnecessary extra complexity and those are
+ * available out-of-the-box with Yamler.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 22.7.14
@@ -47,20 +50,15 @@ import java.util.logging.Logger;
 public class SpigotCBUConfig implements ConfigAdapter {
 
     private final JavaPlugin plugin;
-
+    private List<String> rawTargetCommands;
     private Set<String> blockedCommands;
-
     private String bypassPermission;
-
     private boolean showErrorMessage;
     private String errorMessage;
-
     private boolean preventTab;
     private boolean tabRestrictiveMode;
-
     private boolean notifyBypass;
     private String bypassMessage;
-
     private String tabErrorMessage;
 
     public SpigotCBUConfig(JavaPlugin plugin) {
@@ -88,11 +86,9 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
         //Load options to cache
         blockedCommands = new HashSet<>();
-        if (config.contains(TARGET_COMMANDS_PATH)){
-            blockedCommands.addAll(config.getStringList(TARGET_COMMANDS_PATH));
-        } else {
-            Collections.addAll(blockedCommands, "?", "help", "plugins", "pl", "version", "ver", "about");
-        }
+        config.addDefault(TARGET_COMMANDS_PATH, Arrays.asList("?", "help", "plugins", "pl", "version", "ver", "about"));
+        rawTargetCommands = config.getStringList(TARGET_COMMANDS_PATH);
+        blockedCommands.addAll(rawTargetCommands);
 
         bypassPermission = config.getString(BYPASS_PERMISSION_PATH, "cmdblock.bypass");
         showErrorMessage = config.getBoolean(SHOW_ERROR_MESSAGE_PATH, true);
@@ -117,7 +113,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
     @Override
     public void save() {
         FileConfiguration config = plugin.getConfig();
-        config.set(TARGET_COMMANDS_PATH, blockedCommands);
+        config.set(TARGET_COMMANDS_PATH, rawTargetCommands);
         config.set(BYPASS_PERMISSION_PATH, bypassPermission);
         config.set(SHOW_ERROR_MESSAGE_PATH, showErrorMessage);
         config.set(ERROR_MESSAGE_PATH, errorMessage);
@@ -147,6 +143,18 @@ public class SpigotCBUConfig implements ConfigAdapter {
     @Override
     public Collection<String> getBlockedCommands() {
         return blockedCommands;
+    }
+
+    @Override
+    public void addBlockedCommand(String command) {
+        getBlockedCommands().add(command);
+        rawTargetCommands.add(command);
+    }
+
+    @Override
+    public boolean removeBlockedCommand(String command) {
+        rawTargetCommands.remove(command);
+        return getBlockedCommands().remove(command);
     }
 
     @Override

@@ -165,6 +165,16 @@ public class CBUConfig extends Config implements ConfigAdapter {
     }
 
     @Override
+    public void addBlockedCommand(String command) {
+        getBlockedCommands().add(command);
+    }
+
+    @Override
+    public boolean removeBlockedCommand(String command) {
+        return getBlockedCommands().remove(command);
+    }
+
+    @Override
     public String getBypassPermission() {
         return bypassPermission;
     }
