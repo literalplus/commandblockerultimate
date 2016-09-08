@@ -134,7 +134,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     public void sendTabErrorMessageIfEnabled(final CommandSender target) {
-        if (getConfigAdapter().isShowErrorMessage()) {
+        if (getConfigAdapter().isShowTabErrorMessage()) {
             target.sendMessage(
                     unescapeCommandMessage(getConfigAdapter().getTabErrorMessage(), target, "<command>")
             );
