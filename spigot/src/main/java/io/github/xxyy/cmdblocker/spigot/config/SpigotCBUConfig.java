@@ -54,6 +54,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
     private Set<String> blockedCommands;
     private String bypassPermission;
     private boolean showErrorMessage;
+    private boolean showTabErrorMessage;
     private String errorMessage;
     private boolean preventTab;
     private boolean tabRestrictiveMode;
@@ -92,6 +93,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
         bypassPermission = config.getString(BYPASS_PERMISSION_PATH, "cmdblock.bypass");
         showErrorMessage = config.getBoolean(SHOW_ERROR_MESSAGE_PATH, true);
+        showTabErrorMessage = config.getBoolean(SHOW_TAB_ERROR_MESSAGE_PATH, true);
         errorMessage = config.getString(ERROR_MESSAGE_PATH,
                 "&cI am sorry, but you are not permitted to execute this command.");
         preventTab = config.getBoolean(PREVENT_TAB_PATH, true);
@@ -116,6 +118,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
         config.set(TARGET_COMMANDS_PATH, rawTargetCommands);
         config.set(BYPASS_PERMISSION_PATH, bypassPermission);
         config.set(SHOW_ERROR_MESSAGE_PATH, showErrorMessage);
+        config.set(SHOW_TAB_ERROR_MESSAGE_PATH, showTabErrorMessage);
         config.set(ERROR_MESSAGE_PATH, errorMessage);
         config.set(PREVENT_TAB_PATH, preventTab);
         config.set(TAB_RESTRICTIVE_MODE_PATH, tabRestrictiveMode);
@@ -174,6 +177,11 @@ public class SpigotCBUConfig implements ConfigAdapter {
     @Override
     public boolean isShowErrorMessage() {
         return showErrorMessage;
+    }
+
+    @Override
+    public boolean isShowTabErrorMessage() {
+        return showTabErrorMessage;
     }
 
     @Override

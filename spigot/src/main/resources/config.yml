@@ -14,6 +14,10 @@ bypass-permission: cmdblock.bypass
 # Should the plugin send an error message if one is not allowed to execute a command?
 show-error-message: true
 
+# @since 1.5.1
+# Should the plugin send an error message if one is not allowed to tab-complete a command?
+show-tab-error-message: true
+
 # What should that message be? (Use & for color codes, HTML escape codes accepted)
 # <command> will be replaced with the blocked command's name
 # Example: &c&lError message &euro;&auml;&#00A7;

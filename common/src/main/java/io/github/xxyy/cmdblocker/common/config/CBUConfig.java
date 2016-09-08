@@ -57,8 +57,12 @@ public class CBUConfig extends Config implements ConfigAdapter {
     private String bypassPermission = "cmdblock.bypass";
 
     @Path(ConfigAdapter.SHOW_ERROR_MESSAGE_PATH)
-    @Comment("Should the plugin send an error message if one is not allowed to execute/tab-complete a command? (Default: true)")
+    @Comment("Should the plugin send an error message if one is not allowed to execute a command? (Default: true)")
     private boolean showErrorMessage = true;
+
+    @Path(ConfigAdapter.SHOW_TAB_ERROR_MESSAGE_PATH)
+    @Comments({"@since 1.5.1", "Should the plugin send an error message if one is not allowed to tab-complete a command? (Default: true)"})
+    private boolean showTabErrorMessage = false;
 
     @Path(ConfigAdapter.ERROR_MESSAGE_PATH)
     @Comments({"What should that message be? (Use & for color codes, HTML escape codes accepted)",
@@ -192,6 +196,11 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Override
     public boolean isShowErrorMessage() {
         return showErrorMessage;
+    }
+
+    @Override
+    public boolean isShowTabErrorMessage() {
+        return showTabErrorMessage;
     }
 
     @Override

@@ -33,6 +33,7 @@ public interface ConfigAdapter {
 
     //Path definitions
     String SHOW_ERROR_MESSAGE_PATH = "show-error-message";
+    String SHOW_TAB_ERROR_MESSAGE_PATH = "show-tab-error-message";
     String TARGET_COMMANDS_PATH = "target-commands";
     String BYPASS_PERMISSION_PATH = "bypass-permission";
     String ERROR_MESSAGE_PATH = "error-message";
@@ -127,6 +128,12 @@ public interface ConfigAdapter {
      * a blocked command
      */
     boolean isShowErrorMessage();
+
+    /**
+     * @return whether the plugin will show error messages when somebody is not permitted to
+     * tab-complete a blocked command
+     */
+    boolean isShowTabErrorMessage();
 
     /**
      * @return the error message displayed when somebody tries to execute a blocked command
