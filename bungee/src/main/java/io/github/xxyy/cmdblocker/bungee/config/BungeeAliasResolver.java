@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2015 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2017 Philipp Nowak / Literallie (xxyy.github.io)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@ import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -62,7 +63,7 @@ public class BungeeAliasResolver implements AliasResolver {
             return ImmutableList.of();
         }
 
-        List<String> rtrn = Arrays.asList(foundCommand.getAliases()); //Aliases are stored in lower case
+        List<String> rtrn = new ArrayList(Arrays.asList(foundCommand.getAliases())); //Aliases are stored in lower case
 
         rtrn.add(foundCommand.getName()); //Also stored in lower case
         rtrn.remove(rawName); //Note that the argument must not always be the real name - users tend to specify aliases
