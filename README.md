@@ -45,15 +45,15 @@ git clone https://github.com/xxyy/commandblockerultimate.git
 mvn clean package
 ````
 
-Or you could just head over to my [Continuous Integration Server](http://ci.nowak-at.net/job/public~cmdblkult/) and get your free executable TODAY!
+Or you could just head over to my [Continuous Integration Server](https://ci.l1t.li/job/public~cmdblkult/) and get your free executable TODAY!
 
-For fully tested versions, check out the [Spigot Resource entry](http://www.spigotmc.org/resources/command-blocker-ultimate.296/) for this plugin!
+For fully tested versions, check out the [Spigot Resource entry](https://www.spigotmc.org/resources/command-blocker-ultimate.296/) for this plugin!
 
 (But there's more! If you download RIGHT NOW, you can get plenty of other open-source plugins and other stuff FOR FREE at https://github.com/xxyy !!!1)
 
 Support
 =======
-If encounter any problem with this plugin, just [join #lit on irc.spi.gt](http://irc.spi.gt/iris/?channels=lit), ask and wait patiently for a reply.
+If encounter any problem with this plugin, just [open an issue :)](https://github.com/xxyy/commandblockerultimate/issues)
 
 Contribution
 ============
@@ -63,7 +63,7 @@ License
 =======
 ````
 Command Blocker Ultimate
-Copyright (C) 2014-2015 Philipp Nowak / Literallie (xxyy.github.io)
+Copyright (C) 2014-2017 Philipp Nowak / Literallie (git@l1t.li)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
