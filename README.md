@@ -37,7 +37,7 @@ Features
 
 (*) You need to install [ProtocolLib](http://dev.bukkit.org/bukkit-plugins/protocollib/) for that to work
 
-Compilation [![Build Status](http://ci.nowak-at.net/job/public~cmdblkult/badge/icon)](http://ci.nowak-at.net/job/public~cmdblkult/)
+Compilation [![Build Status](http://ci.l1t.li/job/public~cmdblkult/badge/icon)](http://ci.l1t.li/job/public~cmdblkult/)
 ===========
 You could compile it yourself by doing
 ````
