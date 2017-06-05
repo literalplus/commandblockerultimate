@@ -36,14 +36,14 @@
 
     <ciManagement>
         <system>jenkins</system>
-        <url>https://ci.nowak-at.net/job/public~cmdblkult/</url>
+        <url>https://ci.l1t.li/job/public~cmdblkult/</url>
     </ciManagement>
 
     <distributionManagement>
-        <downloadUrl>https://ci.nowak-at.net/job/public~cmdblkult/</downloadUrl>
+        <downloadUrl>https://ci.l1t.li/job/public~cmdblkult/</downloadUrl>
         <repository>
             <id>xxyy-repo</id>
-            <url>https://repo.nowak-at.net/xxyy-public</url>
+            <url>https://repo.l1t.li/xxyy-public</url>
         </repository>
     </distributionManagement>
 
@@ -104,7 +104,7 @@
         <repository> <!-- Yamler -->
             <id>cubespace-repo</id>
             <!--<url>http://nexus.cube-space.net/content/groups/public/</url>-->
-            <url>https://repo.nowak-at.net/ext-release-local/</url>
+            <url>https://repo.l1t.li/ext-release-local/</url>
             <!--
                  The remote repo is down at the time of writing, using proxy for now.
                  If you're reading this and the remote is back up, you can assume that
