@@ -27,6 +27,8 @@ import org.bukkit.command.CommandSender;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
 
+import java.util.Collection;
+
 /**
  * Represents the /cbu command which is an utility command for CBU.
  *
@@ -53,6 +55,8 @@ public class CommandCBU implements CommandExecutor {
                 return handleBlock(sender, args);
             case "free":
                 return handleUnblock(sender, args);
+            case "list":
+                return handleList(sender);
             default:
                 sender.sendMessage(ChatColor.RED + "Unknown action: /" + label + " " + args[0]);
                 sendUsageMessageTo(sender);
@@ -71,6 +75,7 @@ public class CommandCBU implements CommandExecutor {
         sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu reloadcfg         - Reloads config file");
         sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu block [command]  - Blocks a command on the fly");
         sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu free [command]  - Unblocks a command on the fly");
+        sender.sendMessage(ChatColor.YELLOW + "Usage: /cbu list                  - Lists blocked commands");
     }
 
     private boolean handleReloadConfig(CommandSender sender) {
@@ -142,5 +147,21 @@ public class CommandCBU implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "However, the change could not be saved because of " +
                     "an error. See the server log for details.");
         }
+    }
+
+    private boolean handleList(CommandSender sender) {
+        Collection<String> blockedCommands = config().getBlockedCommands();
+        if (blockedCommands.isEmpty()) {
+            sender.sendMessage(ChatColor.RED + "No commands are blocked.");
+            sender.sendMessage(ChatColor.RED + "You can block commands using /cbu block <command> or in the " +
+                    "configuration file at plugins/CommandBlockerUltimate/config.yml .");
+            return true;
+        }
+        sender.sendMessage(String.format("%s ---- %d commands blocked ----",
+                ChatColor.YELLOW.toString(), blockedCommands.size()));
+        for (String blockedCommand : blockedCommands) {
+            sender.sendMessage(ChatColor.YELLOW + " → " + ChatColor.GOLD + "/" + blockedCommand);
+        }
+        return true;
     }
 }
