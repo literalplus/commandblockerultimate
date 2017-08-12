@@ -99,7 +99,14 @@
         </repository>
         <repository> <!-- Metrics (mcstats) -->
             <id>mcstats-repo</id>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
+            <!--<url>http://repo.mcstats.org/content/repositories/public</url>-->
+            <url>https://repo.l1t.li/mcstats-repo-cache/</url>
+            <!--
+                The remote repo is down at the time of writing, using proxy for now.
+                 If you're reading this and the remote is back up, you can assume that
+                 I forgot to change this back. Make a PR if it bugs you and/or my proxy
+                 is offline. Thanks!
+            -->
         </repository>
         <repository> <!-- Yamler -->
             <id>cubespace-repo</id>
