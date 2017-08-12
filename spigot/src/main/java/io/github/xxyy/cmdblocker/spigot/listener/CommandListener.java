@@ -38,7 +38,7 @@ public class CommandListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommand(final PlayerCommandPreprocessEvent evt) {
         plugin.handleEvent(evt, evt.getPlayer(), evt.getMessage());
     }
