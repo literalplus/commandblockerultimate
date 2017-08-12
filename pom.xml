@@ -106,10 +106,7 @@
         </repository>
         <repository> <!-- ProtocolLib -->
             <id>dmulloy2-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/releases/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository> <!-- Yamler -->
             <id>cubespace-repo</id>
