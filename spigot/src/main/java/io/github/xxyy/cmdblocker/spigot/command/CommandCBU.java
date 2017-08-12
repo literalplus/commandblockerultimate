@@ -46,18 +46,18 @@ public class CommandCBU implements CommandExecutor {
             return sendBannerMessageTo(sender);
         }
 
-        if (args[0].equalsIgnoreCase("reloadcfg")) {
-            return handleReloadConfig(sender);
-        } else if (args[0].equalsIgnoreCase("block")) {
-            return handleBlock(sender, args);
-        } else if (args[0].equalsIgnoreCase("free")) {
-            return handleUnblock(sender, args);
-        } else {
-            sender.sendMessage(ChatColor.RED + "Unknown action: /" + label + " " + args[0]);
-            sendUsageMessageTo(sender);
+        switch (args[0].toLowerCase()) {
+            case "reloadcfg":
+                return handleReloadConfig(sender);
+            case "block":
+                return handleBlock(sender, args);
+            case "free":
+                return handleUnblock(sender, args);
+            default:
+                sender.sendMessage(ChatColor.RED + "Unknown action: /" + label + " " + args[0]);
+                sendUsageMessageTo(sender);
+                return true;
         }
-
-        return true;
     }
 
     private boolean sendBannerMessageTo(CommandSender sender) {
