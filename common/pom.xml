@@ -43,5 +43,9 @@
             <version>17.0</version>
             <!-- same as Spigot -->
         </dependency>
+        <dependency>
+            <groupId>li.l1t.common</groupId>
+            <artifactId>xyc-api-minecraft</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -36,6 +36,10 @@
             <groupId>io.github.xxyy.cmdblocker</groupId>
             <artifactId>cbu-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>li.l1t.common</groupId>
+            <artifactId>xyc-api-bungee</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

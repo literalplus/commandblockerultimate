@@ -45,6 +45,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>cbu-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>li.l1t.common</groupId>
+            <artifactId>xyc-api-spigot</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

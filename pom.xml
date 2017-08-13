@@ -83,6 +83,7 @@
         <java.version>1.7</java.version>
         <bungee.version>1.8-SNAPSHOT</bungee.version>
         <ignoreSnapshots>true</ignoreSnapshots> <!-- maven-release-plugin -->
+        <xyc-api.version>4.5.0</xyc-api.version>
     </properties>
 
     <repositories>
@@ -120,6 +121,10 @@
                  is offline. Thanks!
              -->
         </repository>
+        <repository>
+            <id>xxyy-public</id> <!-- XYC-API -->
+            <url>https://repo.l1t.li/xxyy-public/</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -155,6 +160,21 @@
                 <groupId>net.cubespace</groupId>
                 <artifactId>Yamler-Core</artifactId>
                 <version>2.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>li.l1t.common</groupId>
+                <artifactId>xyc-api-minecraft</artifactId>
+                <version>${xyc-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>li.l1t.common</groupId>
+                <artifactId>xyc-api-spigot</artifactId>
+                <version>${xyc-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>li.l1t.common</groupId>
+                <artifactId>xyc-api-bungee</artifactId>
+                <version>${xyc-api.version}</version>
             </dependency>
 
             <dependency>
