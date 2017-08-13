@@ -1,5 +1,5 @@
 name: CommandBlockerUltimate
 version: ${project.version}
-main: CommandBlockerPlugin
-author: xxyy
+main: li.l1t.cbu.bungee.CommandBlockerPlugin
+author: Literallie
 depends: [Yamler]
