@@ -19,6 +19,7 @@
 
 package io.github.xxyy.cmdblocker.spigot.command;
 
+import io.github.xxyy.cmdblocker.common.util.CBUVersion;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -65,7 +66,7 @@ public class CommandCBU implements CommandExecutor {
     }
 
     private boolean sendBannerMessageTo(CommandSender sender) {
-        sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate " + CommandBlockerPlugin.PLUGIN_VERSION_STRING);
+        sender.sendMessage(ChatColor.DARK_AQUA + "CommandBlockerUltimate " + CBUVersion.PLUGIN_VERSION_STRING);
         sender.sendMessage(ChatColor.DARK_AQUA + " Licensed under GNU GPL v2. (Source: https://git.io/fesVwQ)");
         sendUsageMessageTo(sender);
         return true;

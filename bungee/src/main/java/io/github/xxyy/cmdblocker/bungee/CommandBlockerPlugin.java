@@ -26,8 +26,8 @@ import io.github.xxyy.cmdblocker.bungee.listener.CommandListener;
 import io.github.xxyy.cmdblocker.bungee.listener.TabCompleteListener;
 import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.util.CBUVersion;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
-import li.l1t.common.version.PluginVersion;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -46,10 +46,6 @@ import java.util.concurrent.TimeUnit;
  * @since 2014-07-15
  */
 public class CommandBlockerPlugin extends Plugin {
-    //Create plugin version from manifest (see cbu-bootstrap/pom.xml -> maven-jar-plugin,buildnumber-maven-plugin for details)
-    //Don't need to read this every time since we don't need the individual properties anyway
-    public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
-
     private CBUConfig configAdapter;
     private BungeeAliasResolver aliasResolver = new BungeeAliasResolver(this);
 
@@ -73,7 +69,7 @@ public class CommandBlockerPlugin extends Plugin {
         //Register command
         getProxy().getPluginManager().registerCommand(this, new CommandGCBU(this));
 
-        getLogger().info("CommandBlockerUltimate " + PLUGIN_VERSION_STRING + " is licensed under the GNU General Public License " +
+        getLogger().info("CommandBlockerUltimate " + CBUVersion.PLUGIN_VERSION_STRING + " is licensed under the GNU General Public License " +
                 "Version 2. See the LICENSE file included in its .jar archive for details.");
     }
 

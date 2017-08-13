@@ -19,6 +19,7 @@
 
 package io.github.xxyy.cmdblocker.bungee.command;
 
+import io.github.xxyy.cmdblocker.common.util.CBUVersion;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -91,7 +92,7 @@ public class CommandGCBU extends Command {
 
     private void sendBannerTo(CommandSender sender) {
         sender.sendMessage(new ComponentBuilder("CommandBlockerUltimate ").color(ChatColor.DARK_AQUA)
-                .append(CommandBlockerPlugin.PLUGIN_VERSION_STRING).color(ChatColor.AQUA).create());
+                .append(CBUVersion.PLUGIN_VERSION_STRING).color(ChatColor.AQUA).create());
         sendSimpleMessage(sender, " Licensed under GNU GPL v2.", ChatColor.DARK_AQUA);
         sendSimpleMessage(sender, " Get the source at https://github.com/xxyy/commandblockerultimate", ChatColor.DARK_AQUA);
         sendUsageTo(sender);

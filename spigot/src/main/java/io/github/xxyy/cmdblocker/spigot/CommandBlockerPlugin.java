@@ -23,12 +23,12 @@ import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.common.util.CBUVersion;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
 import io.github.xxyy.cmdblocker.spigot.config.SpigotAliasResolver;
 import io.github.xxyy.cmdblocker.spigot.config.SpigotCBUConfig;
 import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
-import li.l1t.common.version.PluginVersion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -50,10 +50,6 @@ import java.util.logging.Level;
  * @since 2014-01-02 // 1.0
  */
 public class CommandBlockerPlugin extends JavaPlugin implements Listener {
-
-    //Create plugin version from manifest (see cbu-bootstrap/pom.xml -> maven-jar-plugin,buildnumber-maven-plugin for details)
-    //Don't need to read this every time since we don't need the individual properties anyway
-    public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
     private ConfigAdapter configAdapter;
     private SpigotAliasResolver aliasResolver = new SpigotAliasResolver(this);
@@ -96,7 +92,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
             getLogger().info("Could not start Metrics. This error is non-crucial. Just ignore it.");
         }
 
-        getLogger().info("CommandBlockerUltimate " + PLUGIN_VERSION_STRING + " is licensed under the GNU General Public License " +
+        getLogger().info("CommandBlockerUltimate " + CBUVersion.PLUGIN_VERSION_STRING + " is licensed under the GNU General Public License " +
                 "Version 2. See the LICENSE file included in its .jar archive for details.");
     }
 
