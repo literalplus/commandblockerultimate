@@ -54,7 +54,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.0.0</version>
 
                 <executions>
                     <execution>
@@ -68,14 +68,22 @@
                 <configuration>
                     <artifactSet>
                         <includes>
-                            <include>${project.groupId}</include>
-                            <include>org.mcstats.bukkit</include>
+                            <include>${project.groupId}:*</include>
+                            <include>org.mcstats.bukkit:*</include>
+                            <include>li.l1t.common:xyc-api</include>
+                            <include>li.l1t.common:xyc-api-minecraft</include>
+                            <include>li.l1t.common:xyc-api-spigot</include>
+                            <include>li.l1t.common:xyc-api-bungee</include>
                         </includes>
                     </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>org.mcstats</pattern>
-                            <shadedPattern>io.github.xxyy.cmdblocker.lib.com.mcstats</shadedPattern>
+                            <shadedPattern>li.l1t.cbu.lib.com.mcstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>li.l1t.common</pattern>
+                            <shadedPattern>li.l1t.cbu.lib.xyc_api</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
