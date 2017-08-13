@@ -26,9 +26,10 @@ import io.github.xxyy.cmdblocker.bungee.listener.CommandListener;
 import io.github.xxyy.cmdblocker.bungee.listener.TabCompleteListener;
 import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.common.platform.PlatformAdapter;
 import io.github.xxyy.cmdblocker.common.util.CBUVersion;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -45,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2014-07-15
  */
-public class CommandBlockerPlugin extends Plugin {
+public class CommandBlockerPlugin extends Plugin implements PlatformAdapter {
     private CBUConfig configAdapter;
     private BungeeAliasResolver aliasResolver = new BungeeAliasResolver(this);
 
@@ -78,8 +79,8 @@ public class CommandBlockerPlugin extends Plugin {
     }
 
     /**
-     * Checks whether a command sender is permitted to execute a command and sends notification
-     * messages to them if those are enabled.
+     * Checks whether a command sender is permitted to execute a command and sends notification messages to them if
+     * those are enabled.
      *
      * @param command    the command to check
      * @param connection the connection attempting to execute that command
@@ -93,7 +94,7 @@ public class CommandBlockerPlugin extends Plugin {
     public boolean canAccessWithMessage(String command, CommandSender commandSender) {
         Preconditions.checkNotNull(command, "command");
         Preconditions.checkNotNull(commandSender, "commandSender");
-        if(!isCommand(command)) {
+        if (!isCommand(command)) {
             return true;
         }
         String rawCommand = CommandHelper.getRawCommand(command);
@@ -144,34 +145,20 @@ public class CommandBlockerPlugin extends Plugin {
         );
     }
 
-    /**
-     * Returns the current config adapter used by the plugin. <b>Warning:</b> The adapter might be
-     * replaced at any time, so make sure to always get the latest one!
-     *
-     * @return the plugin's current config adapter
-     */
+    @Override
     public CBUConfig getConfigAdapter() {
         return configAdapter;
     }
 
-    /**
-     * Replaces the current config adapter by a fresh one with current values from the configuration
-     * file. This is used instead of {@link CBUConfig#reload()} to allow server owners to react and
-     * fix their configuration file instead of breaking the plugin by assuming the default values.
-     * If the current config file is invalid, an exception is thrown and the adapter is not
-     * replaced.
-     *
-     * @throws InvalidConfigurationException Propagated from {@link CBUConfig#init()} - If you get
-     *                                       this, you can safely assume that thew adapter has not
-     *                                       been replaced.
-     */
-    public void replaceConfigAdapter() throws InvalidConfigurationException {
+    @Override
+    public void replaceConfigAdapter() throws InvalidConfigException {
         CBUConfig newAdapter = createConfig();
-        newAdapter.init();
+        newAdapter.initialize();
         this.configAdapter = newAdapter;
         configAdapter.resolveAliases(aliasResolver);
     }
 
+    @Override
     public AliasResolver getAliasResolver() {
         return aliasResolver;
     }

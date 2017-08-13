@@ -23,6 +23,7 @@ import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.CBUConfig;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.common.platform.PlatformAdapter;
 import io.github.xxyy.cmdblocker.common.util.CBUVersion;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
@@ -49,8 +50,7 @@ import java.util.logging.Level;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2014-01-02 // 1.0
  */
-public class CommandBlockerPlugin extends JavaPlugin implements Listener {
-
+public class CommandBlockerPlugin extends JavaPlugin implements PlatformAdapter, Listener {
     private ConfigAdapter configAdapter;
     private SpigotAliasResolver aliasResolver = new SpigotAliasResolver(this);
 
@@ -175,26 +175,12 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    /**
-     * Returns the current config adapter used by the plugin. <b>Warning:</b> The adapter might be replaced at any time,
-     * so make sure to always get the latest one!
-     *
-     * @return the plugin's current config adapter
-     */
+    @Override
     public ConfigAdapter getConfigAdapter() {
         return configAdapter;
     }
 
-    /**
-     * Replaces the current config adapter by a fresh one with current values from the configuration file.
-      This is used* instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
-      instead of* breaking the plugin by assuming the default values.
-      If the current config file is invalid, an exception is thrown* and the adapter is not replaced.
-      Note that this method doesn't work with {@link SpigotCBUConfig} since Bukkit's* configuration API doesn't allow
-      handling of syntax errors.*
-     ** @throws InvalidConfigException Propagated from {@link CBUConfig#initialize()} - If you get this, you cansafely
-     *                                           assume that thew adapter has not been replaced.
-     */
+    @Override
     public void replaceConfigAdapter() throws InvalidConfigException {
         ConfigAdapter newAdapter = createConfig();
         newAdapter.initialize();
@@ -226,6 +212,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
         getLogger().warning("Tab-completion will NOT be prevented!");
     }
 
+    @Override
     public AliasResolver getAliasResolver() {
         return aliasResolver;
     }
