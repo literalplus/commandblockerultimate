@@ -19,6 +19,16 @@
 
 package io.github.xxyy.cmdblocker.spigot;
 
+import io.github.xxyy.cmdblocker.common.config.AliasResolver;
+import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
+import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
+import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
+import io.github.xxyy.cmdblocker.spigot.config.SpigotAliasResolver;
+import io.github.xxyy.cmdblocker.spigot.config.SpigotCBUConfig;
+import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
+import li.l1t.common.version.PluginVersion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -29,33 +39,21 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-import io.github.xxyy.cmdblocker.common.config.AliasResolver;
-import io.github.xxyy.cmdblocker.common.config.CBUConfig;
-import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
-import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
-import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
-import io.github.xxyy.cmdblocker.spigot.command.CommandCBU;
-import io.github.xxyy.cmdblocker.spigot.config.SpigotAliasResolver;
-import io.github.xxyy.cmdblocker.spigot.config.SpigotCBUConfig;
-import io.github.xxyy.cmdblocker.spigot.listener.CommandListener;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
 /**
- * CommandBlocker Ultimate.
- * Blocks certain commands.
+ * Entry point for the CommandBlockUltimate plugin on the Spigot platform.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 02.01.14 // 1.0
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2014-01-02 // 1.0
  */
 public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
     //Create plugin version from manifest (see cbu-bootstrap/pom.xml -> maven-jar-plugin,buildnumber-maven-plugin for details)
-    //Don't need to read this every time since we don't need the individual properties anyway --> performance
-    public static final String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
+    //Don't need to read this every time since we don't need the individual properties anyway
+    public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
     private ConfigAdapter configAdapter;
     private SpigotAliasResolver aliasResolver = new SpigotAliasResolver(this);
@@ -113,8 +111,8 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     /**
-     * Checks whether a given {@link org.bukkit.command.CommandSender} can execute a given command
-     * and sends an error message if they cannot.
+     * Checks whether a given {@link org.bukkit.command.CommandSender} can execute a given command and sends an error
+     * message if they cannot.
      *
      * @param sender  the sender to check for
      * @param command the raw name of the command to check
@@ -166,8 +164,8 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     /**
-     * Handles a cancellable event and decides if that chat message contains a blocked command.
-     * If it does, the event is cancelled and an error message is printed.
+     * Handles a cancellable event and decides if that chat message contains a blocked command. If it does, the event is
+     * cancelled and an error message is printed.
      *
      * @param evt         What to cancel
      * @param sender      Who wrote the message
@@ -182,8 +180,8 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     /**
-     * Returns the current config adapter used by the plugin.
-     * <b>Warning:</b> The adapter might be replaced at any time, so make sure to always get the latest one!
+     * Returns the current config adapter used by the plugin. <b>Warning:</b> The adapter might be replaced at any time,
+     * so make sure to always get the latest one!
      *
      * @return the plugin's current config adapter
      */
@@ -193,14 +191,13 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
     /**
      * Replaces the current config adapter by a fresh one with current values from the configuration file.
-     * This is used instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
-     * instead of breaking the plugin by assuming the default values.
-     * If the current config file is invalid, an exception is thrown and the adapter is not replaced.
-     * Note that this method doesn't work with {@link SpigotCBUConfig} since Bukkit's configuration API doesn't allow
-     * handling of syntax errors.
-     *
-     * @throws InvalidConfigException Propagated from {@link CBUConfig#initialize()} - If you get this, you can
-     *                                safely assume that thew adapter has not been replaced.
+      This is used* instead of {@link CBUConfig#reload()} to allow server owners to react and fix their configuration file
+      instead of* breaking the plugin by assuming the default values.
+      If the current config file is invalid, an exception is thrown* and the adapter is not replaced.
+      Note that this method doesn't work with {@link SpigotCBUConfig} since Bukkit's* configuration API doesn't allow
+      handling of syntax errors.*
+     ** @throws InvalidConfigException Propagated from {@link CBUConfig#initialize()} - If you get this, you cansafely
+     *                                           assume that thew adapter has not been replaced.
      */
     public void replaceConfigAdapter() throws InvalidConfigException {
         ConfigAdapter newAdapter = createConfig();

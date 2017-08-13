@@ -20,6 +20,14 @@
 package io.github.xxyy.cmdblocker.bungee;
 
 import com.google.common.base.Preconditions;
+import io.github.xxyy.cmdblocker.bungee.command.CommandGCBU;
+import io.github.xxyy.cmdblocker.bungee.config.BungeeAliasResolver;
+import io.github.xxyy.cmdblocker.bungee.listener.CommandListener;
+import io.github.xxyy.cmdblocker.bungee.listener.TabCompleteListener;
+import io.github.xxyy.cmdblocker.common.config.AliasResolver;
+import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
+import li.l1t.common.version.PluginVersion;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -28,27 +36,18 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import io.github.xxyy.cmdblocker.bungee.command.CommandGCBU;
-import io.github.xxyy.cmdblocker.bungee.config.BungeeAliasResolver;
-import io.github.xxyy.cmdblocker.bungee.listener.CommandListener;
-import io.github.xxyy.cmdblocker.bungee.listener.TabCompleteListener;
-import io.github.xxyy.cmdblocker.common.config.AliasResolver;
-import io.github.xxyy.cmdblocker.common.config.CBUConfig;
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
-import io.github.xxyy.cmdblocker.lib.io.github.xxyy.common.version.PluginVersion;
-
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Bungee plugin class for CommandBlockerUltimate.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 15.7.14
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2014-07-15
  */
 public class CommandBlockerPlugin extends Plugin {
     //Create plugin version from manifest (see cbu-bootstrap/pom.xml -> maven-jar-plugin,buildnumber-maven-plugin for details)
-    //Don't need to read this every time since we don't need the individual properties anyway --> performance
+    //Don't need to read this every time since we don't need the individual properties anyway
     public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
     private CBUConfig configAdapter;
