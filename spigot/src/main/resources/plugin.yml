@@ -2,7 +2,7 @@ name: CommandBlockerUltimate
 version: ${project.version}
 author: xxyy
 website: http://j.nowak-at.net/cmdblk
-main: io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin
+main: CommandBlockerPlugin
 softdepend: [ProtocolLib, Yamler]
 prefix: CBU
 
