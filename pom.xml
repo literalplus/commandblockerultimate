@@ -79,7 +79,7 @@
         <full-version>${project.version}${version-suffix}</full-version>
         <minecraft.version>1.8.8</minecraft.version>
         <spigot.version>${minecraft.version}-R0.1-SNAPSHOT</spigot.version>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <bungee.version>1.8-SNAPSHOT</bungee.version>
         <ignoreSnapshots>true</ignoreSnapshots> <!-- maven-release-plugin -->
         <xyc-api.version>4.5.4</xyc-api.version>
