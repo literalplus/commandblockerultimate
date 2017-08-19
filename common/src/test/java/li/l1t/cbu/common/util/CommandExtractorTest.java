@@ -38,42 +38,46 @@
 
 package li.l1t.cbu.common.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Tests the CommandHelper class for compliance with the JavaDoc declarations
+ * Tests the CommandExtractor class for compliance with the JavaDoc declarations
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2014-09-20
  */
-public class CommandHelperTest {
+class CommandExtractorTest {
     @Test
-    public void testGetRawCommand() {
-        assertThat(CommandHelper.getRawCommand("/help"), is("help"));
-        assertThat(CommandHelper.getRawCommand("/help test"), is("help"));
-        assertThat(CommandHelper.getRawCommand("/minecraft:help"), is("minecraft:help"));
-        assertThat(CommandHelper.getRawCommand("/minecraft:help test"), is("minecraft:help"));
-        assertThat(CommandHelper.getRawCommand("/bukkit:help"), is("bukkit:help"));
-        assertThat(CommandHelper.getRawCommand("/bukkit:help something multiple arguments wow"), is("bukkit:help"));
+    void testGetRawCommand() {
+        assertThat(CommandExtractor.getRawCommand("/help"), is("help"));
+        assertThat(CommandExtractor.getRawCommand("/help test"), is("help"));
+        assertThat(CommandExtractor.getRawCommand("/minecraft:help"), is("minecraft:help"));
+        assertThat(CommandExtractor.getRawCommand("/minecraft:help test"), is("minecraft:help"));
+        assertThat(CommandExtractor.getRawCommand("/bukkit:help"), is("bukkit:help"));
+        assertThat(CommandExtractor.getRawCommand("/bukkit:help something multiple arguments wow"), is("bukkit:help"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getRawCommand__startsWithSlash() {
+    @Test
+    void getRawCommand__startsWithSlash() {
         //given
         String chatMessage = " some mesage starting with a space and not a slash";
-        //when
-        CommandHelper.getRawCommand(chatMessage);
         //then an IAE is thrown
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                //when
+                () -> CommandExtractor.getRawCommand(chatMessage)
+        );
     }
 
     @Test
-    public void testRemoveModPrefix() {
-        assertThat(CommandHelper.removeModPrefix("help"), is("help"));
-        assertThat(CommandHelper.removeModPrefix("minecraft:help"), is("help"));
-        assertThat(CommandHelper.removeModPrefix("bukkit:help"), is("help"));
-        assertThat(CommandHelper.removeModPrefix("hey look i have spaces:help"), is("help"));
+    void testRemoveModPrefix() {
+        assertThat(CommandExtractor.removeModPrefix("help"), is("help"));
+        assertThat(CommandExtractor.removeModPrefix("minecraft:help"), is("help"));
+        assertThat(CommandExtractor.removeModPrefix("bukkit:help"), is("help"));
+        assertThat(CommandExtractor.removeModPrefix("hey look i have spaces:help"), is("help"));
     }
 }
