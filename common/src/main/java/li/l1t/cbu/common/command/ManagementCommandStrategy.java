@@ -161,7 +161,7 @@ public class ManagementCommandStrategy implements ExecutionExecutor<CommandExecu
     }
 
     private void handleList(CommandExecution exec) {
-        Collection<String> blockedCommands = config().getBlockedCommands();
+        Collection<String> blockedCommands = config().getRawBlockedCommands();
         if (blockedCommands.isEmpty()) {
             exec.respond(DefaultFormat.userError("No commands are blocked."));
             exec.respond(ChatColor.YELLOW + "You may block commands with /%s block <command>, or in the " +

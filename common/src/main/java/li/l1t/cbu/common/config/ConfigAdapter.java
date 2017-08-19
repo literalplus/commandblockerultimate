@@ -42,8 +42,8 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
- * Represents a configuration adapter (in most cases a YAML file) that is used to fetch
- * CommandBlockerUltimate configuration options and messages.
+ * Represents a configuration adapter (in most cases a YAML file) that is used to fetch CommandBlockerUltimate
+ * configuration options and messages.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 16.7.14
@@ -63,8 +63,8 @@ public interface ConfigAdapter {
     String TAB_ERROR_MESSAGE_PATH = "tab-error-message";
 
     /**
-     * Tries to initialize this config adapter. If an exception occurs, it is logged to {@code
-     * logger} with details on how to get help from this plugin's author.
+     * Tries to initialize this config adapter. If an exception occurs, it is logged to {@code logger} with details on
+     * how to get help from this plugin's author.
      *
      * @param logger Logger to print to
      * @return whether the configuration was initialized successfully.
@@ -74,8 +74,7 @@ public interface ConfigAdapter {
     /**
      * Initializes this config adapter, loading all values into cache.
      *
-     * @throws InvalidConfigException if the underlying configuration is invalid for some reason
-     *                                (e.g. syntax error)
+     * @throws InvalidConfigException if the underlying configuration is invalid for some reason (e.g. syntax error)
      */
     void initialize() throws InvalidConfigException;
 
@@ -94,19 +93,18 @@ public interface ConfigAdapter {
     void save() throws Exception;
 
     /**
-     * Resolves aliases in the block list of this adapter. This is done beforehand to avoid having
-     * to do an expensive search every time {@link #isBlocked(String)} is called. This method should
-     * normally be called shortly after the server has enabled all plugins to allow it to register
-     * all plugin's aliases. This method will {@link AliasResolver#refreshMap() refresh the
-     * resolver's map automatically}.
+     * Resolves aliases in the block list of this adapter. This is done beforehand to avoid having to do an expensive
+     * search every time {@link #isBlocked(String)} is called. This method should normally be called shortly after the
+     * server has enabled all plugins to allow it to register all plugin's aliases. This method will {@link
+     * AliasResolver#refreshMap() refresh the resolver's map automatically}.
      *
      * @param aliasResolver Resolver to use in order to resolve aliases
      */
     void resolveAliases(AliasResolver aliasResolver);
 
     /**
-     * Checks whether a given command, or derivatives of given command (e.g. {@code me} for {@code
-     * minecraft:me}) are blocked.
+     * Checks whether a given command, or derivatives of given command (e.g. {@code me} for {@code minecraft:me}) are
+     * blocked.
      *
      * @param commandName Command name to check
      * @return whether the given command is blocked.
@@ -114,16 +112,18 @@ public interface ConfigAdapter {
     boolean isBlocked(String commandName);
 
     /**
-     * Gets a Collection of blocked commands, including resolved aliases. All values are in lower
-     * case.
-     *
-     * @return A collection of blocked commands
+     * @return the collection of names of commands that are blocked in the configuration literally
+     */
+    Collection<String> getRawBlockedCommands();
+
+    /**
+     * @return the collection of actually blocked commands, including resolved aliases, all lower case
      */
     Collection<String> getBlockedCommands();
 
     /**
-     * Adds a blocked command to this adapter's set of blocked commands. If the command is already
-     * in the set, this method does nothing.
+     * Adds a blocked command to this adapter's set of blocked commands. If the command is already in the set, this
+     * method does nothing.
      *
      * @param command the command to add
      */
@@ -143,14 +143,13 @@ public interface ConfigAdapter {
     String getBypassPermission();
 
     /**
-     * @return whether the plugin will show error messages when somebody is not permitted to execute
-     * a blocked command
+     * @return whether the plugin will show error messages when somebody is not permitted to execute a blocked command
      */
     boolean isShowErrorMessage();
 
     /**
-     * @return whether the plugin will show error messages when somebody is not permitted to
-     * tab-complete a blocked command
+     * @return whether the plugin will show error messages when somebody is not permitted to tab-complete a blocked
+     * command
      */
     boolean isShowTabErrorMessage();
 
@@ -165,10 +164,10 @@ public interface ConfigAdapter {
     boolean isPreventTab();
 
     /**
-     * <p>What strategy to use when blocking tab-complete replies from the server.</p> <p> true:
-     * block all completions returning a targeted command (for example, if /p is typed and /pl is
-     * blocked, print error message) </p> <p> false: just remove blocked commands from list (in the
-     * above example, other commands starting with p would still be shown without notice) </p>
+     * <p>What strategy to use when blocking tab-complete replies from the server.</p> <p> true: block all completions
+     * returning a targeted command (for example, if /p is typed and /pl is blocked, print error message) </p> <p>
+     * false: just remove blocked commands from list (in the above example, other commands starting with p would still
+     * be shown without notice) </p>
      *
      * @return whether tab restrictive mode is enabled
      */
@@ -186,8 +185,7 @@ public interface ConfigAdapter {
     String getBypassMessage();
 
     /**
-     * @return the message displayed when somebody tries to tab-complete a blocked command in
-     * restrictive mode
+     * @return the message displayed when somebody tries to tab-complete a blocked command in restrictive mode
      */
     String getTabErrorMessage();
 }

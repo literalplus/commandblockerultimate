@@ -40,7 +40,7 @@ package li.l1t.cbu.spigot.config;
 
 import com.google.common.collect.ImmutableList;
 import li.l1t.cbu.common.config.AliasResolver;
-import li.l1t.cbu.common.util.CommandHelper;
+import li.l1t.cbu.common.util.CommandExtractor;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -72,7 +72,7 @@ public class SpigotAliasResolver implements AliasResolver {
 
     @Override
     public List<String> resolve(String commandName) {
-        String rawName = CommandHelper.removeModPrefix(commandName).toLowerCase();
+        String rawName = CommandExtractor.removeModPrefix(commandName).toLowerCase();
         Command foundCommand;
         if (commandMap != null) { //If we have the internal command map, we might as well use it
             foundCommand = commandMap.get(commandName); //Versions with prefixes and aliases are stored too

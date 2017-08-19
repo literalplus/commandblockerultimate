@@ -43,11 +43,11 @@ import com.google.common.base.Preconditions;
 /**
  * Static utility class which helps dealing with commands and related.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 22.7.14
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2014-07-22
  */
-public final class CommandHelper {
-    private CommandHelper() {
+public final class CommandExtractor {
+    private CommandExtractor() {
 
     }
 

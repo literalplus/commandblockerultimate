@@ -44,7 +44,7 @@ import li.l1t.cbu.common.config.ConfigAdapter;
 import li.l1t.cbu.common.config.InvalidConfigException;
 import li.l1t.cbu.common.platform.PlatformAdapter;
 import li.l1t.cbu.common.util.CBUVersion;
-import li.l1t.cbu.common.util.CommandHelper;
+import li.l1t.cbu.common.util.CommandExtractor;
 import li.l1t.cbu.spigot.command.CommandCBU;
 import li.l1t.cbu.spigot.config.SpigotAliasResolver;
 import li.l1t.cbu.spigot.config.SpigotCBUConfig;
@@ -188,7 +188,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements PlatformAdapter,
      */
     public void handleEvent(Cancellable evt, CommandSender sender, String chatMessage) {
         boolean executionCancelled = chatMessage.startsWith("/") &&
-                !canExecute(sender, CommandHelper.getRawCommand(chatMessage));
+                !canExecute(sender, CommandExtractor.getRawCommand(chatMessage));
         if (executionCancelled) {
             evt.setCancelled(true);
         }

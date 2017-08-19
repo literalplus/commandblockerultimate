@@ -42,7 +42,7 @@ import li.l1t.cbu.common.config.AliasResolver;
 import li.l1t.cbu.common.config.CBUConfig;
 import li.l1t.cbu.common.config.ConfigAdapter;
 import li.l1t.cbu.common.config.InvalidConfigException;
-import li.l1t.cbu.common.util.CommandHelper;
+import li.l1t.cbu.common.util.CommandExtractor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,16 +55,13 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * This is an alternative implementation of {@link CBUConfig}
- * using the default Spigot YamlConfiguration API. This class is used as a fallback if Yamler is not
- * available.
- * <p/>
- * Some comfort features, such as not reloading the file on a syntax error and automatic updating of
- * the file are not implemented because that would add unnecessary extra complexity and those are
- * available out-of-the-box with Yamler.
+ * This is an alternative implementation of {@link CBUConfig} using the default Spigot YamlConfiguration API. This class
+ * is used as a fallback if Yamler is not available. <p>Some comfort features, such as not reloading the file on a
+ * syntax error and automatic updating of the file are not implemented because that would add unnecessary extra
+ * complexity and those are available out-of-the-box with Yamler.</p>
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 22.7.14
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2014-07-22
  */
 public class SpigotCBUConfig implements ConfigAdapter {
 
@@ -165,7 +162,12 @@ public class SpigotCBUConfig implements ConfigAdapter {
     @Override
     public boolean isBlocked(String commandName) {
         return blockedCommands.contains(commandName) ||
-                blockedCommands.contains(CommandHelper.removeModPrefix(commandName));
+                blockedCommands.contains(CommandExtractor.removeModPrefix(commandName));
+    }
+
+    @Override
+    public Collection<String> getRawBlockedCommands() {
+        return rawTargetCommands;
     }
 
     @Override
@@ -175,17 +177,17 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     @Override
     public void addBlockedCommand(String command) {
-        if(rawTargetCommands.contains(command)) {
+        if (rawTargetCommands.contains(command)) {
             return;
         }
-        getBlockedCommands().add(command);
+        blockedCommands.add(command);
         rawTargetCommands.add(command);
     }
 
     @Override
     public boolean removeBlockedCommand(String command) {
         rawTargetCommands.remove(command);
-        return getBlockedCommands().remove(command);
+        return blockedCommands.remove(command);
     }
 
     @Override

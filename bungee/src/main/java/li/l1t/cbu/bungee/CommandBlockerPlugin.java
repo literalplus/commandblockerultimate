@@ -48,7 +48,7 @@ import li.l1t.cbu.common.config.CBUConfig;
 import li.l1t.cbu.common.config.InvalidConfigException;
 import li.l1t.cbu.common.platform.PlatformAdapter;
 import li.l1t.cbu.common.util.CBUVersion;
-import li.l1t.cbu.common.util.CommandHelper;
+import li.l1t.cbu.common.util.CommandExtractor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -116,7 +116,7 @@ public class CommandBlockerPlugin extends Plugin implements PlatformAdapter {
         if (!isCommand(command)) {
             return true;
         }
-        String rawCommand = CommandHelper.getRawCommand(command);
+        String rawCommand = CommandExtractor.getRawCommand(command);
         if (getConfigAdapter().isBlocked(rawCommand)) {
             if (commandSender.hasPermission(getConfigAdapter().getBypassPermission())) {
                 sendBypassMessageIfEnabled(commandSender, rawCommand);

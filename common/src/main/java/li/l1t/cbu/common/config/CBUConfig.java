@@ -38,7 +38,7 @@
 
 package li.l1t.cbu.common.config;
 
-import li.l1t.cbu.common.util.CommandHelper;
+import li.l1t.cbu.common.util.CommandExtractor;
 import net.cubespace.Yamler.Config.Comment;
 import net.cubespace.Yamler.Config.Comments;
 import net.cubespace.Yamler.Config.Config;
@@ -56,10 +56,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Represents the CommandBlockerUltimate configuration file.
+ * Provides access to a CommandBlockerUltimate configuration file using the Yamler API.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 16.7.14
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2014-07-16
  */
 public class CBUConfig extends Config implements ConfigAdapter {
 
@@ -182,7 +182,12 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Override
     public boolean isBlocked(String commandName) {
         return blockedCommands.contains(commandName) ||
-                blockedCommands.contains(CommandHelper.removeModPrefix(commandName)); //e.g. minecraft:me
+                blockedCommands.contains(CommandExtractor.removeModPrefix(commandName)); //e.g. minecraft:me
+    }
+
+    @Override
+    public Collection<String> getRawBlockedCommands() {
+        return rawTargetCommands;
     }
 
     @Override
@@ -192,17 +197,17 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public void addBlockedCommand(String command) {
-        if(rawTargetCommands.contains(command)) {
+        if (rawTargetCommands.contains(command)) {
             return;
         }
-        getBlockedCommands().add(command);
+        blockedCommands.add(command);
         rawTargetCommands.add(command);
     }
 
     @Override
     public boolean removeBlockedCommand(String command) {
         rawTargetCommands.remove(command);
-        return getBlockedCommands().remove(command);
+        return blockedCommands.remove(command);
     }
 
     @Override
