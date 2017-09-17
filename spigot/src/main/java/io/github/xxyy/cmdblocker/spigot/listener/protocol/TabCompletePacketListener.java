@@ -27,15 +27,12 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.reflect.StructureModifier;
-import org.bukkit.plugin.Plugin;
-
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import io.github.xxyy.cmdblocker.spigot.CommandBlockerPlugin;
+import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Listens for Tab complete packets and intercepts them if necessary.
@@ -45,6 +42,7 @@ import java.util.List;
  */
 @SuppressWarnings("UnusedDeclaration") //Reflection!
 public final class TabCompletePacketListener implements PacketListener {
+    private static final int SUGGESTIONS_INDEX = 0;
     private static final ListeningWhitelist SENDING_WHITELIST = ListeningWhitelist.newBuilder()
             .types(PacketType.Play.Server.TAB_COMPLETE)
             .gamePhase(GamePhase.PLAYING).normal().build();
@@ -62,16 +60,15 @@ public final class TabCompletePacketListener implements PacketListener {
 
     @Override
     public void onPacketReceiving(PacketEvent event) {
-        if (!event.isCancelled()) {
-            //Nothing else than server TAB_COMPLETE should come our way
-            //Packet: {Chat message} http://wiki.vg/Protocol#Tab-Complete_2
-            PacketContainer packet = event.getPacket();
-            StructureModifier<String> textModifier = packet.getSpecificModifier(String.class);
-
-            //We need to check the initial chat message, since tab completions themselves don't
-            //include the command they're for by default
-            this.plugin.handleEvent(event, event.getPlayer(), /* chatMessage */ textModifier.read(0));
+        if (event.isCancelled()) {
+            return;
         }
+        //Nothing else than server TAB_COMPLETE should come our way
+        //Packet: {Chat message} http://wiki.vg/Protocol#Tab-Complete_2
+        StructureModifier<String> textModifier = event.getPacket().getSpecificModifier(String.class);
+        //We need to check the initial chat message, since tab completions themselves don't
+        //include the command they're for by default
+        this.plugin.handleEvent(event, event.getPlayer(), /* chatMessage */ textModifier.read(SUGGESTIONS_INDEX));
     }
 
     @Override
@@ -90,51 +87,54 @@ public final class TabCompletePacketListener implements PacketListener {
     }
 
     @Override
-    public void onPacketSending(final PacketEvent event) {
-        if (!event.isCancelled()) {
-            //Nothing else than server TAB_COMPLETE should come our way
-            //Packet: {(VarInt)Count, Matched command} http://wiki.vg/Protocol#Tab-Complete
-
-            if (event.getPlayer().hasPermission(config().getBypassPermission())) {
-                return;
-            }
-
-            PacketContainer packetContainer = event.getPacket();
-
-            StructureModifier<String[]> matchModifier = packetContainer.getSpecificModifier(String[].class);
-
-            String[] matchedCommands = matchModifier.read(0); //Commands suggested by the server
-            List<String> allowedCommands = null;
-
-
-            for (String matchedCommand : matchedCommands) {
-                if (isBlockedCommand(matchedCommand)) { //Not using canExecute to save some permission checks (Single one done above)
-                    if (config().isTabRestrictiveMode()) { //Hides all replies if anything is matched
-                        this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
-                        event.setCancelled(true);
-                        return;
-                    } else {
-                        if (allowedCommands == null) { //Create list only when needed
-                            allowedCommands = new LinkedList<>(Arrays.asList(matchedCommands));
-                        }
-                        allowedCommands.remove(matchedCommand);
-                    }
-                }
-            }
-
-            if (allowedCommands != null) { // null means that nothing was found
-                if (allowedCommands.size() == 0) { //Nothing is allowed
-                    this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
-                    event.setCancelled(true);
-                } else { //Write allowed commands
-                    matchModifier.write(0, allowedCommands.toArray(new String[allowedCommands.size()]));
-                }
-            }
+    public void onPacketSending(PacketEvent event) {
+        //Nothing else than server TAB_COMPLETE should come our way
+        //Packet: {(VarInt)Count, Matched command} http://wiki.vg/Protocol#Tab-Complete
+        List<String> suggestions = getSuggestionsFrom(event.getPacket());
+        if (event.isCancelled() || suggestions.isEmpty() || hasBypassPermission(event)) {
+            return;
+        }
+        Collection<String> blockedSuggestions = findBlockedSuggestionsIn(suggestions);
+        suggestions.removeAll(blockedSuggestions);
+        if(suggestions.isEmpty() || restrictiveModeApplies(blockedSuggestions)) {
+            this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
+            event.setCancelled(true);
+        } else if(!blockedSuggestions.isEmpty()) {
+            writeSuggestionsTo(event.getPacket(), suggestions);
         }
     }
 
-    private boolean isBlockedCommand(String matchedCommand) {
-        return matchedCommand.startsWith("/") && config().isBlocked(CommandHelper.getRawCommand(matchedCommand));
+    private boolean restrictiveModeApplies(Collection<String> blockedSuggestions) {
+        return !blockedSuggestions.isEmpty() && config().isTabRestrictiveMode();
+    }
+
+    private boolean hasBypassPermission(PacketEvent event) {
+        return event.getPlayer().hasPermission(config().getBypassPermission());
+    }
+
+    private List<String> getSuggestionsFrom(PacketContainer packet) {
+        StructureModifier<String[]> modifier = packet.getSpecificModifier(String[].class);
+        return new ArrayList<>(Arrays.asList(modifier.read(SUGGESTIONS_INDEX)));
+    }
+
+    private Collection<String> findBlockedSuggestionsIn(Collection<String> suggestions) {
+        List<String> blocked = new LinkedList<>();
+        for(String suggestion : suggestions) {
+            if(isBlockedCommand(suggestion)) {
+                blocked.add(suggestion);
+            }
+        }
+        return blocked;
+    }
+
+    private boolean isBlockedCommand(String text) {
+        return text.startsWith("/") && config().isBlocked(CommandHelper.getRawCommand(text));
+    }
+
+    private void writeSuggestionsTo(PacketContainer packet, List<String> suggestions) {
+        StructureModifier<String[]> modifier = packet.getSpecificModifier(String[].class);
+        String[] suggestionsArray = suggestions.toArray(new String[suggestions.size()]);
+        modifier.write(SUGGESTIONS_INDEX, suggestionsArray);
     }
 
     private ConfigAdapter config() {
