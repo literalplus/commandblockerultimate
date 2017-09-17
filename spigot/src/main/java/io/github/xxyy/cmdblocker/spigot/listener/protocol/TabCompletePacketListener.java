@@ -43,6 +43,7 @@ import java.util.*;
 @SuppressWarnings("UnusedDeclaration") //Reflection!
 public final class TabCompletePacketListener implements PacketListener {
     private static final int SUGGESTIONS_INDEX = 0;
+    private static final int TEXT_INDEX = 0;
     private static final ListeningWhitelist SENDING_WHITELIST = ListeningWhitelist.newBuilder()
             .types(PacketType.Play.Server.TAB_COMPLETE)
             .gamePhase(GamePhase.PLAYING).normal().build();
@@ -60,15 +61,22 @@ public final class TabCompletePacketListener implements PacketListener {
 
     @Override
     public void onPacketReceiving(PacketEvent event) {
+        //Packet: {Chat message} http://wiki.vg/Protocol#Tab-Complete_2
+        //We need to check the incoming chat message, since tab completions themselves don't
+        //include the command they're for by default
         if (event.isCancelled()) {
             return;
         }
-        //Nothing else than server TAB_COMPLETE should come our way
-        //Packet: {Chat message} http://wiki.vg/Protocol#Tab-Complete_2
         StructureModifier<String> textModifier = event.getPacket().getSpecificModifier(String.class);
-        //We need to check the initial chat message, since tab completions themselves don't
-        //include the command they're for by default
-        this.plugin.handleEvent(event, event.getPlayer(), /* chatMessage */ textModifier.read(SUGGESTIONS_INDEX));
+        String message = textModifier.read(TEXT_INDEX);
+        if(isBlockedCommand(message) && !hasBypassPermission(event)) {
+            rejectTabComplete(event);
+        }
+    }
+
+    private void rejectTabComplete(PacketEvent event) {
+        this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
+        event.setCancelled(true);
     }
 
     @Override
@@ -88,7 +96,6 @@ public final class TabCompletePacketListener implements PacketListener {
 
     @Override
     public void onPacketSending(PacketEvent event) {
-        //Nothing else than server TAB_COMPLETE should come our way
         //Packet: {(VarInt)Count, Matched command} http://wiki.vg/Protocol#Tab-Complete
         List<String> suggestions = getSuggestionsFrom(event.getPacket());
         if (event.isCancelled() || suggestions.isEmpty() || hasBypassPermission(event)) {
@@ -97,8 +104,7 @@ public final class TabCompletePacketListener implements PacketListener {
         Collection<String> blockedSuggestions = findBlockedSuggestionsIn(suggestions);
         suggestions.removeAll(blockedSuggestions);
         if(suggestions.isEmpty() || restrictiveModeApplies(blockedSuggestions)) {
-            this.plugin.sendTabErrorMessageIfEnabled(event.getPlayer());
-            event.setCancelled(true);
+            rejectTabComplete(event);
         } else if(!blockedSuggestions.isEmpty()) {
             writeSuggestionsTo(event.getPacket(), suggestions);
         }
