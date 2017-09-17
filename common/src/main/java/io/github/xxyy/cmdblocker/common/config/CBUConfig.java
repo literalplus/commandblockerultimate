@@ -68,7 +68,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
     @Comments({"What should that message be? (Use & for color codes, HTML escape codes accepted)",
             "<command> will be replaced with the blocked command's name",
             "Example: &c&lError message &euro;&auml;&#00A7;"})
-    private String errorMessage = "&cI am sorry, but you are not permitted to execute this command.";
+    private String errorMessage = "&cYou are not permitted to execute this command.";
 
     @Path(ConfigAdapter.PREVENT_TAB_PATH)
     @Comments({"@since 1.02",
@@ -99,9 +99,8 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Path(TAB_ERROR_MESSAGE_PATH)
     @Comments({"@since 1.4.0",
-            "The message to display when somebody tries to tab-complete a command that's blocked and",
-            "tab-restrictive-mode is enabled.",
-            "Example: '&cI am sorry, but you cannot see completions for this.'"})
+            "The message to display when somebody tries to tab-complete a command that's blocked.",
+            "Example: '&cYou cannot see completions for this.'"})
     private String tabErrorMessage = "&cI am sorry, but I cannot let you do this, Dave.";
 
     public CBUConfig(File configFile) {

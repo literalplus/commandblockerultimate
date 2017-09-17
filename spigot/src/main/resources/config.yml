@@ -21,7 +21,7 @@ show-tab-error-message: true
 # What should that message be? (Use & for color codes, HTML escape codes accepted)
 # <command> will be replaced with the blocked command's name
 # Example: &c&lError message &euro;&auml;&#00A7;
-error-message: '&cI am sorry, but you are not permitted to execute this command.'
+error-message: '&cYou are not permitted to execute this command.'
 
 # @since 1.02
 # Whether to prevent tab-completion for blocked commands.
@@ -47,7 +47,6 @@ notify-bypass: false
 bypass-message: '&c[CBU] /<command> is blocked. Executing anyways since you have permission.'
 
 # @since 1.4.0
-# The message to display when somebody tries to tab-complete a command that's blocked and
-# tab-restrictive-mode is enabled.
+# The message to display when somebody tries to tab-complete a command that's blocked.
 # Example: '&cI am sorry, but you cannot see completions for this.'
 tab-error-message: '&cI am sorry, but I cannot let you do this, Dave.'
