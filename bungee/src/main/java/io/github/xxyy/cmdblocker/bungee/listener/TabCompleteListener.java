@@ -54,7 +54,7 @@ public class TabCompleteListener implements Listener {
             return;
         }
         if (isBlockedCommand(event.getCursor())) {
-            plugin.sendTabErrorMessageIfEnabled(sender);
+            rejectCompletion(event, sender);
         } else {
             removeBlockedSuggestions(event.getSuggestions(), event, sender);
         }
@@ -84,11 +84,15 @@ public class TabCompleteListener implements Listener {
     private void removeBlockedSuggestions(Collection<String> suggestions, Cancellable event, CommandSender sender) {
         Collection<String> blocked = findBlockedSuggestionsIn(suggestions);
         if (!blocked.isEmpty() && config().isTabRestrictiveMode()) {
-            plugin.sendTabErrorMessageIfEnabled(sender);
-            event.setCancelled(true);
+            rejectCompletion(event, sender);
         } else {
             suggestions.removeAll(blocked);
         }
+    }
+
+    private void rejectCompletion(Cancellable event, CommandSender sender) {
+        plugin.sendTabErrorMessageIfEnabled(sender);
+        event.setCancelled(true);
     }
 
     private Collection<String> findBlockedSuggestionsIn(Collection<String> suggestions) {
