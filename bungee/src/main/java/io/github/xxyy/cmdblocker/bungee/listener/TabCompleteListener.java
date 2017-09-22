@@ -19,25 +19,26 @@
 
 package io.github.xxyy.cmdblocker.bungee.listener;
 
+import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
+import io.github.xxyy.cmdblocker.common.config.CBUConfig;
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.event.TabCompleteResponseEvent;
+import net.md_5.bungee.api.plugin.Cancellable;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
-import io.github.xxyy.cmdblocker.bungee.CommandBlockerPlugin;
-import io.github.xxyy.cmdblocker.common.config.CBUConfig;
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
-
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Listens for tab-complete events and removes BungeeCord (and Bukkit!) replies.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 16.7.14
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2014-07-16
  */
 public class TabCompleteListener implements Listener {
     private final CommandBlockerPlugin plugin;
@@ -47,69 +48,74 @@ public class TabCompleteListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onTabComplete(TabCompleteEvent evt) {
-        if (evt.isCancelled()) {
+    public void onTabComplete(TabCompleteEvent event) {
+        CommandSender sender = getSenderOrNull(event);
+        if (shouldIgnoreTabComplete(event, sender)) {
             return;
         }
-
-        CommandSender sender = null;
-        if (evt.getSender() instanceof CommandSender) {
-            sender = (CommandSender) evt.getSender();
+        if (isBlockedCommand(event.getCursor())) {
+            plugin.sendTabErrorMessageIfEnabled(sender);
+        } else {
+            removeBlockedSuggestions(event.getSuggestions(), event, sender);
         }
-
-        if(isBaseCommandBlockedWithMessage(evt, sender)) {
-            return;
-        }
-
-        evt.setCancelled(removeBlocked(evt.getSuggestions(), sender));
     }
 
-    private boolean isBaseCommandBlockedWithMessage(TabCompleteEvent evt, CommandSender sender) {
-        return plugin.getConfigAdapter().isPreventTab() &&
-                !plugin.canAccessWithMessage(evt.getCursor(), sender);
+    private boolean shouldIgnoreTabComplete(Cancellable event, CommandSender sender) {
+        return event.isCancelled() || sender == null || hasBypassPermission(sender) || !config().isPreventTab();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onTabCompleteResponse(TabCompleteResponseEvent evt) {
-        if (evt.isCancelled()) {
-            return;
-        }
-
-        CommandSender messageRecipient = null;
-        if (evt.getReceiver() instanceof CommandSender) {
-            messageRecipient = (CommandSender) evt.getReceiver();
-        }
-
-        evt.setCancelled(removeBlocked(evt.getSuggestions(), messageRecipient));
+    private boolean hasBypassPermission(CommandSender sender) {
+        return sender.hasPermission(config().getBypassPermission());
     }
 
-    //Returns whether the event is to be cancelled
-    private boolean removeBlocked(List<String> suggestions, CommandSender messageRecipient) {
-        if (messageRecipient != null &&
-                messageRecipient.hasPermission(config().getBypassPermission())) {
-            return false; //Don't need to check if sender has bypass permission
+    private CommandSender getSenderOrNull(TabCompleteEvent event) {
+        if (event.getSender() instanceof CommandSender) {
+            return (CommandSender) event.getSender();
+        } else {
+            return null;
         }
-
-        Iterator<String> it = suggestions.iterator();
-        while (it.hasNext()) {
-            String suggestion = it.next();
-
-            if (isBlockedCommand(suggestion)) {
-                if (config().isTabRestrictiveMode()) {
-                    plugin.sendTabErrorMessageIfEnabled(messageRecipient);
-                    return true;
-                } else {
-                    it.remove(); //Remove suggestion from mutable list
-                }
-            }
-        }
-
-        return false;
     }
 
     private boolean isBlockedCommand(String suggestion) {
         return plugin.isCommand(suggestion) &&
                 config().isBlocked(CommandHelper.getRawCommand(suggestion));
+    }
+
+    private void removeBlockedSuggestions(Collection<String> suggestions, Cancellable event, CommandSender sender) {
+        Collection<String> blocked = findBlockedSuggestionsIn(suggestions);
+        if (!blocked.isEmpty() && config().isTabRestrictiveMode()) {
+            plugin.sendTabErrorMessageIfEnabled(sender);
+            event.setCancelled(true);
+        } else {
+            suggestions.removeAll(blocked);
+        }
+    }
+
+    private Collection<String> findBlockedSuggestionsIn(Collection<String> suggestions) {
+        List<String> blocked = new LinkedList<>();
+        for (String suggestion : suggestions) {
+            if (isBlockedCommand(suggestion)) {
+                blocked.add(suggestion);
+            }
+        }
+        return blocked;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTabCompleteResponse(TabCompleteResponseEvent event) {
+        CommandSender receiver = getReceiverOrNull(event);
+        if (shouldIgnoreTabComplete(event, receiver)) {
+            return;
+        }
+        removeBlockedSuggestions(event.getSuggestions(), event, receiver);
+    }
+
+    private CommandSender getReceiverOrNull(TabCompleteResponseEvent event) {
+        if (event.getReceiver() instanceof CommandSender) {
+            return (CommandSender) event.getReceiver();
+        } else {
+            return null;
+        }
     }
 
     private CBUConfig config() {
