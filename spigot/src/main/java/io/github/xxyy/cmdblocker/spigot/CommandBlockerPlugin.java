@@ -55,7 +55,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
 
     //Create plugin version from manifest (see cbu-bootstrap/pom.xml -> maven-jar-plugin,buildnumber-maven-plugin for details)
     //Don't need to read this every time since we don't need the individual properties anyway --> performance
-    public static String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
+    public static final String PLUGIN_VERSION_STRING = PluginVersion.ofClass(CommandBlockerPlugin.class).toString();
 
     private ConfigAdapter configAdapter;
     private SpigotAliasResolver aliasResolver = new SpigotAliasResolver(this);
@@ -103,7 +103,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     private ConfigAdapter createConfig() {
-        if(getServer().getPluginManager().getPlugin("Yamler") != null) {
+        if (getServer().getPluginManager().getPlugin("Yamler") != null) {
             return new CBUConfig(new File(getDataFolder(), "config.yml"));
         } else {
             getLogger().warning("It is recommended that you install Yamler, because that allows the config to be a lot " +
@@ -121,8 +121,8 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * @return Whether {@code sender} can execute {@code command}, not taking aliases into account.
      */
     private boolean canExecute(final CommandSender sender, final String command) {
-        if (configAdapter.isBlocked(command)){
-            if (!sender.hasPermission(getConfigAdapter().getBypassPermission())){
+        if (configAdapter.isBlocked(command)) {
+            if (!sender.hasPermission(getConfigAdapter().getBypassPermission())) {
                 sendErrorMessageIfEnabled(sender, command);
                 return false;
             } else {
@@ -142,7 +142,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     }
 
     private void sendBypassMessageIfEnabled(final CommandSender target, final String command) {
-        if(getConfigAdapter().isNotifyBypass()) {
+        if (getConfigAdapter().isNotifyBypass()) {
             target.sendMessage(
                     unescapeCommandMessage(getConfigAdapter().getBypassMessage(), target, command)
             );
@@ -174,7 +174,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * @param chatMessage The message written, including the slash.
      */
     public void handleEvent(Cancellable evt, CommandSender sender, String chatMessage) {
-        if (chatMessage.startsWith("/") && !canExecute(sender, CommandHelper.getRawCommand(chatMessage))) {
+        boolean executionCancelled = chatMessage.startsWith("/") &&
+                !canExecute(sender, CommandHelper.getRawCommand(chatMessage));
+        if (executionCancelled) {
             evt.setCancelled(true);
         }
     }
@@ -182,6 +184,7 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
     /**
      * Returns the current config adapter used by the plugin.
      * <b>Warning:</b> The adapter might be replaced at any time, so make sure to always get the latest one!
+     *
      * @return the plugin's current config adapter
      */
     public ConfigAdapter getConfigAdapter() {
@@ -195,8 +198,9 @@ public class CommandBlockerPlugin extends JavaPlugin implements Listener {
      * If the current config file is invalid, an exception is thrown and the adapter is not replaced.
      * Note that this method doesn't work with {@link SpigotCBUConfig} since Bukkit's configuration API doesn't allow
      * handling of syntax errors.
+     *
      * @throws InvalidConfigException Propagated from {@link CBUConfig#initialize()} - If you get this, you can
-     *                                          safely assume that thew adapter has not been replaced.
+     *                                safely assume that thew adapter has not been replaced.
      */
     public void replaceConfigAdapter() throws InvalidConfigException {
         ConfigAdapter newAdapter = createConfig();
