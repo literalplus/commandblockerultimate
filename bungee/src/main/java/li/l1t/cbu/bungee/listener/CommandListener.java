@@ -27,10 +27,10 @@ import li.l1t.cbu.bungee.CommandBlockerPlugin;
 
 
 /**
- * Listens for bungee chat, filters commands and blocks blocked ones. Makes sense, eh?
+ * Listens for bungee chat, filters commands and blocks blocked ones.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 15.7.14
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2014-07-15
  */
 public class CommandListener implements Listener {
     private final CommandBlockerPlugin plugin;
