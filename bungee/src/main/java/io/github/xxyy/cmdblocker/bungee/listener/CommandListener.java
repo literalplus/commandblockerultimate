@@ -41,6 +41,9 @@ public class CommandListener implements Listener {
 
     @EventHandler
     public void onChat(ChatEvent evt) {
-        evt.setCancelled(plugin.handleCommandExecution(evt.getMessage(), evt.getSender()));
+        boolean executionCancelled = plugin.handleCommandExecution(evt.getMessage(), evt.getSender());
+        if (executionCancelled) {
+            evt.setCancelled(true);
+        }
     }
 }
