@@ -25,7 +25,7 @@
     <groupId>io.github.xxyy.cmdblocker</groupId>
     <artifactId>cbu-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.5</version>
+    <version>1.5.6-SNAPSHOT</version>
 
     <modules>
         <module>common</module>
@@ -49,7 +49,7 @@
 
     <scm>
         <connection>scm:git:git@github.com:xxyy/commandblockerultimate.git</connection>
-      <tag>cbu-parent-1.5.5</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <licenses>
