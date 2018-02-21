@@ -33,18 +33,14 @@ public class ImmutableFilterResult implements FilterResult {
     private final CommandLine commandLine;
     private final FilterOpinion opinion;
     private final SenderAdapter sender;
-    private final FilterAction executionAction;
-    private final FilterAction tabCompleteAction;
-
-    //TODO: constructor with Filter argument for actions
+    private final FilterAction action;
 
     public ImmutableFilterResult(CommandLine commandLine, FilterOpinion opinion, SenderAdapter sender,
-                                 FilterAction executionAction, FilterAction tabCompleteAction) {
+                                 FilterAction action) {
         this.commandLine = commandLine;
         this.opinion = opinion;
         this.sender = sender;
-        this.executionAction = executionAction;
-        this.tabCompleteAction = tabCompleteAction;
+        this.action = action;
     }
 
     @Override
@@ -64,13 +60,7 @@ public class ImmutableFilterResult implements FilterResult {
 
     @Nullable
     @Override
-    public FilterAction getExecutionAction() {
-        return executionAction;
-    }
-
-    @Nullable
-    @Override
-    public FilterAction getTabCompleteAction() {
-        return tabCompleteAction;
+    public FilterAction getAction() {
+        return action;
     }
 }

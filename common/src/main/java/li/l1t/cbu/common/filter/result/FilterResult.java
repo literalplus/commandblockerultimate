@@ -39,16 +39,9 @@ public interface FilterResult {
     SenderAdapter getSender();
 
     /**
-     * @return the command execution action of the filter whose opinion is reflected in this result, or null if no
-     * filter had a non-{@link FilterOpinion#NONE neutral} opinion
+     * @return the execution or completion action, depending on the query type, of the filter whose opinion is
+     * reflected in this result, or null if no filter had a non-{@link FilterOpinion#NONE neutral} opinion
      */
     @Nullable
-    FilterAction getExecutionAction();
-
-    /**
-     * @return the tab-complete action of the filter whose opinion is reflected in this result, or null if no filter
-     * had a non-{@link FilterOpinion#NONE neutral} opinion
-     */
-    @Nullable
-    FilterAction getTabCompleteAction();
+    FilterAction getAction();
 }

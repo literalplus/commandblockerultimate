@@ -45,8 +45,7 @@ class MessageActionTest {
 
     private ImmutableFilterResult givenAFilterResult(TestSender sender) {
         return new ImmutableFilterResult(
-                new SimpleCommandLine(COMMAND_LINE), FilterOpinion.NONE, sender,
-                null, null
+                new SimpleCommandLine(COMMAND_LINE), FilterOpinion.NONE, sender, null
         );
     }
 
