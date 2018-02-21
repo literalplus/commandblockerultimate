@@ -19,7 +19,7 @@
 
 package li.l1t.cbu.common.filter.action;
 
-import li.l1t.cbu.common.filter.FilterResult;
+import li.l1t.cbu.common.filter.result.FilterResult;
 
 /**
  * A filter action that sends chat messages on denial and bypass.

@@ -19,7 +19,7 @@
 
 package li.l1t.cbu.common.filter.action;
 
-import li.l1t.cbu.common.filter.FilterResult;
+import li.l1t.cbu.common.filter.result.FilterResult;
 
 /**
  * An action that is executed when a command execution or tab completion is denied by a filter.

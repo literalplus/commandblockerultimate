@@ -20,8 +20,8 @@
 package li.l1t.cbu.common.filter.criterion;
 
 import com.google.common.collect.ImmutableSet;
-import li.l1t.cbu.common.filter.FilterOpinion;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
+import li.l1t.cbu.common.filter.result.FilterOpinion;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 

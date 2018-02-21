@@ -19,10 +19,10 @@
 
 package li.l1t.cbu.common.filter.action;
 
-import li.l1t.cbu.common.filter.FilterOpinion;
-import li.l1t.cbu.common.filter.FilterResult;
-import li.l1t.cbu.common.filter.ImmutableFilterResult;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
+import li.l1t.cbu.common.filter.result.FilterOpinion;
+import li.l1t.cbu.common.filter.result.FilterResult;
+import li.l1t.cbu.common.filter.result.ImmutableFilterResult;
 import li.l1t.cbu.common.platform.TestSender;
 import org.junit.jupiter.api.Test;
 

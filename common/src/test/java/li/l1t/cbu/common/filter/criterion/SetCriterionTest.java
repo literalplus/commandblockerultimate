@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import li.l1t.cbu.common.config.DummyResolver;
-import li.l1t.cbu.common.filter.FilterOpinion;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
+import li.l1t.cbu.common.filter.result.FilterOpinion;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
