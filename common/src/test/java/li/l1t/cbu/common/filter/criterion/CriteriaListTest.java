@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (l1t.li)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package li.l1t.cbu.common.filter;
+package li.l1t.cbu.common.filter.criterion;
 
 import com.google.common.collect.ImmutableSet;
+import li.l1t.cbu.common.filter.FilterOpinion;
+import li.l1t.cbu.common.filter.SimpleCommandLine;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 

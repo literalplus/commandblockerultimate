@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,8 @@
  */
 
 package li.l1t.cbu.common.filter;
+
+import li.l1t.cbu.common.filter.criterion.CommandCriterion;
 
 /**
  * Represents the opinion of a {@link CommandCriterion} regarding a command line.
