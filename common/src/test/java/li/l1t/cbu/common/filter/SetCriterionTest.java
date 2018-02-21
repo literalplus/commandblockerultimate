@@ -30,28 +30,28 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-class SetFilterTest {
+class SetCriterionTest {
     @Test
     void checkExecution__pos_single() {
         //given
-        SetFilter filter = new SetFilter(ImmutableSet.of("blocked"));
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked"));
         //when
-        FilterOpinion opinion = whenChecked(filter, "/blocked args wow");
+        FilterOpinion opinion = whenChecked(criterion, "/blocked args wow");
         //then
         assertThat(opinion, is(FilterOpinion.DENY));
     }
 
-    private FilterOpinion whenChecked(SetFilter filter, String fullMessage) {
-        return filter.checkExecution(new SimpleCommandLine(fullMessage));
+    private FilterOpinion whenChecked(SetCriterion criterion, String fullMessage) {
+        return criterion.checkExecution(new SimpleCommandLine(fullMessage));
     }
 
     @Test
     void checkExecution__pos_prefix_blocked() {
         //given
-        SetFilter filter = new SetFilter(ImmutableSet.of("bukkit:blocked"));
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("bukkit:blocked"));
         //when
-        FilterOpinion negative = whenChecked(filter, "/blocked args wow");
-        FilterOpinion positive = whenChecked(filter, "/bukkit:blocked args wow");
+        FilterOpinion negative = whenChecked(criterion, "/blocked args wow");
+        FilterOpinion positive = whenChecked(criterion, "/bukkit:blocked args wow");
         //then
         assertThat(negative, is(FilterOpinion.NONE));
         assertThat(positive, is(FilterOpinion.DENY));
@@ -60,10 +60,10 @@ class SetFilterTest {
     @Test
     void checkExecution__pos_prefix_implied() {
         //given
-        SetFilter filter = new SetFilter(ImmutableSet.of("blocked"));
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked"));
         //when
-        FilterOpinion opinion1 = whenChecked(filter, "/blocked args wow");
-        FilterOpinion opinion2 = whenChecked(filter, "/bukkit:blocked args wow");
+        FilterOpinion opinion1 = whenChecked(criterion, "/blocked args wow");
+        FilterOpinion opinion2 = whenChecked(criterion, "/bukkit:blocked args wow");
         //then
         assertThat(opinion1, is(FilterOpinion.DENY));
         assertThat(opinion2, is(FilterOpinion.DENY));
@@ -72,10 +72,10 @@ class SetFilterTest {
     @Test
     void checkExecution__pos_multiple() {
         //given
-        SetFilter filter = new SetFilter(ImmutableSet.of("blocked", "more"));
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked", "more"));
         //when
-        FilterOpinion opinion1 = whenChecked(filter, "/blocked args wow");
-        FilterOpinion opinion2 = whenChecked(filter, "/more args wow");
+        FilterOpinion opinion1 = whenChecked(criterion, "/blocked args wow");
+        FilterOpinion opinion2 = whenChecked(criterion, "/more args wow");
         //then
         assertThat(opinion1, is(FilterOpinion.DENY));
         assertThat(opinion2, is(FilterOpinion.DENY));
@@ -84,9 +84,9 @@ class SetFilterTest {
     @Test
     void checkExecution__neg_multiple() {
         //given
-        SetFilter filter = new SetFilter(ImmutableSet.of("blocked", "more"));
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked", "more"));
         //when
-        FilterOpinion opinion = whenChecked(filter, "/other args wow");
+        FilterOpinion opinion = whenChecked(criterion, "/other args wow");
         //then
         assertThat(opinion, is(FilterOpinion.NONE));
     }
@@ -94,9 +94,9 @@ class SetFilterTest {
     @Test
     void checkExecution__pos_customOpinion() {
         //given
-        SetFilter filter = new SetFilter(ImmutableSet.of("allowed"), FilterOpinion.ALLOW);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("allowed"), FilterOpinion.ALLOW);
         //when
-        FilterOpinion opinion = whenChecked(filter, "/allowed args wow");
+        FilterOpinion opinion = whenChecked(criterion, "/allowed args wow");
         //then
         assertThat(opinion, is(FilterOpinion.ALLOW));
     }
@@ -110,15 +110,15 @@ class SetFilterTest {
                         .put("othercommand", ImmutableList.of())
                         .build()
         );
-        SetFilter filter = new SetFilter(ImmutableSet.of("command", "othercommand"));
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("command", "othercommand"));
         //when
-        filter.resolveAliases(resolver);
+        criterion.resolveAliases(resolver);
         //then
-        assertThat(whenChecked(filter, "/command wow"), is(FilterOpinion.DENY));
-        assertThat(whenChecked(filter, "/alias1"), is(FilterOpinion.DENY));
-        assertThat(whenChecked(filter, "/alias2"), is(FilterOpinion.DENY));
-        assertThat(whenChecked(filter, "/othercommand"), is(FilterOpinion.DENY));
-        assertThat(whenChecked(filter, "/wow"), is(FilterOpinion.NONE));
+        assertThat(whenChecked(criterion, "/command wow"), is(FilterOpinion.DENY));
+        assertThat(whenChecked(criterion, "/alias1"), is(FilterOpinion.DENY));
+        assertThat(whenChecked(criterion, "/alias2"), is(FilterOpinion.DENY));
+        assertThat(whenChecked(criterion, "/othercommand"), is(FilterOpinion.DENY));
+        assertThat(whenChecked(criterion, "/wow"), is(FilterOpinion.NONE));
     }
 
 }

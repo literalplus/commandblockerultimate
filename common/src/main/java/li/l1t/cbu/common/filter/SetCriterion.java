@@ -28,21 +28,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A command filter that keeps a set of root commands that are denied only by their name.
+ * Matches command lines only by their base command. Is aware of plugin prefixes, so blocking "me" covers "me" as well
+ * as "minecraft:me" etc.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-08-19
  */
-public class SetFilter implements CommandFilter {
+public class SetCriterion implements CommandCriterion {
     private final Set<String> rawCommandNames;
     private final Set<String> resolvedCommandNames = new HashSet<>();
     private final FilterOpinion matchOpinion;
 
-    public SetFilter(Set<String> rawCommandNames) {
+    public SetCriterion(Set<String> rawCommandNames) {
         this(rawCommandNames, FilterOpinion.DENY);
     }
 
-    public SetFilter(Set<String> rawCommandNames, FilterOpinion matchOpinion) {
+    public SetCriterion(Set<String> rawCommandNames, FilterOpinion matchOpinion) {
         this.rawCommandNames = rawCommandNames;
         this.matchOpinion = matchOpinion;
         this.resolvedCommandNames.addAll(this.rawCommandNames);

@@ -24,12 +24,12 @@ import li.l1t.cbu.common.config.AliasResolver;
 import javax.annotation.Nonnull;
 
 /**
- * Represents a filter that is capable of allowing or denying command lines.
+ * Inspects command lines and blocks some, based on pre-defined criteria.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-08-19
  */
-public interface CommandFilter {
+public interface CommandCriterion {
     /**
      * @return a concise description of this filter, never null
      */

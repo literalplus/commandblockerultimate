@@ -20,7 +20,7 @@
 package li.l1t.cbu.common.filter;
 
 /**
- * Represents the opinion of a {@link CommandFilter} regarding a command line.
+ * Represents the opinion of a {@link CommandCriterion} regarding a command line.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-08-19

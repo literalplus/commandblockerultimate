@@ -25,46 +25,46 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-class FilterListTest {
+class CriteriaListTest {
     @Test
     void checkExecution__none() {
         //given
-        FilterList list = givenAFilterList();
+        CriteriaList list = givenACriteriaList();
         //when
         FilterOpinion res = whenChecked(list, "/wow args");
         //then
         assertThat(res, CoreMatchers.is(FilterOpinion.ALLOW));
     }
 
-    private FilterList givenAFilterList() {
-        return new FilterList(FilterOpinion.ALLOW);
+    private CriteriaList givenACriteriaList() {
+        return new CriteriaList(FilterOpinion.ALLOW);
     }
 
-    private FilterOpinion whenChecked(FilterList list, String fullMessage) {
+    private FilterOpinion whenChecked(CriteriaList list, String fullMessage) {
         return list.checkExecution(new SimpleCommandLine(fullMessage));
     }
 
     @Test
     void checkExecution__one() {
         //given
-        FilterList list = givenAFilterList();
-        list.addFilter(givenFilterWith("blocked"));
+        CriteriaList list = givenACriteriaList();
+        list.addCriterion(givenASetCriterion("blocked"));
         //when
         FilterOpinion res = whenChecked(list, "/blocked");
         //then
         assertThat(res, CoreMatchers.is(FilterOpinion.DENY));
     }
 
-    private SetFilter givenFilterWith(String... command) {
-        return new SetFilter(ImmutableSet.copyOf(command));
+    private SetCriterion givenASetCriterion(String... blocked) {
+        return new SetCriterion(ImmutableSet.copyOf(blocked));
     }
 
     @Test
     void checkExecution__multi_pos() {
         //given
-        FilterList list = givenAFilterList();
-        list.addFilter(givenFilterWith("blocked"));
-        list.addFilter(givenFilterWith("other"));
+        CriteriaList list = givenACriteriaList();
+        list.addCriterion(givenASetCriterion("blocked"));
+        list.addCriterion(givenASetCriterion("other"));
         //when
         FilterOpinion res1 = whenChecked(list, "/blocked");
         FilterOpinion res2 = whenChecked(list, "/other");
@@ -76,9 +76,9 @@ class FilterListTest {
     @Test
     void checkExecution__multi_neg() {
         //given
-        FilterList list = givenAFilterList();
-        list.addFilter(givenFilterWith("blocked"));
-        list.addFilter(givenFilterWith("other"));
+        CriteriaList list = givenACriteriaList();
+        list.addCriterion(givenASetCriterion("blocked"));
+        list.addCriterion(givenASetCriterion("other"));
         //when
         FilterOpinion res = whenChecked(list, "/wow");
         //then
@@ -88,9 +88,9 @@ class FilterListTest {
     @Test
     void checkExecution__multi_same() {
         //given
-        FilterList list = givenAFilterList();
-        list.addFilter(givenFilterWith("blocked"));
-        list.addFilter(givenFilterWith("blocked"));
+        CriteriaList list = givenACriteriaList();
+        list.addCriterion(givenASetCriterion("blocked"));
+        list.addCriterion(givenASetCriterion("blocked"));
         //when
         FilterOpinion res = whenChecked(list, "/blocked");
         //then

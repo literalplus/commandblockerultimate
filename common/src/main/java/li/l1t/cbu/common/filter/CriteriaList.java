@@ -27,16 +27,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A command filter that consults a list of other filters to find its opinion.
+ * A command criterion that consults a list of other criteria, in registration order, to form a collective opinion.
+ * The first criterion that returns a non-{@link FilterOpinion#NONE neutral} opinion defines the collective opinion.
+ * If no filter has a non-neutral opinion, the {@link #setDefaultOpinion(FilterOpinion) default opinion} is used.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-08-19
  */
-public class FilterList implements CommandFilter {
+public class CriteriaList implements CommandCriterion {
     private FilterOpinion defaultOpinion;
-    private List<CommandFilter> filters = new ArrayList<>();
+    private List<CommandCriterion> criteria = new ArrayList<>();
 
-    public FilterList(FilterOpinion defaultOpinion) {
+    public CriteriaList(FilterOpinion defaultOpinion) {
         setDefaultOpinion(defaultOpinion);
     }
 
@@ -45,21 +47,27 @@ public class FilterList implements CommandFilter {
         this.defaultOpinion = defaultOpinion;
     }
 
-    public void addFilter(CommandFilter filter) {
-        Preconditions.checkNotNull(filter, "filter");
-        filters.add(filter);
+    public void addCriterion(CommandCriterion criterion) {
+        Preconditions.checkNotNull(criterion, "criterion");
+        criteria.add(criterion);
     }
 
     @Nonnull
     @Override
     public String getDescription() {
-        return "filter list over " + filters.toString();
+        return "filter list over " + criteria.toString();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see CriteriaList for details on the decision-making process
+     */
     @Nonnull
     @Override
     public FilterOpinion checkExecution(CommandLine commandLine) {
-        FilterOpinion collectiveOpinion = filters.stream()
+        // TODO: This checks all filters even if we already have the result
+        FilterOpinion collectiveOpinion = criteria.stream()
                 .map(filter -> filter.checkExecution(commandLine))
                 .reduce(this::combineOpinions)
                 .orElse(FilterOpinion.NONE);
@@ -79,6 +87,6 @@ public class FilterList implements CommandFilter {
 
     @Override
     public void resolveAliases(AliasResolver resolver) {
-        filters.forEach(filter -> filter.resolveAliases(resolver));
+        criteria.forEach(filter -> filter.resolveAliases(resolver));
     }
 }
