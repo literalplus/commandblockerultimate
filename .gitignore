@@ -10,3 +10,4 @@ target
 .idea
 *.iml
 dependency-reduced-pom.xml
+codealike.json
