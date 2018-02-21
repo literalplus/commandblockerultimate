@@ -57,7 +57,10 @@ public class SetFilter implements CommandFilter {
     @Nonnull
     @Override
     public FilterOpinion checkExecution(CommandLine commandLine) {
-        if (resolvedCommandNames.contains(commandLine.getRootCommand())) {
+        boolean rootCommandBlocked = resolvedCommandNames.contains(commandLine.getRootCommand());
+        // v if minecraft:me is blocked, the root command check alone wouldn't find it (blocked "minecraft:me" != root "me")
+        boolean rawCommandBlocked = resolvedCommandNames.contains(commandLine.getRawCommand());
+        if (rootCommandBlocked || rawCommandBlocked) {
             return matchOpinion;
         } else {
             return FilterOpinion.NONE;

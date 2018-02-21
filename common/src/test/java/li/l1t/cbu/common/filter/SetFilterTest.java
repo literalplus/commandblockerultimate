@@ -46,6 +46,30 @@ class SetFilterTest {
     }
 
     @Test
+    void checkExecution__pos_prefix_blocked() {
+        //given
+        SetFilter filter = new SetFilter(ImmutableSet.of("bukkit:blocked"));
+        //when
+        FilterOpinion negative = whenChecked(filter, "/blocked args wow");
+        FilterOpinion positive = whenChecked(filter, "/bukkit:blocked args wow");
+        //then
+        assertThat(negative, is(FilterOpinion.NONE));
+        assertThat(positive, is(FilterOpinion.DENY));
+    }
+
+    @Test
+    void checkExecution__pos_prefix_implied() {
+        //given
+        SetFilter filter = new SetFilter(ImmutableSet.of("blocked"));
+        //when
+        FilterOpinion opinion1 = whenChecked(filter, "/blocked args wow");
+        FilterOpinion opinion2 = whenChecked(filter, "/bukkit:blocked args wow");
+        //then
+        assertThat(opinion1, is(FilterOpinion.DENY));
+        assertThat(opinion2, is(FilterOpinion.DENY));
+    }
+
+    @Test
     void checkExecution__pos_multiple() {
         //given
         SetFilter filter = new SetFilter(ImmutableSet.of("blocked", "more"));
