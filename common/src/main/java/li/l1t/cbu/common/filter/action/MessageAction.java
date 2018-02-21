@@ -53,4 +53,20 @@ public class MessageAction implements FilterAction {
             parseAndSendMessage(bypassMessage, result);
         }
     }
+
+    public void setShowDenialMessage(boolean showDenialMessage) {
+        this.showDenialMessage = showDenialMessage;
+    }
+
+    public void setShowBypassMessage(boolean showBypassMessage) {
+        this.showBypassMessage = showBypassMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public void setBypassMessage(String bypassMessage) {
+        this.bypassMessage = bypassMessage;
+    }
 }
