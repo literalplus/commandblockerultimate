@@ -42,7 +42,8 @@ public class MessageAction implements FilterAction {
 
     private void parseAndSendMessage(String rawMessage, FilterResult result) {
         String parsedMessage = rawMessage
-                .replace("<command>", result.getCommandLine().getRawCommand());
+                .replace("<command>", result.getCommandLine().getRawCommand())
+                .replace("<name>", result.getSender().getName());
         result.getSender().sendMessage(parsedMessage);
     }
 
