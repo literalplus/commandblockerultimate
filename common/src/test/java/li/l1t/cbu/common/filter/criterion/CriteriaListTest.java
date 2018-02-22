@@ -43,7 +43,7 @@ class CriteriaListTest {
     }
 
     private FilterOpinion whenChecked(CriteriaList list, String fullMessage) {
-        return list.checkExecution(new SimpleCommandLine(fullMessage));
+        return list.process(new SimpleCommandLine(fullMessage));
     }
 
     @Test

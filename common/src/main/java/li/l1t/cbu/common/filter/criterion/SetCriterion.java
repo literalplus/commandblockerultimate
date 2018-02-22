@@ -61,7 +61,7 @@ public class SetCriterion implements CommandCriterion {
 
     @Nonnull
     @Override
-    public FilterOpinion checkExecution(CommandLine commandLine) {
+    public FilterOpinion process(CommandLine commandLine) {
         boolean rootCommandBlocked = resolvedCommandNames.contains(commandLine.getRootCommand());
         // v if minecraft:me is blocked, the root command check alone wouldn't find it (blocked "minecraft:me" != root "me")
         boolean rawCommandBlocked = resolvedCommandNames.contains(commandLine.getRawCommand());

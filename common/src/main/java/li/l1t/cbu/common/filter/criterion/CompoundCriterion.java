@@ -19,38 +19,17 @@
 
 package li.l1t.cbu.common.filter.criterion;
 
-import li.l1t.cbu.common.config.AliasResolver;
-import li.l1t.cbu.common.filter.CommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 
-import javax.annotation.Nonnull;
-
 /**
- * Inspects command lines and blocks some, based on a pre-defined criterion.
+ * A command criterion that consults other criteria to form a collective opinion.
+ * If no filter has a non-neutral opinion, the {@link #setDefaultOpinion(FilterOpinion) default opinion} is used.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
- * @since 2017-08-19
+ * @since 2018-02-22
  */
-public interface CommandCriterion {
-    /**
-     * @return a concise description of this filter, never null
-     */
-    @Nonnull
-    String getDescription();
+public interface CompoundCriterion extends CommandCriterion {
+    void setDefaultOpinion(FilterOpinion defaultOpinion);
 
-    /**
-     * Checks the opinion of this criterion regarding given command line.
-     *
-     * @param commandLine the command line to process
-     * @return what this criterion thinks about that line, never null
-     */
-    @Nonnull
-    FilterOpinion process(CommandLine commandLine);
-
-    /**
-     * Resolves aliases of the filtered commands to be blocked too, if supported by this filter.
-     *
-     * @param resolver the resolver providing alias information
-     */
-    void resolveAliases(AliasResolver resolver);
+    void addCriterion(CommandCriterion criterion);
 }

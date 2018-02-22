@@ -44,7 +44,7 @@ class SetCriterionTest {
     }
 
     private FilterOpinion whenChecked(SetCriterion criterion, String fullMessage) {
-        return criterion.checkExecution(new SimpleCommandLine(fullMessage));
+        return criterion.process(new SimpleCommandLine(fullMessage));
     }
 
     @Test

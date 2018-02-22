@@ -29,14 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A command criterion that consults a list of other criteria, in registration order, to form a collective opinion.
+ * A compound criterion that consults a list of other criteria, in registration order, to form a collective opinion.
  * The first criterion that returns a non-{@link FilterOpinion#NONE neutral} opinion defines the collective opinion.
  * If no filter has a non-neutral opinion, the {@link #setDefaultOpinion(FilterOpinion) default opinion} is used.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-08-19
  */
-public class CriteriaList implements CommandCriterion {
+public class CriteriaList implements CompoundCriterion {
     private FilterOpinion defaultOpinion;
     private List<CommandCriterion> criteria = new ArrayList<>();
 
@@ -44,11 +44,13 @@ public class CriteriaList implements CommandCriterion {
         setDefaultOpinion(defaultOpinion);
     }
 
+    @Override
     public void setDefaultOpinion(FilterOpinion defaultOpinion) {
         Preconditions.checkNotNull(defaultOpinion, "defaultOpinion");
         this.defaultOpinion = defaultOpinion;
     }
 
+    @Override
     public void addCriterion(CommandCriterion criterion) {
         Preconditions.checkNotNull(criterion, "criterion");
         criteria.add(criterion);
@@ -67,10 +69,10 @@ public class CriteriaList implements CommandCriterion {
      */
     @Nonnull
     @Override
-    public FilterOpinion checkExecution(CommandLine commandLine) {
+    public FilterOpinion process(CommandLine commandLine) {
         // TODO: This checks all filters even if we already have the result
         FilterOpinion collectiveOpinion = criteria.stream()
-                .map(filter -> filter.checkExecution(commandLine))
+                .map(filter -> filter.process(commandLine))
                 .reduce(this::combineOpinions)
                 .orElse(FilterOpinion.NONE);
         if (collectiveOpinion == FilterOpinion.NONE) {
