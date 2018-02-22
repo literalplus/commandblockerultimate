@@ -40,14 +40,16 @@ public class SetCriterion implements CommandCriterion {
     private final Set<String> rawCommandNames;
     private final Set<String> resolvedCommandNames = new HashSet<>();
     private final FilterOpinion matchOpinion;
+    private final boolean resolveAliases;
 
-    public SetCriterion(Set<String> rawCommandNames) {
-        this(rawCommandNames, FilterOpinion.DENY);
+    public SetCriterion(Set<String> rawCommandNames, boolean resolveAliases) {
+        this(rawCommandNames, FilterOpinion.DENY, resolveAliases);
     }
 
-    public SetCriterion(Set<String> rawCommandNames, FilterOpinion matchOpinion) {
+    public SetCriterion(Set<String> rawCommandNames, FilterOpinion matchOpinion, boolean resolveAliases) {
         this.rawCommandNames = rawCommandNames;
         this.matchOpinion = matchOpinion;
+        this.resolveAliases = resolveAliases;
         this.resolvedCommandNames.addAll(this.rawCommandNames);
     }
 
@@ -74,14 +76,13 @@ public class SetCriterion implements CommandCriterion {
     public void resolveAliases(AliasResolver resolver) {
         resolvedCommandNames.clear();
         resolvedCommandNames.addAll(rawCommandNames);
+        if (!resolveAliases) {
+            return;
+        }
         Set<String> aliasesExcludingNames = rawCommandNames.stream()
                 .map(resolver::resolve)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
         resolvedCommandNames.addAll(aliasesExcludingNames);
-    }
-
-    public Set<String> getRawCommandNames() {
-        return rawCommandNames;
     }
 }
