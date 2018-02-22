@@ -40,12 +40,4 @@ public enum FilterOpinion {
      * Represents that the filter does not have an opinion on the execution.
      */
     NONE;
-
-    public boolean isAllowed() {
-        return this == ALLOW;
-    }
-
-    public boolean isDenied() {
-        return this == DENY;
-    }
 }
