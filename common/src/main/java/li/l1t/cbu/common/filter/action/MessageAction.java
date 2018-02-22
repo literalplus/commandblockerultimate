@@ -19,7 +19,9 @@
 
 package li.l1t.cbu.common.filter.action;
 
+import li.l1t.cbu.common.filter.CommandLine;
 import li.l1t.cbu.common.filter.result.FilterResult;
+import li.l1t.cbu.common.platform.SenderAdapter;
 
 /**
  * A filter action that sends chat messages on denial and bypass.
@@ -41,16 +43,20 @@ public class MessageAction implements FilterAction {
     }
 
     private void parseAndSendMessage(String rawMessage, FilterResult result) {
+        parseAndSendMessage(rawMessage, result.getCommandLine(), result.getSender());
+    }
+
+    private void parseAndSendMessage(String rawMessage, CommandLine commandLine, SenderAdapter sender) {
         String parsedMessage = rawMessage
-                .replace("<command>", result.getCommandLine().getRawCommand())
-                .replace("<name>", result.getSender().getName());
-        result.getSender().sendMessage(parsedMessage);
+                .replace("<command>", commandLine.getRawCommand())
+                .replace("<name>", sender.getName());
+        sender.sendMessage(parsedMessage);
     }
 
     @Override
-    public void onBypass(FilterResult result) {
+    public void onBypass(CommandLine commandLine, SenderAdapter sender) {
         if (showBypassMessage) {
-            parseAndSendMessage(bypassMessage, result);
+            parseAndSendMessage(bypassMessage, commandLine, sender);
         }
     }
 

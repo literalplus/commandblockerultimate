@@ -19,10 +19,12 @@
 
 package li.l1t.cbu.common.filter.action;
 
+import li.l1t.cbu.common.filter.CommandLine;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.filter.result.FilterResult;
 import li.l1t.cbu.common.filter.result.ImmutableFilterResult;
+import li.l1t.cbu.common.platform.SenderAdapter;
 import li.l1t.cbu.common.platform.TestSender;
 import org.junit.jupiter.api.Test;
 
@@ -45,8 +47,12 @@ class MessageActionTest {
 
     private ImmutableFilterResult givenAFilterResult(TestSender sender) {
         return new ImmutableFilterResult(
-                new SimpleCommandLine(COMMAND_LINE), FilterOpinion.NONE, sender, null
+                givenACommandLine(), FilterOpinion.NONE, sender, null
         );
+    }
+
+    private SimpleCommandLine givenACommandLine() {
+        return new SimpleCommandLine(COMMAND_LINE);
     }
 
     @Test
@@ -64,7 +70,11 @@ class MessageActionTest {
     }
 
     private String computeExpectedMessage(FilterResult result) {
-        return "§chenlo " + result.getSender().getName() + ", you failed with " + result.getCommandLine().getRawCommand() + ".";
+        return computeExpectedMessage(result.getCommandLine(), result.getSender());
+    }
+
+    private String computeExpectedMessage(CommandLine commandLine, SenderAdapter sender) {
+        return "§chenlo " + sender.getName() + ", you failed with " + commandLine.getRawCommand() + ".";
     }
 
     @Test
@@ -87,12 +97,12 @@ class MessageActionTest {
         action.setShowBypassMessage(true);
         action.setBypassMessage(RAW_MESSAGE);
         TestSender sender = new TestSender();
-        ImmutableFilterResult result = givenAFilterResult(sender);
+        SimpleCommandLine commandLine = givenACommandLine();
         // when
-        action.onBypass(result);
+        action.onBypass(commandLine, sender);
         // then
         sender.assertReceivedMessages(1);
-        sender.assertLastReceivedMessageIs(computeExpectedMessage(result));
+        sender.assertLastReceivedMessageIs(computeExpectedMessage(commandLine, sender));
     }
 
     @Test
@@ -100,9 +110,8 @@ class MessageActionTest {
         // given
         MessageAction action = new MessageAction();
         TestSender sender = new TestSender();
-        ImmutableFilterResult result = givenAFilterResult(sender);
         // when
-        action.onBypass(result);
+        action.onBypass(givenACommandLine(), sender);
         // then
         sender.assertDidNotReceiveAnyMessages();
     }
