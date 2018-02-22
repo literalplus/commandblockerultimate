@@ -58,7 +58,7 @@ class CriteriaListTest {
     }
 
     private SetCriterion givenASetCriterion(String... blocked) {
-        return new SetCriterion(ImmutableSet.copyOf(blocked), true);
+        return new SetCriterion(ImmutableSet.copyOf(blocked));
     }
 
     @Test

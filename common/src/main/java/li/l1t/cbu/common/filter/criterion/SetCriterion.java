@@ -39,11 +39,11 @@ import java.util.stream.Collectors;
 public class SetCriterion implements CommandCriterion {
     private final Set<String> rawCommandNames;
     private final Set<String> resolvedCommandNames = new HashSet<>();
-    private final FilterOpinion matchOpinion;
-    private final boolean resolveAliases;
+    private FilterOpinion matchOpinion;
+    private boolean resolveAliases;
 
-    public SetCriterion(Set<String> rawCommandNames, boolean resolveAliases) {
-        this(rawCommandNames, FilterOpinion.DENY, resolveAliases);
+    public SetCriterion(Set<String> rawCommandNames) {
+        this(rawCommandNames, FilterOpinion.DENY, true);
     }
 
     public SetCriterion(Set<String> rawCommandNames, FilterOpinion matchOpinion, boolean resolveAliases) {
@@ -84,5 +84,9 @@ public class SetCriterion implements CommandCriterion {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
         resolvedCommandNames.addAll(aliasesExcludingNames);
+    }
+
+    public void setResolveAliases(boolean resolveAliases) {
+        this.resolveAliases = resolveAliases;
     }
 }

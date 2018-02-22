@@ -26,8 +26,7 @@ import li.l1t.cbu.common.filter.result.FilterOpinion;
 import javax.annotation.Nonnull;
 
 /**
- * Inspects command lines and blocks some, based on a pre-defined criterion. Implementations must be immutable,
- * except for alias resolving.
+ * Inspects command lines and blocks some, based on a pre-defined criterion.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-08-19

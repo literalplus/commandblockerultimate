@@ -36,7 +36,7 @@ class SetCriterionTest {
     @Test
     void checkExecution__pos_single() {
         //given
-        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked"), true);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked"));
         //when
         FilterOpinion opinion = whenChecked(criterion, "/blocked args wow");
         //then
@@ -50,7 +50,7 @@ class SetCriterionTest {
     @Test
     void checkExecution__pos_prefix_blocked() {
         //given
-        SetCriterion criterion = new SetCriterion(ImmutableSet.of("bukkit:blocked"), true);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("bukkit:blocked"));
         //when
         FilterOpinion negative = whenChecked(criterion, "/blocked args wow");
         FilterOpinion positive = whenChecked(criterion, "/bukkit:blocked args wow");
@@ -62,7 +62,7 @@ class SetCriterionTest {
     @Test
     void checkExecution__pos_prefix_implied() {
         //given
-        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked"), true);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked"));
         //when
         FilterOpinion opinion1 = whenChecked(criterion, "/blocked args wow");
         FilterOpinion opinion2 = whenChecked(criterion, "/bukkit:blocked args wow");
@@ -74,7 +74,7 @@ class SetCriterionTest {
     @Test
     void checkExecution__pos_multiple() {
         //given
-        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked", "more"), true);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked", "more"));
         //when
         FilterOpinion opinion1 = whenChecked(criterion, "/blocked args wow");
         FilterOpinion opinion2 = whenChecked(criterion, "/more args wow");
@@ -86,7 +86,7 @@ class SetCriterionTest {
     @Test
     void checkExecution__neg_multiple() {
         //given
-        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked", "more"), true);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("blocked", "more"));
         //when
         FilterOpinion opinion = whenChecked(criterion, "/other args wow");
         //then
@@ -104,10 +104,10 @@ class SetCriterionTest {
     }
 
     @Test
-    void resolveAliases__on() {
+    void resolveAliases__on_by_default() {
         //given
         DummyResolver resolver = givenAnAliasResolver();
-        SetCriterion criterion = new SetCriterion(ImmutableSet.of("command", "othercommand"), true);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("command", "othercommand"));
         //when
         criterion.resolveAliases(resolver);
         //then
@@ -135,7 +135,8 @@ class SetCriterionTest {
     void resolveAliases__off() {
         //given
         DummyResolver resolver = givenAnAliasResolver();
-        SetCriterion criterion = new SetCriterion(ImmutableSet.of("command", "othercommand"), false);
+        SetCriterion criterion = new SetCriterion(ImmutableSet.of("command", "othercommand"));
+        criterion.setResolveAliases(false);
         //when
         criterion.resolveAliases(resolver);
         //then
