@@ -70,23 +70,13 @@ public class CriteriaList implements CompoundCriterion {
     @Nonnull
     @Override
     public FilterOpinion process(CommandLine commandLine) {
-        // TODO: This checks all filters even if we already have the result
-        FilterOpinion collectiveOpinion = criteria.stream()
-                .map(filter -> filter.process(commandLine))
-                .reduce(this::combineOpinions)
-                .orElse(FilterOpinion.NONE);
-        if (collectiveOpinion == FilterOpinion.NONE) {
-            collectiveOpinion = defaultOpinion;
+        for (CommandCriterion criterion : criteria) {
+            FilterOpinion opinion = criterion.process(commandLine);
+            if (opinion != FilterOpinion.NONE) {
+                return opinion;
+            }
         }
-        return collectiveOpinion;
-    }
-
-    private FilterOpinion combineOpinions(FilterOpinion first, FilterOpinion second) {
-        if (first != FilterOpinion.NONE) {
-            return first;
-        } else {
-            return second;
-        }
+        return defaultOpinion;
     }
 
     @Override
