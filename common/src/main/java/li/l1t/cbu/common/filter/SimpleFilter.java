@@ -45,7 +45,7 @@ public class SimpleFilter extends CriteriaList implements Filter {
     }
 
     @Override
-    public FilterOpinion processExecution(SenderAdapter sender, CommandLine commandLine) {
+    public FilterOpinion processExecution(CommandLine commandLine, SenderAdapter sender) {
         Preconditions.checkNotNull(sender, "sender");
         Preconditions.checkNotNull(commandLine, "commandLine");
         if (!config().doesPreventExecution()) {

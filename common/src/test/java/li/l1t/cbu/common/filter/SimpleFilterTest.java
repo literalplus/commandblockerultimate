@@ -49,7 +49,7 @@ class SimpleFilterTest {
         TestSender testSender = new TestSender();
         assumePreventsExecution(filter);
         // when
-        FilterOpinion opinion = filter.processExecution(testSender, commandLineWith(COMMAND_NAME_1));
+        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
         // then
         assertThat(opinion, is(FilterOpinion.NONE));
     }
@@ -77,7 +77,7 @@ class SimpleFilterTest {
         TestSender testSender = new TestSender();
         assumePreventsExecution(filter);
         // when
-        FilterOpinion opinion = filter.processExecution(testSender, commandLineWith(COMMAND_NAME_1));
+        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
         // then
         assertThat(opinion, is(FilterOpinion.ALLOW));
     }
@@ -89,7 +89,7 @@ class SimpleFilterTest {
         TestSender testSender = new TestSender();
         assumePreventsExecution(filter);
         // when
-        FilterOpinion opinion = filter.processExecution(testSender, commandLineWith(COMMAND_NAME_1));
+        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
         // then
         assertThat(opinion, is(FilterOpinion.DENY));
     }
@@ -115,13 +115,13 @@ class SimpleFilterTest {
         TestSender testSender = new TestSender();
         assumeExecutionDenied(filter, testSender, COMMAND_NAME_1);
         // when
-        FilterOpinion opinion = filter.processExecution(testSender, commandLineWith(OTHER_COMMAND_NAME));
+        FilterOpinion opinion = filter.processExecution(commandLineWith(OTHER_COMMAND_NAME), testSender);
         // then
         assertThat(opinion, is(FilterOpinion.NONE));
     }
 
     private void assumeExecutionDenied(SimpleFilter filter, TestSender testSender, String commandName) {
-        Assumptions.assumeTrue(filter.processExecution(testSender, commandLineWith(commandName)) == FilterOpinion.DENY);
+        Assumptions.assumeTrue(filter.processExecution(commandLineWith(commandName), testSender) == FilterOpinion.DENY);
     }
 
     @Test
@@ -130,9 +130,9 @@ class SimpleFilterTest {
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1, COMMAND_NAME_2);
         TestSender testSender = new TestSender();
         // when
-        FilterOpinion opinion1 = filter.processExecution(testSender, commandLineWith(COMMAND_NAME_1));
-        FilterOpinion opinion2 = filter.processExecution(testSender, commandLineWith(COMMAND_NAME_2));
-        FilterOpinion opinionOther = filter.processExecution(testSender, commandLineWith(OTHER_COMMAND_NAME));
+        FilterOpinion opinion1 = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
+        FilterOpinion opinion2 = filter.processExecution(commandLineWith(COMMAND_NAME_2), testSender);
+        FilterOpinion opinionOther = filter.processExecution(commandLineWith(OTHER_COMMAND_NAME), testSender);
         // then
         assertThat(opinion1, is(FilterOpinion.DENY));
         assertThat(opinion2, is(FilterOpinion.DENY));
@@ -152,7 +152,7 @@ class SimpleFilterTest {
     }
 
     private void thenExecutionIsAllowed(SimpleFilter filter, TestSender testSender, String commandName) {
-        FilterOpinion opinion = filter.processExecution(testSender, commandLineWith(commandName));
+        FilterOpinion opinion = filter.processExecution(commandLineWith(commandName), testSender);
         assertThat(opinion, is(FilterOpinion.NONE));
     }
 
@@ -181,7 +181,7 @@ class SimpleFilterTest {
         AtomicBoolean called = new AtomicBoolean(false);
         config(filter).executionAction(new LambdaAction().bypass((c, s) -> called.set(true)));
         // when
-        filter.processExecution(testSender, commandLineWith(COMMAND_NAME_1));
+        filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
         // then
         assertThat(called.get(), is(true));
     }
@@ -193,7 +193,7 @@ class SimpleFilterTest {
     }
 
     private void assumeExecutionAllowed(SimpleFilter filter, TestSender testSender, String commandName) {
-        Assumptions.assumeTrue(filter.processExecution(testSender, commandLineWith(commandName)) != FilterOpinion.DENY);
+        Assumptions.assumeTrue(filter.processExecution(commandLineWith(commandName), testSender) != FilterOpinion.DENY);
     }
 
     @Test
@@ -205,7 +205,7 @@ class SimpleFilterTest {
         AtomicBoolean called = new AtomicBoolean(false);
         config(filter).executionAction(new LambdaAction().bypass((c, s) -> called.set(true)));
         // when
-        filter.processExecution(testSender, commandLineWith(COMMAND_NAME_1));
+        filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
         // then
         assertThat(called.get(), is(false));
     }

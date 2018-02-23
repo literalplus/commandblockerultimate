@@ -46,7 +46,7 @@ public interface Filter extends CompoundCriterion {
      * @param sender      the sender that issued given command line
      * @return the collective opinion of this filter's criteria regarding given execution, never null
      */
-    FilterOpinion processExecution(SenderAdapter sender, CommandLine commandLine);
+    FilterOpinion processExecution(CommandLine commandLine, SenderAdapter sender);
 
 
 }
