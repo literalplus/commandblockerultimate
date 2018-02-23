@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,8 @@ import li.l1t.cbu.common.config.CBUConfig;
 import li.l1t.cbu.common.config.ConfigAdapter;
 import li.l1t.cbu.common.config.InvalidConfigException;
 
+import javax.annotation.Nonnull;
+
 /**
  * Provides an adapter for platform-specific operations related to the CommandBlockerUltimate plugin.
  *
@@ -38,6 +40,7 @@ public interface PlatformAdapter {
      *
      * @return this platform's current config adapter
      */
+    @Nonnull
     ConfigAdapter getConfigAdapter();
 
     /**
@@ -55,5 +58,6 @@ public interface PlatformAdapter {
     /**
      * @return the platform-specific alias resolver
      */
+    @Nonnull
     AliasResolver getAliasResolver();
 }

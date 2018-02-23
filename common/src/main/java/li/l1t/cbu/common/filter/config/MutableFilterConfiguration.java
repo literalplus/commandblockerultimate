@@ -23,6 +23,8 @@ import com.google.common.base.Preconditions;
 import li.l1t.cbu.common.filter.action.FilterAction;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 
+import javax.annotation.Nonnull;
+
 /**
  * A mutable implementation of a filter configuration which provides builder-like setter methods and
  * includes defaults for all values.
@@ -45,11 +47,13 @@ public class MutableFilterConfiguration implements FilterConfiguration {
         this.tabCompleteAction = Preconditions.checkNotNull(tabCompleteAction, "tabCompleteAction");
     }
 
+    @Nonnull
     @Override
     public FilterOpinion getDefaultOpinion() {
         return defaultOpinion;
     }
 
+    @Nonnull
     @Override
     public String getBypassPermission() {
         return bypassPermission;

@@ -25,6 +25,8 @@ import li.l1t.cbu.common.filter.criterion.CompoundCriterion;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
+import javax.annotation.Nonnull;
+
 /**
  * A named command filter with individual configuration.
  * A command filter processes tab-completions as well as command executions, checks them based on a collection of
@@ -37,6 +39,7 @@ public interface Filter extends CompoundCriterion {
     /**
      * @return this filter's configuration which need not be immutable
      */
+    @Nonnull
     FilterConfiguration config();
 
     /**
@@ -47,6 +50,7 @@ public interface Filter extends CompoundCriterion {
      * @param sender      the sender that issued given command line
      * @return the collective opinion of this filter's criteria regarding given execution, never null
      */
+    @Nonnull
     FilterOpinion processExecution(CommandLine commandLine, SenderAdapter sender);
 
 

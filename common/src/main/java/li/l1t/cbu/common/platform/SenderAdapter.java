@@ -19,6 +19,8 @@
 
 package li.l1t.cbu.common.platform;
 
+import javax.annotation.Nonnull;
+
 /**
  * A platform-independent adapter for a command sender.
  *
@@ -26,6 +28,7 @@ package li.l1t.cbu.common.platform;
  * @since 2018-02-21
  */
 public interface SenderAdapter {
+    @Nonnull
     String getName();
 
     boolean hasPermission(String permission);

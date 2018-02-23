@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (l1t.li)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@ package li.l1t.cbu.common.config;
 
 import com.google.common.collect.ImmutableList;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public class DummyResolver implements AliasResolver {
         this.aliasMap = aliasMap;
     }
 
+    @Nonnull
     @Override
     public List<String> resolve(String commandName) {
         return aliasMap.getOrDefault(commandName, ImmutableList.of());

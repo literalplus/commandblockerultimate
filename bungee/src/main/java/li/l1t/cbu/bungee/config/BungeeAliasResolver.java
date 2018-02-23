@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,10 +24,11 @@ import li.l1t.cbu.common.config.AliasResolver;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -50,6 +51,7 @@ public class BungeeAliasResolver implements AliasResolver {
         this.commandMap = stealCommandMap(plugin);
     }
 
+    @Nonnull
     @Override
     public List<String> resolve(String commandName) {
         String rawName = commandName.toLowerCase();

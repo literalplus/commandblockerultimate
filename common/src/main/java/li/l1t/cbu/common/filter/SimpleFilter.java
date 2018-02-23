@@ -25,6 +25,8 @@ import li.l1t.cbu.common.filter.criterion.CriteriaList;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
+import javax.annotation.Nonnull;
+
 /**
  * A command filter with individual configuration that has a defined set of criteria.
  *
@@ -39,11 +41,13 @@ public class SimpleFilter extends CriteriaList implements Filter {
         this.configuration = configuration;
     }
 
+    @Nonnull
     @Override
     public FilterConfiguration config() {
         return configuration;
     }
 
+    @Nonnull
     @Override
     public FilterOpinion processExecution(CommandLine commandLine, SenderAdapter sender) {
         Preconditions.checkNotNull(sender, "sender");

@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 package li.l1t.cbu.common.config;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public interface AliasResolver {
      * @param commandName Name of the command or any alias of the command
      * @return A List of all aliases and the name of requested command, <b>excluding {@code commandName}</b> or an empty List if none were found
      */
+    @Nonnull
     List<String> resolve(String commandName);
 
     /**

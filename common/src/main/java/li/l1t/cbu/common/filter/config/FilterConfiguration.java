@@ -22,6 +22,8 @@ package li.l1t.cbu.common.filter.config;
 import li.l1t.cbu.common.filter.action.FilterAction;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 
+import javax.annotation.Nonnull;
+
 /**
  * Stores the behaviour configuration of a {@link li.l1t.cbu.common.filter.Filter}.
  *
@@ -32,11 +34,13 @@ public interface FilterConfiguration {
     /**
      * @return the opinion that is used if no criteria has a non-{@link FilterOpinion#NONE neutral} opinion
      */
+    @Nonnull
     FilterOpinion getDefaultOpinion();
 
     /**
      * @return the permission that allows command senders to bypass this filter entirely
      */
+    @Nonnull
     String getBypassPermission();
 
     /**
