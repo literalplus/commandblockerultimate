@@ -22,6 +22,7 @@ package li.l1t.cbu.common.platform;
 import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ChatColor;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class TestSender implements SenderAdapter {
     private final List<String> grantedPermissions = new ArrayList<>();
     private final List<String> receivedMessages = new ArrayList<>();
 
+    @Nonnull
     @Override
     public String getName() {
         return "Dummy";
