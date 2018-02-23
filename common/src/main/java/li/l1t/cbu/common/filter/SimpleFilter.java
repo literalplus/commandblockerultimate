@@ -55,6 +55,8 @@ public class SimpleFilter extends CriteriaList implements Filter {
         if (sender.hasPermission(config().getBypassPermission())) {
             config().getExecutionAction().onBypass(commandLine, sender);
             return FilterOpinion.NONE;
+        } else if (result == FilterOpinion.DENY) {
+            configuration.getExecutionAction().onDenial(commandLine, sender);
         }
         return result;
     }

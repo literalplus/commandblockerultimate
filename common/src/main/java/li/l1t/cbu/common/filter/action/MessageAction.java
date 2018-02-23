@@ -20,7 +20,6 @@
 package li.l1t.cbu.common.filter.action;
 
 import li.l1t.cbu.common.filter.CommandLine;
-import li.l1t.cbu.common.filter.result.FilterResult;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
 /**
@@ -36,14 +35,10 @@ public class MessageAction implements FilterAction {
     private String bypassMessage = "&c[CBU] /<command> is blocked. Executing anyways since you have permission.";
 
     @Override
-    public void onDenial(FilterResult result) {
+    public void onDenial(CommandLine commandLine, SenderAdapter sender) {
         if (showDenialMessage) {
-            parseAndSendMessage(errorMessage, result);
+            parseAndSendMessage(errorMessage, commandLine, sender);
         }
-    }
-
-    private void parseAndSendMessage(String rawMessage, FilterResult result) {
-        parseAndSendMessage(rawMessage, result.getCommandLine(), result.getSender());
     }
 
     private void parseAndSendMessage(String rawMessage, CommandLine commandLine, SenderAdapter sender) {

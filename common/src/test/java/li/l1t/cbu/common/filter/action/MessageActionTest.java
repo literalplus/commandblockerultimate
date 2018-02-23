@@ -21,9 +21,6 @@ package li.l1t.cbu.common.filter.action;
 
 import li.l1t.cbu.common.filter.CommandLine;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
-import li.l1t.cbu.common.filter.result.FilterOpinion;
-import li.l1t.cbu.common.filter.result.FilterResult;
-import li.l1t.cbu.common.filter.result.ImmutableFilterResult;
 import li.l1t.cbu.common.platform.SenderAdapter;
 import li.l1t.cbu.common.platform.TestSender;
 import org.junit.jupiter.api.Test;
@@ -38,17 +35,11 @@ class MessageActionTest {
         // given
         MessageAction action = new MessageAction();
         TestSender sender = new TestSender();
-        ImmutableFilterResult result = givenAFilterResult(sender);
+        SimpleCommandLine commandLine = givenACommandLine();
         // when
-        action.onDenial(result);
+        action.onDenial(commandLine, sender);
         // then
         sender.assertReceivedMessages(1);
-    }
-
-    private ImmutableFilterResult givenAFilterResult(TestSender sender) {
-        return new ImmutableFilterResult(
-                givenACommandLine(), FilterOpinion.NONE, sender, null
-        );
     }
 
     private SimpleCommandLine givenACommandLine() {
@@ -61,16 +52,12 @@ class MessageActionTest {
         MessageAction action = new MessageAction();
         action.setErrorMessage(RAW_MESSAGE);
         TestSender sender = new TestSender();
-        ImmutableFilterResult result = givenAFilterResult(sender);
+        SimpleCommandLine commandLine = givenACommandLine();
         // when
-        action.onDenial(result);
+        action.onDenial(commandLine, sender);
         // then
         sender.assertReceivedMessages(1);
-        sender.assertLastReceivedMessageIs(computeExpectedMessage(result));
-    }
-
-    private String computeExpectedMessage(FilterResult result) {
-        return computeExpectedMessage(result.getCommandLine(), result.getSender());
+        sender.assertLastReceivedMessageIs(computeExpectedMessage(commandLine, sender));
     }
 
     private String computeExpectedMessage(CommandLine commandLine, SenderAdapter sender) {
@@ -83,9 +70,9 @@ class MessageActionTest {
         MessageAction action = new MessageAction();
         action.setShowDenialMessage(false);
         TestSender sender = new TestSender();
-        ImmutableFilterResult result = givenAFilterResult(sender);
+        SimpleCommandLine commandLine = givenACommandLine();
         // when
-        action.onDenial(result);
+        action.onDenial(commandLine, sender);
         // then
         sender.assertDidNotReceiveAnyMessages();
     }

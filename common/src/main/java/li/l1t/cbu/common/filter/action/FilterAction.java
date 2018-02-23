@@ -20,7 +20,6 @@
 package li.l1t.cbu.common.filter.action;
 
 import li.l1t.cbu.common.filter.CommandLine;
-import li.l1t.cbu.common.filter.result.FilterResult;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
 /**
@@ -33,16 +32,17 @@ public interface FilterAction {
     /**
      * Notifies this action that an execution or completion was denied.
      *
-     * @param result the filter result that caused the denial
+     * @param commandLine the command line that caused the denial
+     * @param sender      the sender that that caused the execution
      */
-    void onDenial(FilterResult result);
+    void onDenial(CommandLine commandLine, SenderAdapter sender);
 
     /**
      * Notifies this action that an execution or completion was denied, but the command sender has the necessary
      * permission to bypass the result.
      *
      * @param commandLine the command line that caused the denial
-     * @param sender the sender that has the required permission
+     * @param sender      the sender that has the required permission
      */
     void onBypass(CommandLine commandLine, SenderAdapter sender);
 }

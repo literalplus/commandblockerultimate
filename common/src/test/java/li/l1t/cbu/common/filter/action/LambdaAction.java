@@ -20,11 +20,9 @@
 package li.l1t.cbu.common.filter.action;
 
 import li.l1t.cbu.common.filter.CommandLine;
-import li.l1t.cbu.common.filter.result.FilterResult;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * A simple filter action that forwards handling to lambda expressions.
@@ -33,10 +31,10 @@ import java.util.function.Consumer;
  * @since 2018-02-23
  */
 public class LambdaAction implements FilterAction {
-    private Consumer<FilterResult> denialConsumer;
+    private BiConsumer<CommandLine, SenderAdapter> denialConsumer;
     private BiConsumer<CommandLine, SenderAdapter> bypassConsumer;
 
-    public LambdaAction denial(Consumer<FilterResult> denialConsumer) {
+    public LambdaAction denial(BiConsumer<CommandLine, SenderAdapter> denialConsumer) {
         this.denialConsumer = denialConsumer;
         return this;
     }
@@ -47,9 +45,9 @@ public class LambdaAction implements FilterAction {
     }
 
     @Override
-    public void onDenial(FilterResult result) {
+    public void onDenial(CommandLine commandLine, SenderAdapter sender) {
         if (denialConsumer != null) {
-            denialConsumer.accept(result);
+            denialConsumer.accept(commandLine, sender);
         }
     }
 
