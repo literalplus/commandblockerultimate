@@ -40,7 +40,8 @@ public interface Filter extends CompoundCriterion {
     FilterConfiguration config();
 
     /**
-     * Processes an execution, respecting this filter's configuration.
+     * Processes an execution, respecting this filter's configuration, and notifies the
+     * {@link FilterConfiguration#getExecutionAction() execution action} of the result.
      *
      * @param commandLine the command line to process
      * @param sender      the sender that issued given command line
