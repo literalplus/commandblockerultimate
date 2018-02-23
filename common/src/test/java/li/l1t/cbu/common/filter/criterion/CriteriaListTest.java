@@ -19,12 +19,18 @@
 
 package li.l1t.cbu.common.filter.criterion;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import li.l1t.cbu.common.config.DummyResolver;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 class CriteriaListTest {
@@ -35,11 +41,11 @@ class CriteriaListTest {
         //when
         FilterOpinion res = whenChecked(list, "/wow args");
         //then
-        assertThat(res, CoreMatchers.is(FilterOpinion.ALLOW));
+        assertThat(res, CoreMatchers.is(FilterOpinion.NONE));
     }
 
     private CriteriaList givenACriteriaList() {
-        return new CriteriaList(FilterOpinion.ALLOW);
+        return new CriteriaList(FilterOpinion.NONE);
     }
 
     private FilterOpinion whenChecked(CriteriaList list, String fullMessage) {
@@ -84,7 +90,7 @@ class CriteriaListTest {
         //when
         FilterOpinion res = whenChecked(list, "/wow");
         //then
-        assertThat(res, CoreMatchers.is(FilterOpinion.ALLOW));
+        assertThat(res, CoreMatchers.is(FilterOpinion.NONE));
     }
 
     @Test
@@ -97,5 +103,35 @@ class CriteriaListTest {
         FilterOpinion res = whenChecked(list, "/blocked");
         //then
         assertThat(res, CoreMatchers.is(FilterOpinion.DENY));
+    }
+
+    @Test
+    void checkExecution__multi_aliases() {
+        //given
+        CriteriaList list = givenACriteriaList();
+        list.addCriterion(givenASetCriterion("mycommand"));
+        list.addCriterion(givenASetCriterion("othercommand"));
+        DummyResolver resolver = givenAnAliasResolver();
+        //when
+        list.resolveAliases(resolver);
+        //then
+        thenAliasResolutionYielded(FilterOpinion.DENY, list);
+    }
+
+    private DummyResolver givenAnAliasResolver() {
+        return new DummyResolver(
+                ImmutableMap.<String, List<String>>builder()
+                        .put("mycommand", ImmutableList.of("alias3", "alias4"))
+                        .put("othercommand", ImmutableList.of())
+                        .build()
+        );
+    }
+
+    private void thenAliasResolutionYielded(FilterOpinion aliasOpinion, CriteriaList list) {
+        assertThat(whenChecked(list, "/mycommand wow"), is(FilterOpinion.DENY));
+        assertThat(whenChecked(list, "/alias3"), is(aliasOpinion));
+        assertThat(whenChecked(list, "/alias4"), is(aliasOpinion));
+        assertThat(whenChecked(list, "/othercommand"), is(FilterOpinion.DENY));
+        assertThat(whenChecked(list, "/wow"), is(FilterOpinion.NONE));
     }
 }
