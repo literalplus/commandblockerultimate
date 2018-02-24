@@ -40,8 +40,10 @@ public class CriteriaList implements CompoundCriterion {
     private FilterOpinion defaultOpinion;
     private List<CommandCriterion> criteria = new ArrayList<>();
 
+    // TODO: is there a cleaner way to do this in SimpleFilter than ignoring the field here?
     public CriteriaList(FilterOpinion defaultOpinion) {
-        setDefaultOpinion(defaultOpinion);
+        // can't call setter because of SimpleFilter override
+        this.defaultOpinion = Preconditions.checkNotNull(defaultOpinion, "defaultOpinion");
     }
 
     @Override
