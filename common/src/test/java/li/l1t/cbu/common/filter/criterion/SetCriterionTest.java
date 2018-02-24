@@ -22,7 +22,7 @@ package li.l1t.cbu.common.filter.criterion;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import li.l1t.cbu.common.config.DummyResolver;
+import li.l1t.cbu.common.config.FakeResolver;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import org.junit.jupiter.api.Test;
@@ -106,7 +106,7 @@ class SetCriterionTest {
     @Test
     void resolveAliases__on_by_default() {
         //given
-        DummyResolver resolver = givenAnAliasResolver();
+        FakeResolver resolver = givenAnAliasResolver();
         SetCriterion criterion = new SetCriterion(ImmutableSet.of("command", "othercommand"));
         //when
         criterion.resolveAliases(resolver);
@@ -114,8 +114,8 @@ class SetCriterionTest {
         thenAliasResolutionYielded(FilterOpinion.DENY, criterion);
     }
 
-    private DummyResolver givenAnAliasResolver() {
-        return new DummyResolver(
+    private FakeResolver givenAnAliasResolver() {
+        return new FakeResolver(
                 ImmutableMap.<String, List<String>>builder()
                         .put("command", ImmutableList.of("alias1", "alias2"))
                         .put("othercommand", ImmutableList.of())
@@ -134,7 +134,7 @@ class SetCriterionTest {
     @Test
     void resolveAliases__off() {
         //given
-        DummyResolver resolver = givenAnAliasResolver();
+        FakeResolver resolver = givenAnAliasResolver();
         SetCriterion criterion = new SetCriterion(ImmutableSet.of("command", "othercommand"));
         criterion.setResolveAliases(false);
         //when

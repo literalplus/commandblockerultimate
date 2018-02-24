@@ -25,10 +25,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public class DummyResolver implements AliasResolver {
+public class FakeResolver implements AliasResolver {
     private final Map<String, List<String>> aliasMap;
 
-    public DummyResolver(Map<String, List<String>> aliasMap) {
+    public FakeResolver(Map<String, List<String>> aliasMap) {
         this.aliasMap = aliasMap;
     }
 

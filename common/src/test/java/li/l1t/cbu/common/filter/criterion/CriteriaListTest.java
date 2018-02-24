@@ -22,7 +22,7 @@ package li.l1t.cbu.common.filter.criterion;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import li.l1t.cbu.common.config.DummyResolver;
+import li.l1t.cbu.common.config.FakeResolver;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import org.hamcrest.CoreMatchers;
@@ -111,15 +111,15 @@ class CriteriaListTest {
         CriteriaList list = givenACriteriaList();
         list.addCriterion(givenASetCriterion("mycommand"));
         list.addCriterion(givenASetCriterion("othercommand"));
-        DummyResolver resolver = givenAnAliasResolver();
+        FakeResolver resolver = givenAnAliasResolver();
         //when
         list.resolveAliases(resolver);
         //then
         thenAliasResolutionYielded(FilterOpinion.DENY, list);
     }
 
-    private DummyResolver givenAnAliasResolver() {
-        return new DummyResolver(
+    private FakeResolver givenAnAliasResolver() {
+        return new FakeResolver(
                 ImmutableMap.<String, List<String>>builder()
                         .put("mycommand", ImmutableList.of("alias3", "alias4"))
                         .put("othercommand", ImmutableList.of())

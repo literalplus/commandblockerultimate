@@ -26,7 +26,7 @@ import li.l1t.cbu.common.filter.action.SpyAction;
 import li.l1t.cbu.common.filter.config.MutableFilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.SetCriterion;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
-import li.l1t.cbu.common.platform.TestSender;
+import li.l1t.cbu.common.platform.FakeSender;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
@@ -45,10 +45,10 @@ class SimpleFilterTest {
     void processExecution__none_by_default() {
         // given
         SimpleFilter filter = givenTheDefaultFilter();
-        TestSender testSender = new TestSender();
+        FakeSender sender = new FakeSender();
         assumePreventsExecution(filter);
         // when
-        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
+        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
         // then
         assertThat(opinion, is(FilterOpinion.NONE));
     }
@@ -73,10 +73,10 @@ class SimpleFilterTest {
     void processExecution__default_opinion() {
         // given
         SimpleFilter filter = givenAFilter(givenAFilterConfig().defaultOpinion(FilterOpinion.ALLOW));
-        TestSender testSender = new TestSender();
+        FakeSender sender = new FakeSender();
         assumePreventsExecution(filter);
         // when
-        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
+        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
         // then
         assertThat(opinion, is(FilterOpinion.ALLOW));
     }
@@ -85,10 +85,10 @@ class SimpleFilterTest {
     void processExecution__blocking_single() {
         // given
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
-        TestSender testSender = new TestSender();
+        FakeSender sender = new FakeSender();
         assumePreventsExecution(filter);
         // when
-        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
+        FilterOpinion opinion = filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
         // then
         assertThat(opinion, is(FilterOpinion.DENY));
     }
@@ -111,27 +111,27 @@ class SimpleFilterTest {
     void processExecution__blocking_other() {
         // given
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
-        TestSender testSender = new TestSender();
-        assumeExecutionDenied(filter, testSender, COMMAND_NAME_1);
+        FakeSender sender = new FakeSender();
+        assumeExecutionDenied(filter, sender, COMMAND_NAME_1);
         // when
-        FilterOpinion opinion = filter.processExecution(commandLineWith(OTHER_COMMAND_NAME), testSender);
+        FilterOpinion opinion = filter.processExecution(commandLineWith(OTHER_COMMAND_NAME), sender);
         // then
         assertThat(opinion, is(FilterOpinion.NONE));
     }
 
-    private void assumeExecutionDenied(SimpleFilter filter, TestSender testSender, String commandName) {
-        Assumptions.assumeTrue(filter.processExecution(commandLineWith(commandName), testSender) == FilterOpinion.DENY);
+    private void assumeExecutionDenied(SimpleFilter filter, FakeSender sender, String commandName) {
+        Assumptions.assumeTrue(filter.processExecution(commandLineWith(commandName), sender) == FilterOpinion.DENY);
     }
 
     @Test
     void processExecution__blocking_multiple() {
         // given
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1, COMMAND_NAME_2);
-        TestSender testSender = new TestSender();
+        FakeSender sender = new FakeSender();
         // when
-        FilterOpinion opinion1 = filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
-        FilterOpinion opinion2 = filter.processExecution(commandLineWith(COMMAND_NAME_2), testSender);
-        FilterOpinion opinionOther = filter.processExecution(commandLineWith(OTHER_COMMAND_NAME), testSender);
+        FilterOpinion opinion1 = filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
+        FilterOpinion opinion2 = filter.processExecution(commandLineWith(COMMAND_NAME_2), sender);
+        FilterOpinion opinionOther = filter.processExecution(commandLineWith(OTHER_COMMAND_NAME), sender);
         // then
         assertThat(opinion1, is(FilterOpinion.DENY));
         assertThat(opinion2, is(FilterOpinion.DENY));
@@ -142,16 +142,16 @@ class SimpleFilterTest {
     void processExecution__blocking_disabled() {
         // given
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
-        TestSender testSender = new TestSender();
-        assumeExecutionDenied(filter, testSender, COMMAND_NAME_1);
+        FakeSender sender = new FakeSender();
+        assumeExecutionDenied(filter, sender, COMMAND_NAME_1);
         // when
         config(filter).preventExecution(false);
         // then
-        thenExecutionIsAllowed(filter, testSender, COMMAND_NAME_1);
+        thenExecutionIsAllowed(filter, sender, COMMAND_NAME_1);
     }
 
-    private void thenExecutionIsAllowed(SimpleFilter filter, TestSender testSender, String commandName) {
-        FilterOpinion opinion = filter.processExecution(commandLineWith(commandName), testSender);
+    private void thenExecutionIsAllowed(SimpleFilter filter, FakeSender sender, String commandName) {
+        FilterOpinion opinion = filter.processExecution(commandLineWith(commandName), sender);
         assertThat(opinion, is(FilterOpinion.NONE));
     }
 
@@ -163,31 +163,31 @@ class SimpleFilterTest {
     void processExecution__bypass() {
         // given
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
-        TestSender testSender = new TestSender();
-        assumeExecutionDenied(filter, testSender, COMMAND_NAME_1);
+        FakeSender sender = new FakeSender();
+        assumeExecutionDenied(filter, sender, COMMAND_NAME_1);
         // when
-        testSender.grantPermission(filter.config().getBypassPermission());
+        sender.grantPermission(filter.config().getBypassPermission());
         // then
-        thenExecutionIsAllowed(filter, testSender, COMMAND_NAME_1);
+        thenExecutionIsAllowed(filter, sender, COMMAND_NAME_1);
     }
 
     @Test
     void processExecution__bypass_callback() {
         // given
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
-        TestSender testSender = givenASenderWithBypassPermission(filter);
-        assumeExecutionAllowed(filter, testSender, COMMAND_NAME_1);
+        FakeSender sender = givenASenderWithBypassPermission(filter);
+        assumeExecutionAllowed(filter, sender, COMMAND_NAME_1);
         SpyAction spy = givenExecutionsAreSpiedUpon(filter);
         // when
-        filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
+        filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
         // then
         assertThat(spy.getBypassCount(), is(1));
     }
 
-    private TestSender givenASenderWithBypassPermission(SimpleFilter filter) {
-        TestSender testSender = new TestSender();
-        testSender.grantPermission(filter.config().getBypassPermission());
-        return testSender;
+    private FakeSender givenASenderWithBypassPermission(SimpleFilter filter) {
+        FakeSender sender = new FakeSender();
+        sender.grantPermission(filter.config().getBypassPermission());
+        return sender;
     }
 
     private SpyAction givenExecutionsAreSpiedUpon(SimpleFilter filter) {
@@ -196,19 +196,19 @@ class SimpleFilterTest {
         return spyAction;
     }
 
-    private void assumeExecutionAllowed(SimpleFilter filter, TestSender testSender, String commandName) {
-        Assumptions.assumeTrue(filter.processExecution(commandLineWith(commandName), testSender) != FilterOpinion.DENY);
+    private void assumeExecutionAllowed(SimpleFilter filter, FakeSender sender, String commandName) {
+        Assumptions.assumeTrue(filter.processExecution(commandLineWith(commandName), sender) != FilterOpinion.DENY);
     }
 
     @Test
     void processExecution__bypass_no_callback() {
         // given
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
-        TestSender testSender = new TestSender();
-        assumeExecutionDenied(filter, testSender, COMMAND_NAME_1);
+        FakeSender sender = new FakeSender();
+        assumeExecutionDenied(filter, sender, COMMAND_NAME_1);
         SpyAction spy = givenExecutionsAreSpiedUpon(filter);
         // when
-        filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
+        filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
         // then
         assertThat(spy.getBypassCount(), is(0));
     }

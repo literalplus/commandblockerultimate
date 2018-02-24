@@ -21,8 +21,8 @@ package li.l1t.cbu.common.filter.action;
 
 import li.l1t.cbu.common.filter.CommandLine;
 import li.l1t.cbu.common.filter.SimpleCommandLine;
+import li.l1t.cbu.common.platform.FakeSender;
 import li.l1t.cbu.common.platform.SenderAdapter;
-import li.l1t.cbu.common.platform.TestSender;
 import org.junit.jupiter.api.Test;
 
 
@@ -34,7 +34,7 @@ class MessageActionTest {
     void onDenial__message_by_default() {
         // given
         MessageAction action = new MessageAction();
-        TestSender sender = new TestSender();
+        FakeSender sender = new FakeSender();
         SimpleCommandLine commandLine = givenACommandLine();
         // when
         action.onDenial(commandLine, sender);
@@ -51,7 +51,7 @@ class MessageActionTest {
         // given
         MessageAction action = new MessageAction();
         action.setErrorMessage(RAW_MESSAGE);
-        TestSender sender = new TestSender();
+        FakeSender sender = new FakeSender();
         SimpleCommandLine commandLine = givenACommandLine();
         // when
         action.onDenial(commandLine, sender);
@@ -69,7 +69,7 @@ class MessageActionTest {
         // given
         MessageAction action = new MessageAction();
         action.setShowDenialMessage(false);
-        TestSender sender = new TestSender();
+        FakeSender sender = new FakeSender();
         SimpleCommandLine commandLine = givenACommandLine();
         // when
         action.onDenial(commandLine, sender);
@@ -83,7 +83,7 @@ class MessageActionTest {
         MessageAction action = new MessageAction();
         action.setShowBypassMessage(true);
         action.setBypassMessage(RAW_MESSAGE);
-        TestSender sender = new TestSender();
+        FakeSender sender = new FakeSender();
         SimpleCommandLine commandLine = givenACommandLine();
         // when
         action.onBypass(commandLine, sender);
@@ -96,7 +96,7 @@ class MessageActionTest {
     void onBypass__no_message_by_default() {
         // given
         MessageAction action = new MessageAction();
-        TestSender sender = new TestSender();
+        FakeSender sender = new FakeSender();
         // when
         action.onBypass(givenACommandLine(), sender);
         // then

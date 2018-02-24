@@ -38,7 +38,7 @@ import static org.hamcrest.Matchers.*;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2018-02-21
  */
-public class TestSender implements SenderAdapter {
+public class FakeSender implements SenderAdapter {
     private final List<String> grantedPermissions = new ArrayList<>();
     private final List<String> receivedMessages = new ArrayList<>();
 
