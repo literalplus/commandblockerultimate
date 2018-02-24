@@ -21,8 +21,8 @@ package li.l1t.cbu.common.filter;
 
 import com.google.common.collect.ImmutableSet;
 import li.l1t.cbu.common.filter.action.FilterAction;
-import li.l1t.cbu.common.filter.action.LambdaAction;
 import li.l1t.cbu.common.filter.action.MessageAction;
+import li.l1t.cbu.common.filter.action.SpyAction;
 import li.l1t.cbu.common.filter.config.MutableFilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.SetCriterion;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -178,18 +177,23 @@ class SimpleFilterTest {
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
         TestSender testSender = givenASenderWithBypassPermission(filter);
         assumeExecutionAllowed(filter, testSender, COMMAND_NAME_1);
-        AtomicBoolean called = new AtomicBoolean(false);
-        config(filter).executionAction(new LambdaAction().bypass((c, s) -> called.set(true)));
+        SpyAction spy = givenExecutionsAreSpiedUpon(filter);
         // when
         filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
         // then
-        assertThat(called.get(), is(true));
+        assertThat(spy.getBypassCount(), is(1));
     }
 
     private TestSender givenASenderWithBypassPermission(SimpleFilter filter) {
         TestSender testSender = new TestSender();
         testSender.grantPermission(filter.config().getBypassPermission());
         return testSender;
+    }
+
+    private SpyAction givenExecutionsAreSpiedUpon(SimpleFilter filter) {
+        SpyAction spyAction = new SpyAction();
+        config(filter).executionAction(spyAction);
+        return spyAction;
     }
 
     private void assumeExecutionAllowed(SimpleFilter filter, TestSender testSender, String commandName) {
@@ -202,11 +206,10 @@ class SimpleFilterTest {
         SimpleFilter filter = givenAFilterBlocking(COMMAND_NAME_1);
         TestSender testSender = new TestSender();
         assumeExecutionDenied(filter, testSender, COMMAND_NAME_1);
-        AtomicBoolean called = new AtomicBoolean(false);
-        config(filter).executionAction(new LambdaAction().bypass((c, s) -> called.set(true)));
+        SpyAction spy = givenExecutionsAreSpiedUpon(filter);
         // when
         filter.processExecution(commandLineWith(COMMAND_NAME_1), testSender);
         // then
-        assertThat(called.get(), is(false));
+        assertThat(spy.getBypassCount(), is(0));
     }
 }

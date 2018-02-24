@@ -22,39 +22,31 @@ package li.l1t.cbu.common.filter.action;
 import li.l1t.cbu.common.filter.CommandLine;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
-import java.util.function.BiConsumer;
-
 /**
- * A simple filter action that forwards handling to lambda expressions.
+ * A filter action that keeps track of how often its event methods have been called.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2018-02-23
  */
-public class LambdaAction implements FilterAction {
-    private BiConsumer<CommandLine, SenderAdapter> denialConsumer;
-    private BiConsumer<CommandLine, SenderAdapter> bypassConsumer;
-
-    public LambdaAction denial(BiConsumer<CommandLine, SenderAdapter> denialConsumer) {
-        this.denialConsumer = denialConsumer;
-        return this;
-    }
-
-    public LambdaAction bypass(BiConsumer<CommandLine, SenderAdapter> bypassConsumer) {
-        this.bypassConsumer = bypassConsumer;
-        return this;
-    }
+public class SpyAction implements FilterAction {
+    private int denialCount;
+    private int bypassCount;
 
     @Override
     public void onDenial(CommandLine commandLine, SenderAdapter sender) {
-        if (denialConsumer != null) {
-            denialConsumer.accept(commandLine, sender);
-        }
+        denialCount++;
     }
 
     @Override
     public void onBypass(CommandLine commandLine, SenderAdapter sender) {
-        if (bypassConsumer != null) {
-            bypassConsumer.accept(commandLine, sender);
-        }
+        bypassCount++;
+    }
+
+    public int getDenialCount() {
+        return denialCount;
+    }
+
+    public int getBypassCount() {
+        return bypassCount;
     }
 }
