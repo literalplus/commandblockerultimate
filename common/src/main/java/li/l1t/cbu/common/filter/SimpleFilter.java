@@ -64,4 +64,15 @@ public class SimpleFilter extends CriteriaList implements Filter {
         }
         return result;
     }
+
+    @Override
+    public FilterOpinion getDefaultOpinion() {
+        return config().getDefaultOpinion();
+    }
+
+    @Override
+    public void setDefaultOpinion(FilterOpinion defaultOpinion) {
+        Preconditions.checkNotNull(defaultOpinion, "defaultOpinion");
+        config().setDefaultOpinion(defaultOpinion);
+    }
 }

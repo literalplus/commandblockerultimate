@@ -31,5 +31,7 @@ import li.l1t.cbu.common.filter.result.FilterOpinion;
 public interface CompoundCriterion extends CommandCriterion {
     void setDefaultOpinion(FilterOpinion defaultOpinion);
 
+    FilterOpinion getDefaultOpinion();
+
     void addCriterion(CommandCriterion criterion);
 }

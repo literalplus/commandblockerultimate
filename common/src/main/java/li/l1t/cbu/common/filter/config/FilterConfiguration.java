@@ -38,6 +38,11 @@ public interface FilterConfiguration {
     FilterOpinion getDefaultOpinion();
 
     /**
+     * @param defaultOpinion the new {@link #getDefaultOpinion() default opinion}
+     */
+    void setDefaultOpinion(FilterOpinion defaultOpinion);
+
+    /**
      * @return the permission that allows command senders to bypass this filter entirely
      */
     @Nonnull

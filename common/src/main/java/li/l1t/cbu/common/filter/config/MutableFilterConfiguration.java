@@ -53,6 +53,11 @@ public class MutableFilterConfiguration implements FilterConfiguration {
         return defaultOpinion;
     }
 
+    @Override
+    public void setDefaultOpinion(FilterOpinion defaultOpinion) {
+        defaultOpinion(defaultOpinion);
+    }
+
     @Nonnull
     @Override
     public String getBypassPermission() {

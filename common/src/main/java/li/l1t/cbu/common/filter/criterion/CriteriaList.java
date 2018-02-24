@@ -51,6 +51,11 @@ public class CriteriaList implements CompoundCriterion {
     }
 
     @Override
+    public FilterOpinion getDefaultOpinion() {
+        return defaultOpinion;
+    }
+
+    @Override
     public void addCriterion(CommandCriterion criterion) {
         Preconditions.checkNotNull(criterion, "criterion");
         criteria.add(criterion);
@@ -76,7 +81,7 @@ public class CriteriaList implements CompoundCriterion {
                 return opinion;
             }
         }
-        return defaultOpinion;
+        return getDefaultOpinion();
     }
 
     @Override
