@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,11 +19,11 @@
 
 package li.l1t.cbu.common.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests the CommandExtractor class for compliance with the JavaDoc declarations
@@ -47,7 +47,7 @@ class CommandExtractorTest {
         //given
         String chatMessage = " some mesage starting with a space and not a slash";
         //then an IAE is thrown
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 //when
                 () -> CommandExtractor.getRawCommand(chatMessage)
@@ -60,5 +60,13 @@ class CommandExtractorTest {
         assertThat(CommandExtractor.removeModPrefix("minecraft:help"), is("help"));
         assertThat(CommandExtractor.removeModPrefix("bukkit:help"), is("help"));
         assertThat(CommandExtractor.removeModPrefix("hey look i have spaces:help"), is("help"));
+    }
+
+    @Test
+    void testIsCommand__slashCheck() {
+        assertThat(CommandExtractor.isCommand("/henlo"), is(true));
+        assertThat(CommandExtractor.isCommand("/plug:henlo some params"), is(true));
+        assertThat(CommandExtractor.isCommand("hen/lo"), is(false));
+        assertThat(CommandExtractor.isCommand("henlo this is message/"), is(false));
     }
 }

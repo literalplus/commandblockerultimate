@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2017 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2018 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,19 +41,27 @@ public final class CommandExtractor {
      * @throws IllegalArgumentException if the command does not start with a slash
      */
     public static String getRawCommand(String chatMessage) {
-        Preconditions.checkArgument(chatMessage.charAt(0) == '/',
+        Preconditions.checkArgument(isCommand(chatMessage),
                 "getRawCommand('%s') requires a command, starting with a slash, to be passed!",
                 chatMessage);
-        String result;
+        String rawCommand;
 
-        int spaceIndex = chatMessage.indexOf(" "); //For finding the executed command's name
-        if (spaceIndex == -1) { //If no space found
-            result = chatMessage.substring(1); //Just remove slash
-        } else { //If we have a space
-            result = chatMessage.substring(1, spaceIndex); //Get the first word of the message and remove slash
+        int spaceIndex = chatMessage.indexOf(' ');
+        if (spaceIndex == -1) {
+            rawCommand = chatMessage.substring(1);
+        } else {
+            rawCommand = chatMessage.substring(1, spaceIndex); //first word of the message
         }
 
-        return result.toLowerCase(); //Bukkit saves commands in lower case
+        return rawCommand.toLowerCase(); //Bukkit saves commands in lower case
+    }
+
+    /**
+     * @param chatMessage the chat message to inspect
+     * @return whether given message is a command, judging from its text only
+     */
+    public static boolean isCommand(String chatMessage) {
+        return chatMessage.charAt(0) == '/';
     }
 
     /**
@@ -65,8 +73,8 @@ public final class CommandExtractor {
      * @return The raw raw command name, without prefix.
      */
     public static String removeModPrefix(String commandName) {
-        int colonIndex = commandName.indexOf(":"); //For removing those minecraft plugin/mod prefixes, e.g. bukkit:kill -> kill
-        if (colonIndex != -1) { //If we have a colon
+        int colonIndex = commandName.indexOf(':');
+        if (colonIndex != -1) {
             commandName = commandName.substring(colonIndex + 1); //Remove prefix including the colon
         }
         return commandName;
