@@ -20,9 +20,11 @@
 package li.l1t.cbu.common.filter;
 
 import com.google.common.base.Preconditions;
+import li.l1t.cbu.common.filter.action.FilterAction;
 import li.l1t.cbu.common.filter.config.FilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.CriteriaList;
 import li.l1t.cbu.common.filter.dto.CommandLine;
+import li.l1t.cbu.common.filter.dto.TabCompleteRequest;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
@@ -51,19 +53,34 @@ public class SimpleFilter extends CriteriaList implements Filter {
     @Nonnull
     @Override
     public FilterOpinion processExecution(CommandLine commandLine, SenderAdapter sender) {
-        Preconditions.checkNotNull(sender, "sender");
-        Preconditions.checkNotNull(commandLine, "commandLine");
         if (!config().doesPreventExecution()) {
             return FilterOpinion.NONE;
         }
-        FilterOpinion result = process(commandLine);
+        return processAction(config().getExecutionAction(), commandLine, sender);
+    }
+
+    @Nonnull
+    private FilterOpinion processAction(FilterAction handler, CommandLine commandLine, SenderAdapter sender) {
+        Preconditions.checkNotNull(sender, "sender");
+        Preconditions.checkNotNull(commandLine, "commandLine");
+        FilterOpinion result = super.process(commandLine);
         if (sender.hasPermission(config().getBypassPermission())) {
-            config().getExecutionAction().onBypass(commandLine, sender);
+            handler.onBypass(commandLine, sender);
             return FilterOpinion.NONE;
         } else if (result == FilterOpinion.DENY) {
-            configuration.getExecutionAction().onDenial(commandLine, sender);
+            handler.onDenial(commandLine, sender);
         }
         return result;
+    }
+
+    @Nonnull
+    @Override
+    public FilterOpinion processTabRequest(TabCompleteRequest request) {
+        Preconditions.checkNotNull(request, "request");
+        if (!config().doesPreventTabComplete()) {
+            return FilterOpinion.NONE;
+        }
+        return processAction(config().getTabCompleteAction(), request.toCommandLine(), request.getSender());
     }
 
     @Override

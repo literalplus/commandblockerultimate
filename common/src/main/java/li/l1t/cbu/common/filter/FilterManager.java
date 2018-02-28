@@ -22,6 +22,7 @@ package li.l1t.cbu.common.filter;
 import com.google.common.base.Preconditions;
 import li.l1t.cbu.common.config.AliasResolver;
 import li.l1t.cbu.common.filter.dto.CommandLine;
+import li.l1t.cbu.common.filter.dto.TabCompleteRequest;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
@@ -57,10 +58,32 @@ public class FilterManager {
     }
 
     /**
-     * Removes all filters, leaving this manager in its initial state.
+     * Forwards a tab-completion request to filters in order, until the first has a non-{@link FilterOpinion#NONE neutral}
+     * opinion, or all filters have been invoked.
+     *
+     * @param request      the request to process
+     * @return the first non-neutral opinion, or {@link FilterOpinion#NONE} if no filter had an opinion
      */
-    public void clearFilters() {
-        filters.clear();
+    public FilterOpinion processTabRequest(TabCompleteRequest request) {
+        Preconditions.checkNotNull(request, "request");
+        for (Filter filter : filters) {
+            FilterOpinion opinion = filter.processTabRequest(request);
+            if (opinion != FilterOpinion.NONE) {
+                return opinion;
+            }
+        }
+        return FilterOpinion.NONE;
+    }
+
+    /**
+     * Asks all managed filters to resolve their aliases using given resolver.
+     * <p><b>Note:</b> This only affects current filters and has no effect on future registrations.</p>
+     *
+     * @param resolver the resolver to use, may not be null
+     */
+    public void resolveAliases(AliasResolver resolver) {
+        Preconditions.checkNotNull(resolver, "resolver");
+        filters.forEach(f -> f.resolveAliases(resolver));
     }
 
     /**
@@ -85,18 +108,14 @@ public class FilterManager {
         return filters.remove(filter);
     }
 
-    public List<Filter> getFilters() {
-        return filters;
+    /**
+     * Removes all filters, leaving this manager in its initial state.
+     */
+    public void clearFilters() {
+        filters.clear();
     }
 
-    /**
-     * Asks all managed filters to resolve their aliases using given resolver.
-     * <p><b>Note:</b> This only affects current filters and has no effect on future registrations.</p>
-     *
-     * @param resolver the resolver to use, may not be null
-     */
-    public void resolveAliases(AliasResolver resolver) {
-        Preconditions.checkNotNull(resolver, "resolver");
-        filters.forEach(f -> f.resolveAliases(resolver));
+    public List<Filter> getFilters() {
+        return filters;
     }
 }

@@ -37,7 +37,7 @@ import java.util.Arrays;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-class SimpleFilterTest {
+class SimpleFilterExecTest {
     private static final FilterAction DEFAULT_ACTION = new MessageAction();
     private static final String COMMAND_NAME_1 = "henlo";
     private static final String COMMAND_NAME_2 = "test";
@@ -184,6 +184,7 @@ class SimpleFilterTest {
         filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
         // then
         assertThat(spy.getBypassCount(), is(1));
+        assertThat(spy.getDenialCount(), is(0));
     }
 
     private FakeSender givenASenderWithBypassPermission(SimpleFilter filter) {
@@ -213,5 +214,21 @@ class SimpleFilterTest {
         filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
         // then
         assertThat(spy.getBypassCount(), is(0));
+        assertThat(spy.getDenialCount(), is(1));
+    }
+
+    @Test
+    void processExecution__no_callback_when_allowed() {
+        // given
+        SimpleFilter filter = givenTheDefaultFilter();
+        filter.setDefaultOpinion(FilterOpinion.ALLOW);
+        FakeSender sender = new FakeSender();
+        assumeExecutionAllowed(filter, sender, COMMAND_NAME_1);
+        SpyAction spy = givenExecutionsAreSpiedUpon(filter);
+        // when
+        filter.processExecution(commandLineWith(COMMAND_NAME_1), sender);
+        // then
+        assertThat(spy.getBypassCount(), is(0));
+        assertThat(spy.getDenialCount(), is(0));
     }
 }

@@ -21,6 +21,7 @@ package li.l1t.cbu.common.filter;
 
 import li.l1t.cbu.common.config.FakeResolver;
 import li.l1t.cbu.common.filter.dto.SimpleCommandLine;
+import li.l1t.cbu.common.filter.dto.SimpleTabCompleteRequest;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.FakeSender;
 import org.junit.jupiter.api.Test;
@@ -154,5 +155,38 @@ class FilterManagerTest {
         assertThat(opinion, is(FilterOpinion.DENY));
         assertThat(filter1.getExecutionCount(), is(1));
         assertThat(filter2.getExecutionCount(), is(1));
+    }
+
+    @Test
+    void processTabRequest__single() {
+        // given
+        FilterManager manager = new FilterManager();
+        assumeTrue(whenAnyTabRequestIsProcessed(manager) == FilterOpinion.NONE);
+        FakeFilter filter = givenAFilterIsAddedTo(manager, FilterOpinion.ALLOW);
+        // when
+        FilterOpinion opinion = whenAnyTabRequestIsProcessed(manager);
+        // then
+        assertThat(opinion, is(FilterOpinion.ALLOW));
+        assertThat(filter.getTabRequestCount(), is(1));
+    }
+
+    private FilterOpinion whenAnyTabRequestIsProcessed(FilterManager manager) {
+        return manager.processTabRequest(new SimpleTabCompleteRequest(new FakeSender(), "/whatevs", false));
+    }
+
+    @Test
+    void processTabRequest__multiple_combined() {
+        // given
+        FilterManager manager = new FilterManager();
+        FakeFilter filter1 = givenAFilterIsAddedTo(manager, FilterOpinion.NONE);
+        FakeFilter filter2 = givenAFilterIsAddedTo(manager, FilterOpinion.ALLOW);
+        FakeFilter filter3 = givenAFilterIsAddedTo(manager, FilterOpinion.DENY);
+        // when
+        FilterOpinion opinion = whenAnyTabRequestIsProcessed(manager);
+        // then
+        assertThat(opinion, is(FilterOpinion.ALLOW));
+        assertThat(filter1.getTabRequestCount(), is(1));
+        assertThat(filter2.getTabRequestCount(), is(1));
+        assertThat(filter3.getTabRequestCount(), is(0));
     }
 }

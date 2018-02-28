@@ -35,6 +35,12 @@ public class SimpleCommandLine implements CommandLine {
     private final String rawCommand;
     private Args args = null;
 
+    /**
+     * Creates a command line.
+     *
+     * @param fullMessage the full chat message, must be {@link CommandExtractor#isCommand(String) a command}
+     * @throws IllegalArgumentException if given message is not a command
+     */
     public SimpleCommandLine(String fullMessage) {
         this.fullMessage = fullMessage;
         this.rawCommand = CommandExtractor.getRawCommand(fullMessage);
