@@ -25,6 +25,7 @@ import li.l1t.cbu.common.filter.action.SpyAction;
 import li.l1t.cbu.common.filter.config.FilterConfiguration;
 import li.l1t.cbu.common.filter.config.MutableFilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.CommandCriterion;
+import li.l1t.cbu.common.filter.dto.CommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 

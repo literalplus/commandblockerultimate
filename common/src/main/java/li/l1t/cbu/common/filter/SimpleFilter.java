@@ -22,6 +22,7 @@ package li.l1t.cbu.common.filter;
 import com.google.common.base.Preconditions;
 import li.l1t.cbu.common.filter.config.FilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.CriteriaList;
+import li.l1t.cbu.common.filter.dto.CommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 

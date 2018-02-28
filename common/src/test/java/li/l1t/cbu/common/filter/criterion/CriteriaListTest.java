@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import li.l1t.cbu.common.config.FakeResolver;
-import li.l1t.cbu.common.filter.SimpleCommandLine;
+import li.l1t.cbu.common.filter.dto.SimpleCommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;

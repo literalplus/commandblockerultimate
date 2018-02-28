@@ -19,8 +19,8 @@
 
 package li.l1t.cbu.common.filter.action;
 
-import li.l1t.cbu.common.filter.CommandLine;
-import li.l1t.cbu.common.filter.SimpleCommandLine;
+import li.l1t.cbu.common.filter.dto.CommandLine;
+import li.l1t.cbu.common.filter.dto.SimpleCommandLine;
 import li.l1t.cbu.common.platform.FakeSender;
 import li.l1t.cbu.common.platform.SenderAdapter;
 import org.junit.jupiter.api.Test;

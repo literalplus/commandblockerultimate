@@ -20,6 +20,7 @@
 package li.l1t.cbu.common.filter;
 
 import li.l1t.cbu.common.config.FakeResolver;
+import li.l1t.cbu.common.filter.dto.SimpleCommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.FakeSender;
 import org.junit.jupiter.api.Test;

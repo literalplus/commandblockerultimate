@@ -21,7 +21,7 @@ package li.l1t.cbu.common.filter.criterion;
 
 import com.google.common.base.Preconditions;
 import li.l1t.cbu.common.config.AliasResolver;
-import li.l1t.cbu.common.filter.CommandLine;
+import li.l1t.cbu.common.filter.dto.CommandLine;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 
 import javax.annotation.Nonnull;
