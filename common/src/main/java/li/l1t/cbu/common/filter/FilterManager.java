@@ -22,6 +22,8 @@ package li.l1t.cbu.common.filter;
 import com.google.common.base.Preconditions;
 import li.l1t.cbu.common.config.AliasResolver;
 import li.l1t.cbu.common.filter.dto.CommandLine;
+import li.l1t.cbu.common.filter.dto.Completable;
+import li.l1t.cbu.common.filter.dto.SimpleTabSuggestion;
 import li.l1t.cbu.common.filter.dto.TabCompleteRequest;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
@@ -61,18 +63,69 @@ public class FilterManager {
      * Forwards a tab-completion request to filters in order, until the first has a non-{@link FilterOpinion#NONE neutral}
      * opinion, or all filters have been invoked.
      *
-     * @param request      the request to process
+     * @param request the request to process
      * @return the first non-neutral opinion, or {@link FilterOpinion#NONE} if no filter had an opinion
      */
     public FilterOpinion processTabRequest(TabCompleteRequest request) {
         Preconditions.checkNotNull(request, "request");
         for (Filter filter : filters) {
-            FilterOpinion opinion = filter.processTabRequest(request);
+            FilterOpinion opinion = filter.processTabComplete(request);
             if (opinion != FilterOpinion.NONE) {
                 return opinion;
             }
         }
         return FilterOpinion.NONE;
+    }
+
+    /**
+     * Forwards a list of tab-completion suggestions to filters in order, until all suggestions have been removed,
+     * or all filters have been invoked. Does not take into account the request that caused the suggestions, i.e.
+     * cannot block sub-commands, only suggested root-level commands. Operates on a copy of the provided list.
+     *
+     * @param rawSuggestions the suggestions to process
+     * @return the list of suggestions that were not blocked
+     */
+    public List<String> processTabSuggestions(SenderAdapter sender, List<String> rawSuggestions) {
+        Preconditions.checkNotNull(rawSuggestions, "rawSuggestions");
+        return removeBlockedSuggestions(rawSuggestions, new SimpleTabSuggestion(sender, ""));
+    }
+
+    private List<String> removeBlockedSuggestions(List<String> rawSuggestions, SimpleTabSuggestion base) {
+        List<String> suggestionsCopy = new ArrayList<>(rawSuggestions);
+        for (String suggestionText : rawSuggestions) {
+            base.setText(suggestionText);
+            if (isCompletableBlocked(base)) {
+                suggestionsCopy.remove(suggestionText);
+            }
+        }
+        return suggestionsCopy;
+    }
+
+    private boolean isCompletableBlocked(Completable suggestion) {
+        for (Filter filter : filters) {
+            FilterOpinion opinion = filter.processTabComplete(suggestion);
+            if (opinion == FilterOpinion.DENY) { //TODO: restrictive mode?
+                return true;
+            } else if (opinion == FilterOpinion.ALLOW) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Processed a tab-completion where both the request and the response are known. If the cursor represents
+     * a blocked command by itself, an empty list is returned, meaning no completions are to be provided.
+     * Otherwise, all suggestions are processed, taking the cursor into account, and only allowed and
+     * neutral suggestions are included in the returned list.
+     *
+     * @param request     the request that caused the completion
+     * @param suggestions the list of raw string suggestions provided by the system
+     * @return the list of suggestions that were not blocked, or an empty list if all were blocked
+     */
+    public List<String> processTabCompletion(TabCompleteRequest request, List<String> suggestions) {
+        SimpleTabSuggestion base = new SimpleTabSuggestion(request.getSender(), "", request.getCursor());
+        return removeBlockedSuggestions(suggestions, base);
     }
 
     /**

@@ -24,7 +24,7 @@ import li.l1t.cbu.common.filter.action.FilterAction;
 import li.l1t.cbu.common.filter.config.FilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.CriteriaList;
 import li.l1t.cbu.common.filter.dto.CommandLine;
-import li.l1t.cbu.common.filter.dto.TabCompleteRequest;
+import li.l1t.cbu.common.filter.dto.Completable;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
@@ -75,12 +75,14 @@ public class SimpleFilter extends CriteriaList implements Filter {
 
     @Nonnull
     @Override
-    public FilterOpinion processTabRequest(TabCompleteRequest request) {
-        Preconditions.checkNotNull(request, "request");
+    public FilterOpinion processTabComplete(Completable completable) {
+        Preconditions.checkNotNull(completable, "completable");
         if (!config().doesPreventTabComplete()) {
             return FilterOpinion.NONE;
         }
-        return processAction(config().getTabCompleteAction(), request.toCommandLine(), request.getSender());
+        return completable.findMergedCommand()
+                .map(line -> processAction(config().getTabCompleteAction(), line, completable.getSender()))
+                .orElse(FilterOpinion.NONE);
     }
 
     @Override

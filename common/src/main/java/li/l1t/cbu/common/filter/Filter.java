@@ -23,7 +23,7 @@ import li.l1t.cbu.common.filter.config.FilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.CommandCriterion;
 import li.l1t.cbu.common.filter.criterion.CompoundCriterion;
 import li.l1t.cbu.common.filter.dto.CommandLine;
-import li.l1t.cbu.common.filter.dto.TabCompleteRequest;
+import li.l1t.cbu.common.filter.dto.Completable;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
@@ -56,12 +56,17 @@ public interface Filter extends CompoundCriterion {
     FilterOpinion processExecution(CommandLine commandLine, SenderAdapter sender);
 
     /**
-     * Processes a tab-complete request, respecting this filter's configuration, and notifies the
+     * Processes a tab-completion, respecting this filter's configuration, and notifies the
      * {@link FilterConfiguration#getTabCompleteAction() completion action} of the result.
+     * <p><b>Important:</b> Depending on what data given completable provides, this may not consider all options.
+     * For example, a request may only contain a cursor, but not the suggestions. If the passed completable
+     * does not have both cursor and suggestion, this may not block all possibly blocked commands. Essentially,
+     * the quality of the results depends on the data quality for {@link Completable#findMergedCommand()}.</p>
      *
-     * @param request the request to process
-     * @return the collective opinion of this filter's criteria regarding given execution, never null
+     * @param completable the request to process
+     * @return the collective opinion of this filter's criteria regarding given completion,
+     * {@link FilterOpinion#NONE} if {@link Completable#findMergedCommand()} returns an empty optional, but never null
      */
     @Nonnull
-    FilterOpinion processTabRequest(TabCompleteRequest request);
+    FilterOpinion processTabComplete(Completable completable);
 }

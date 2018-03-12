@@ -26,7 +26,7 @@ import li.l1t.cbu.common.filter.config.FilterConfiguration;
 import li.l1t.cbu.common.filter.config.MutableFilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.CommandCriterion;
 import li.l1t.cbu.common.filter.dto.CommandLine;
-import li.l1t.cbu.common.filter.dto.TabCompleteRequest;
+import li.l1t.cbu.common.filter.dto.Completable;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.SenderAdapter;
 
@@ -42,7 +42,7 @@ public class FakeFilter implements Filter {
     private MutableFilterConfiguration config = new MutableFilterConfiguration(new SpyAction(), new SpyAction());
     private FilterOpinion defaultOpinion = FilterOpinion.NONE;
     private int executionCount = 0;
-    private int tabRequestCount = 0;
+    private int tabCount = 0;
     private int aliasResolutionCount = 0;
 
     @Nonnull
@@ -60,13 +60,15 @@ public class FakeFilter implements Filter {
 
     @Nonnull
     @Override
-    public FilterOpinion processTabRequest(TabCompleteRequest request) {
-        tabRequestCount++;
-        return process(request.toCommandLine());
+    public FilterOpinion processTabComplete(Completable request) {
+        tabCount++;
+        return request.findMergedCommand()
+                .map(this::process)
+                .orElse(FilterOpinion.NONE);
     }
 
-    public int getTabRequestCount() {
-        return tabRequestCount;
+    public int getTabCount() {
+        return tabCount;
     }
 
     @Override

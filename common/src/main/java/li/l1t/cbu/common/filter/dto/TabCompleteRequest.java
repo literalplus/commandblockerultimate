@@ -19,7 +19,6 @@
 
 package li.l1t.cbu.common.filter.dto;
 
-import li.l1t.cbu.common.platform.SenderAdapter;
 import li.l1t.cbu.common.util.CommandExtractor;
 
 /**
@@ -30,12 +29,7 @@ import li.l1t.cbu.common.util.CommandExtractor;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2018-02-28
  */
-public interface TabCompleteRequest {
-    /**
-     * @return who issued this completion request
-     */
-    SenderAdapter getSender();
-
+public interface TabCompleteRequest extends Completable {
     /**
      * @return what the player has typed in the chat box so far, with a slash prepended if the text does not
      * {@link CommandExtractor#isCommand(String) indicate a command} but a command is
@@ -55,7 +49,7 @@ public interface TabCompleteRequest {
     boolean isAssumeCommand();
 
     /**
-     * @return this request's {@link #getCursor()} coverted to a command line object
+     * @return this request's {@link #getCursor()} converted to a command line object
      * @throws IllegalArgumentException if this request does not represent a command
      */
     CommandLine toCommandLine();

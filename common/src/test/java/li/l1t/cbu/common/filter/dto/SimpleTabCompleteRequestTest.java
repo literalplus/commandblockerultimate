@@ -20,7 +20,10 @@
 package li.l1t.cbu.common.filter.dto;
 
 import li.l1t.cbu.common.platform.FakeSender;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -119,5 +122,40 @@ class SimpleTabCompleteRequestTest {
         CommandLine line2 = request.toCommandLine();
         // then
         assertThat(line2, is(sameInstance(line1)));
+    }
+
+    @Test
+    void toCommandLine__not_command() {
+        // given
+        String rawCommand = "henlo";
+        String rawCursor = rawCommand + " aa bb";
+        SimpleTabCompleteRequest request = givenARequest(rawCursor, false);
+        // when
+        Assertions.assertThrows(IllegalArgumentException.class, request::toCommandLine);
+    }
+
+    @Test
+    void findMergedCommand__assumed_command() {
+        // given
+        String rawCommand = "henlo";
+        String rawCursor = rawCommand + " aa bb";
+        SimpleTabCompleteRequest request = givenARequest(rawCursor, true);
+        // when
+        Optional<CommandLine> line = request.findMergedCommand();
+        // then
+        assertThat(line.isPresent(), is(true));
+        thenTheCommandLineMatches(line.orElseThrow(AssertionError::new), rawCommand, '/' + rawCursor);
+    }
+
+    @Test
+    void findMergedCommand__not_command() {
+        // given
+        String rawCommand = "henlo";
+        String rawCursor = rawCommand + " aa bb";
+        SimpleTabCompleteRequest request = givenARequest(rawCursor, false);
+        // when
+        Optional<CommandLine> line = request.findMergedCommand();
+        // then
+        assertThat(line.isPresent(), is(false));
     }
 }

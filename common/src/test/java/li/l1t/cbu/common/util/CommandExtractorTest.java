@@ -64,9 +64,76 @@ class CommandExtractorTest {
 
     @Test
     void testIsCommand__slashCheck() {
+        assertThat(CommandExtractor.isCommand(""), is(false));
         assertThat(CommandExtractor.isCommand("/henlo"), is(true));
         assertThat(CommandExtractor.isCommand("/plug:henlo some params"), is(true));
         assertThat(CommandExtractor.isCommand("hen/lo"), is(false));
         assertThat(CommandExtractor.isCommand("henlo this is message/"), is(false));
+    }
+
+    @Test
+    void testMergeTabSuggestion__empties() {
+        // given
+        String cursor = "";
+        String rawSuggestion = "";
+        // when
+        String merged = CommandExtractor.mergeTabSuggestion(cursor, rawSuggestion);
+        // then
+        assertThat(merged, is(""));
+    }
+
+    @Test
+    void testMergeTabSuggestion__no_cursor() {
+        // given
+        String cursor = "";
+        String rawSuggestion = "henlo 123";
+        // when
+        String merged = CommandExtractor.mergeTabSuggestion(cursor, rawSuggestion);
+        // then
+        assertThat(merged, is(rawSuggestion));
+    }
+
+    @Test
+    void testMergeTabSuggestion__space_cursor() {
+        // given
+        String cursor = "/test ";
+        String rawSuggestion = "henlo 123";
+        // when
+        String merged = CommandExtractor.mergeTabSuggestion(cursor, rawSuggestion);
+        // then
+        assertThat(merged, is(cursor + rawSuggestion));
+    }
+
+    @Test
+    void testMergeTabSuggestion__replace_cursor() {
+        // given
+        String cursor = "/test rip";
+        String rawSuggestion = "henlo 123";
+        // when
+        String merged = CommandExtractor.mergeTabSuggestion(cursor, rawSuggestion);
+        // then
+        assertThat(merged, is("/test " + rawSuggestion));
+    }
+
+    @Test
+    void testMergeTabSuggestion__replace_cursor_root() {
+        // given
+        String cursor = "/test";
+        String rawSuggestion = "/henlo";
+        // when
+        String merged = CommandExtractor.mergeTabSuggestion(cursor, rawSuggestion);
+        // then
+        assertThat(merged, is(rawSuggestion));
+    }
+
+    @Test
+    void testMergeTabSuggestion__replace_cursor_later() {
+        // given
+        String cursor = "/test rip henlo wow xx";
+        String rawSuggestion = "henlo 123";
+        // when
+        String merged = CommandExtractor.mergeTabSuggestion(cursor, rawSuggestion);
+        // then
+        assertThat(merged, is("/test rip henlo wow " + rawSuggestion));
     }
 }

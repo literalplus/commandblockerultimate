@@ -22,6 +22,8 @@ package li.l1t.cbu.common.filter.dto;
 import li.l1t.cbu.common.platform.SenderAdapter;
 import li.l1t.cbu.common.util.CommandExtractor;
 
+import java.util.Optional;
+
 /**
  * A simple tab complete request that lazily computes its command line object, but caches the result.
  *
@@ -71,5 +73,14 @@ public class SimpleTabCompleteRequest implements TabCompleteRequest {
             commandLine = new SimpleCommandLine(getCursor());
         }
         return commandLine;
+    }
+
+    @Override
+    public Optional<CommandLine> findMergedCommand() {
+        if (CommandExtractor.isCommand(getCursor())) {
+            return Optional.of(toCommandLine());
+        } else {
+            return Optional.empty();
+        }
     }
 }

@@ -20,19 +20,27 @@
 package li.l1t.cbu.common.filter;
 
 import li.l1t.cbu.common.config.FakeResolver;
+import li.l1t.cbu.common.filter.dto.CommandLine;
 import li.l1t.cbu.common.filter.dto.SimpleCommandLine;
 import li.l1t.cbu.common.filter.dto.SimpleTabCompleteRequest;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.FakeSender;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class FilterManagerTest {
+    private static final String CURSOR_COMMAND = "/ignoredroot";
+
     @Test
     void resolveAliases__forwarding_single() {
         // given
@@ -167,7 +175,7 @@ class FilterManagerTest {
         FilterOpinion opinion = whenAnyTabRequestIsProcessed(manager);
         // then
         assertThat(opinion, is(FilterOpinion.ALLOW));
-        assertThat(filter.getTabRequestCount(), is(1));
+        assertThat(filter.getTabCount(), is(1));
     }
 
     private FilterOpinion whenAnyTabRequestIsProcessed(FilterManager manager) {
@@ -185,8 +193,189 @@ class FilterManagerTest {
         FilterOpinion opinion = whenAnyTabRequestIsProcessed(manager);
         // then
         assertThat(opinion, is(FilterOpinion.ALLOW));
-        assertThat(filter1.getTabRequestCount(), is(1));
-        assertThat(filter2.getTabRequestCount(), is(1));
-        assertThat(filter3.getTabRequestCount(), is(0));
+        assertThat(filter1.getTabCount(), is(1));
+        assertThat(filter2.getTabCount(), is(1));
+        assertThat(filter3.getTabCount(), is(0));
+    }
+
+    @Test
+    void processTabSuggestions__single() {
+        // given
+        FilterManager manager = new FilterManager();
+        givenAllSuggestionsAreKept(manager);
+        FakeFilter filter = givenAFilterIsAddedTo(manager, FilterOpinion.DENY);
+        String[] suggestions = {"/topkek", "/lol"};
+        // when
+        List<String> kept = whenSuggestionsAreProcessed(manager, suggestions);
+        // then
+        assertThat(kept, is(empty()));
+        assertThat(filter.getTabCount(), is(2));
+    }
+
+    private void givenAllSuggestionsAreKept(FilterManager manager) {
+        String[] rawSuggestions = new String[]{"/whatevs", "/something"};
+        List<String> kept = whenSuggestionsAreProcessed(manager, rawSuggestions);
+        Assumptions.assumeTrue(Arrays.asList(rawSuggestions).equals(kept));
+    }
+
+    private List<String> whenSuggestionsAreProcessed(FilterManager manager, String... rawSuggestions) {
+        return manager.processTabSuggestions(new FakeSender(), Arrays.asList(rawSuggestions));
+    }
+
+    @Test
+    void processTabSuggestions__multiple_combined() {
+        // given
+        FilterManager manager = new FilterManager();
+        FakeFilter filter1 = givenAFilterIsAddedTo(manager, FilterOpinion.NONE);
+        FakeFilter filter2 = givenAFilterIsAddedTo(manager, FilterOpinion.ALLOW);
+        FakeFilter filter3 = givenAFilterIsAddedTo(manager, FilterOpinion.DENY);
+        String[] suggestions = {"/henlo", "/wowowow"};
+        // when
+        List<String> kept = whenSuggestionsAreProcessed(manager, suggestions);
+        // then
+        assertThat(kept, contains(suggestions));
+        assertThat(filter1.getTabCount(), is(2));
+        assertThat(filter2.getTabCount(), is(2));
+        assertThat(filter3.getTabCount(), is(0));
+    }
+
+    @Test
+    void processTabSuggestions__multiple_complex_filters() {
+        // given
+        FilterManager manager = new FilterManager();
+        manager.addFilter(givenAPredicateFilter(cl -> cl.getRootCommand().equals("henlo")));
+        String[] suggestions = {"/henlo aa", "/wowowow", "this is not a command"};
+        // when
+        List<String> kept = whenSuggestionsAreProcessed(manager, suggestions);
+        // then
+        assertThat(kept, contains("/wowowow", "this is not a command"));
+    }
+
+    private FakeFilter givenAPredicateFilter(Predicate<CommandLine> predicate) {
+        return new FakeFilter() {
+            @Nonnull
+            @Override
+            public FilterOpinion process(CommandLine commandLine) {
+                return predicate.test(commandLine) ? FilterOpinion.DENY : FilterOpinion.NONE;
+            }
+        };
+    }
+
+    @Test
+    void processTabComplete__single() {
+        // given
+        FilterManager manager = new FilterManager();
+        givenAllCompletionsAreKept(manager);
+        FakeFilter filter = givenTheCursorCommandIsNotBlocked(manager);
+        String[] suggestions = {"/topkek", "/lol"};
+        // when
+        List<String> kept = whenCompletionsAreProcessed(manager, CURSOR_COMMAND, suggestions);
+        // then
+        assertThat(kept, is(empty()));
+        assertThat(filter.getTabCount(), is(2));
+    }
+
+    private void givenAllCompletionsAreKept(FilterManager manager) {
+        String[] rawSuggestions = new String[]{"/whatevs", "/something"};
+        List<String> kept = whenCompletionsAreProcessed(manager, "/bb", rawSuggestions);
+        Assumptions.assumeTrue(Arrays.asList(rawSuggestions).equals(kept));
+    }
+
+    private FakeFilter givenTheCursorCommandIsNotBlocked(FilterManager manager) {
+        FakeFilter filter = givenAPredicateFilter(cl -> !cl.getRootCommand().equals(CURSOR_COMMAND.substring(1)));
+        manager.addFilter(filter);
+        return filter;
+    }
+
+    private List<String> whenCompletionsAreProcessed(FilterManager manager, String cursor, String... rawSuggestions) {
+        return manager.processTabCompletion(
+                new SimpleTabCompleteRequest(new FakeSender(), cursor, false),
+                Arrays.asList(rawSuggestions)
+        );
+    }
+
+    @Test
+    void processTabComplete__cursor_blocked_suggestions_allowed() {
+        // given
+        FilterManager manager = new FilterManager();
+        givenAllCompletionsAreKept(manager);
+        FakeFilter filter = givenOnlyTheCursorCommandIsBlocked(manager);
+        String[] suggestions = {"/topkek", "/lol"};
+        // when
+        List<String> kept = whenCompletionsAreProcessed(manager, CURSOR_COMMAND, suggestions);
+        // then
+        assertThat(kept, contains(suggestions));
+        assertThat(filter.getTabCount(), is(2));
+    }
+
+    private FakeFilter givenOnlyTheCursorCommandIsBlocked(FilterManager manager) {
+        FakeFilter filter = givenAPredicateFilter(cl -> cl.getRootCommand().equals(CURSOR_COMMAND.substring(1)));
+        manager.addFilter(filter);
+        return filter;
+    }
+
+    @Test
+    void processTabCompletions__multiple_combined() {
+        // given
+        FilterManager manager = new FilterManager();
+        FakeFilter filter1 = givenAFilterIsAddedTo(manager, FilterOpinion.NONE);
+        FakeFilter filter2 = givenAFilterIsAddedTo(manager, FilterOpinion.ALLOW);
+        FakeFilter filter3 = givenAFilterIsAddedTo(manager, FilterOpinion.DENY);
+        String[] suggestions = {"/henlo", "/wowowow"};
+        // when
+        List<String> kept = whenCompletionsAreProcessed(manager, "/aa", suggestions);
+        // then
+        assertThat(kept, contains(suggestions));
+        assertThat(filter1.getTabCount(), is(2));
+        assertThat(filter2.getTabCount(), is(2));
+        assertThat(filter3.getTabCount(), is(0));
+    }
+
+    @Test
+    void processTabCompletions__merging_allowed_root() {
+        // given
+        FilterManager manager = new FilterManager();
+        manager.addFilter(givenAPredicateFilter(cl -> cl.getRootCommand().equals("henlo")));
+        String[] suggestions = {"/henlo", "/allowed"};
+        // when
+        List<String> kept = whenCompletionsAreProcessed(manager, "/aa", suggestions);
+        // then
+        assertThat(kept, contains("/allowed"));
+    }
+
+    @Test
+    void processTabCompletions__merging_blocked_root_replacing() {
+        // given
+        FilterManager manager = new FilterManager();
+        manager.addFilter(givenAPredicateFilter(cl -> cl.getRootCommand().equals("aa")));
+        String[] suggestions = {"/henlo", "/allowed"};
+        // when
+        List<String> kept = whenCompletionsAreProcessed(manager, "/aa", suggestions);
+        // then
+        assertThat(kept, contains(suggestions));
+    }
+
+    @Test
+    void processTabCompletions__merging_blocked_root_sub() {
+        // given
+        FilterManager manager = new FilterManager();
+        manager.addFilter(givenAPredicateFilter(cl -> cl.getRootCommand().equals("aa")));
+        String[] suggestions = {"henlo", "allowed"};
+        // when
+        List<String> kept = whenCompletionsAreProcessed(manager, "/aa ", suggestions);
+        // then
+        assertThat(kept, is(empty()));
+    }
+
+    @Test
+    void processTabCompletions__merging_blocked_sub_suggestion() {
+        // given
+        FilterManager manager = new FilterManager();
+        manager.addFilter(givenAPredicateFilter(cl -> cl.getFullMessage().startsWith("/aa ILLIEGAL")));
+        String[] suggestions = {"ILLIEGAL", "allowed"};
+        // when
+        List<String> kept = whenCompletionsAreProcessed(manager, "/aa ", suggestions);
+        // then
+        assertThat(kept, contains("allowed"));
     }
 }

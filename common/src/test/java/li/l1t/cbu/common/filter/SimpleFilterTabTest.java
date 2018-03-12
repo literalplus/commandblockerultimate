@@ -26,8 +26,8 @@ import li.l1t.cbu.common.filter.action.SpyAction;
 import li.l1t.cbu.common.filter.config.MutableFilterConfiguration;
 import li.l1t.cbu.common.filter.criterion.SetCriterion;
 import li.l1t.cbu.common.filter.dto.CommandLine;
+import li.l1t.cbu.common.filter.dto.FakeCompletable;
 import li.l1t.cbu.common.filter.dto.SimpleCommandLine;
-import li.l1t.cbu.common.filter.dto.SimpleTabCompleteRequest;
 import li.l1t.cbu.common.filter.result.FilterOpinion;
 import li.l1t.cbu.common.platform.FakeSender;
 import org.junit.jupiter.api.Assumptions;
@@ -38,11 +38,10 @@ import java.util.Arrays;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-class SimpleFilterTabReqTest {
+class SimpleFilterTabTest {
     private static final FilterAction DEFAULT_ACTION = new MessageAction();
-    private static final String COMMAND_NAME_1 = "henlo";
-    private static final String COMMAND_NAME_2 = "test";
-    private static final String OTHER_COMMAND_NAME = "gunther";
+    private static final String COMMAND_NAME_1 = "/henlo";
+    private static final String OTHER_COMMAND_NAME = "/gunther";
 
     @Test
     void processTabComplete__none_by_default() {
@@ -76,9 +75,19 @@ class SimpleFilterTabReqTest {
     }
 
     private FilterOpinion whenATabRequestIsProcessed(SimpleFilter filter, String commandName, FakeSender sender) {
-        return filter.processTabRequest(new SimpleTabCompleteRequest(
-                sender, "/" + commandName + " aa", false
-        ));
+        CommandLine commandLine = commandName == null ? null : new SimpleCommandLine(commandName + " aa");
+        return filter.processTabComplete(new FakeCompletable(sender, commandLine));
+    }
+
+    @Test
+    void processTabComplete__none_if_no_command() {
+        // given
+        SimpleFilter filter = givenTheDefaultFilter();
+        assumePreventsTab(filter);
+        // when
+        FilterOpinion opinion = whenATabRequestIsProcessed(filter, null);
+        // then
+        assertThat(opinion, is(FilterOpinion.NONE));
     }
 
     @Test
@@ -92,10 +101,6 @@ class SimpleFilterTabReqTest {
         assertThat(opinion, is(FilterOpinion.ALLOW));
     }
 
-    private CommandLine commandLineWith(String commandName) {
-        return new SimpleCommandLine("/" + commandName + " text xyz");
-    }
-
     @Test
     void processTabComplete__blocking_single() {
         // given
@@ -106,10 +111,11 @@ class SimpleFilterTabReqTest {
         assertThat(opinion, is(FilterOpinion.DENY));
     }
 
-    private SimpleFilter givenAFilterBlocking(String... commandName) {
+    private SimpleFilter givenAFilterBlocking(String... commandNames) {
         SimpleFilter filter = givenTheDefaultFilter();
         assumePreventsTab(filter);
-        Arrays.stream(commandName)
+        Arrays.stream(commandNames)
+                .map(s -> s.substring(1))
                 .map(ImmutableSet::of)
                 .map(SetCriterion::new)
                 .forEach(filter::addCriterion);
