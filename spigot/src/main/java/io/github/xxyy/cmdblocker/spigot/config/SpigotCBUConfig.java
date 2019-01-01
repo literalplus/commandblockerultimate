@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2015 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2019 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,13 +19,11 @@
 
 package io.github.xxyy.cmdblocker.spigot.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import io.github.xxyy.cmdblocker.common.config.AliasResolver;
 import io.github.xxyy.cmdblocker.common.config.ConfigAdapter;
-import io.github.xxyy.cmdblocker.common.config.InvalidConfigException;
 import io.github.xxyy.cmdblocker.common.util.CommandHelper;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,13 +34,11 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * This is an alternative implementation of {@link io.github.xxyy.cmdblocker.common.config.CBUConfig}
- * using the default Spigot YamlConfiguration API. This class is used as a fallback if Yamler is not
- * available.
+ * This is an alternative implementation of {@link io.github.xxyy.cmdblocker.common.config.CBUConfig} using the default
+ * Spigot YamlConfiguration API. This class is used as a fallback if Yamler is not available.
  * <p/>
- * Some comfort features, such as not reloading the file on a syntax error and automatic updating of
- * the file are not implemented because that would add unnecessary extra complexity and those are
- * available out-of-the-box with Yamler.
+ * Some comfort features, such as not reloading the file on a syntax error and automatic updating of the file are not
+ * implemented because that would add unnecessary extra complexity and those are available out-of-the-box with Yamler.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 22.7.14
@@ -61,6 +57,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
     private boolean notifyBypass;
     private String bypassMessage;
     private String tabErrorMessage;
+    private boolean resolveAliases;
 
     public SpigotCBUConfig(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -68,17 +65,12 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     @Override
     public boolean tryInitialize(Logger logger) {
-        try {
-            initialize();
-        } catch (InvalidConfigException ignore) {
-            //Can never happen
-        }
-
+        initialize();
         return true;
     }
 
     @Override
-    public void initialize() throws InvalidConfigException {
+    public void initialize() {
         plugin.saveDefaultConfig();
         plugin.getLogger().warning("Using the simplified configuration adapter! When CommandBlockerUltimate updates, new " +
                 "options won't be in your configuration file!");
@@ -104,6 +96,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
                 "&c[CBU] This command is blocked. Executing anyways since you have permission.");
         tabErrorMessage = config.getString(TAB_ERROR_MESSAGE_PATH,
                 "&cI am sorry, but I cannot let you do this, Dave.");
+        resolveAliases = config.getBoolean(RESOLVE_ALIASES_PATH, true);
     }
 
     @Override
@@ -125,6 +118,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
         config.set(NOTIFY_BYPASS_PATH, notifyBypass);
         config.set(BYPASS_MESSAGE_PATH, bypassMessage);
         config.set(TAB_ERROR_MESSAGE_PATH, tabErrorMessage);
+        config.set(RESOLVE_ALIASES_PATH, resolveAliases);
         plugin.saveConfig();
     }
 
@@ -156,7 +150,7 @@ public class SpigotCBUConfig implements ConfigAdapter {
 
     @Override
     public void addBlockedCommand(String command) {
-        if(rawTargetCommands.contains(command)) {
+        if (rawTargetCommands.contains(command)) {
             return;
         }
         getBlockedCommands().add(command);

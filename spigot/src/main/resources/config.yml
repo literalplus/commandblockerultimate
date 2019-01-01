@@ -50,3 +50,9 @@ bypass-message: '&c[CBU] /<command> is blocked. Executing anyways since you have
 # The message to display when somebody tries to tab-complete a command that's blocked.
 # Example: '&cI am sorry, but you cannot see completions for this.'
 tab-error-message: '&cI am sorry, but I cannot let you do this, Dave.'
+
+# @since 1.5.6
+# Whether to resolve aliases at all.
+# If disabled, only commands specified explicitly will be blocked.
+# Default value: true
+resolve-aliases: true

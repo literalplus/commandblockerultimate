@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2015 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2019 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,13 +19,12 @@
 
 package io.github.xxyy.cmdblocker.common.config;
 
+import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 import net.cubespace.Yamler.Config.Comment;
 import net.cubespace.Yamler.Config.Comments;
 import net.cubespace.Yamler.Config.Config;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.cubespace.Yamler.Config.Path;
-
-import io.github.xxyy.cmdblocker.common.util.CommandHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -103,6 +102,13 @@ public class CBUConfig extends Config implements ConfigAdapter {
             "Example: '&cYou cannot see completions for this.'"})
     private String tabErrorMessage = "&cI am sorry, but I cannot let you do this, Dave.";
 
+    @Path(RESOLVE_ALIASES_PATH)
+    @Comments({"@since 1.5.6",
+            "Whether to resolve aliases at all.",
+            "If disabled, only commands specified explicitly will be blocked.",
+            "Default value: true"})
+    private boolean resolveAliases = true;
+
     public CBUConfig(File configFile) {
         CONFIG_HEADER = new String[]{
                 "Configuration file for CommandBlockerUltimate. CommandBlockerUltimate is licensed under " +
@@ -152,6 +158,10 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public void resolveAliases(AliasResolver aliasResolver) {
+        if (!resolveAliases) {
+            blockedCommands = new HashSet<>(rawTargetCommands);
+            return;
+        }
         aliasResolver.refreshMap();
         blockedCommands.clear();
 
@@ -174,7 +184,7 @@ public class CBUConfig extends Config implements ConfigAdapter {
 
     @Override
     public void addBlockedCommand(String command) {
-        if(rawTargetCommands.contains(command)) {
+        if (rawTargetCommands.contains(command)) {
             return;
         }
         getBlockedCommands().add(command);

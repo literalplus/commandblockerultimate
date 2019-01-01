@@ -1,6 +1,6 @@
 /*
  * Command Blocker Ultimate
- * Copyright (C) 2014-2015 Philipp Nowak / Literallie (xxyy.github.io)
+ * Copyright (C) 2014-2019 Philipp Nowak / Literallie (l1t.li)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,6 +42,7 @@ public interface ConfigAdapter {
     String NOTIFY_BYPASS_PATH = "notify-bypass";
     String BYPASS_MESSAGE_PATH = "bypass-message";
     String TAB_ERROR_MESSAGE_PATH = "tab-error-message";
+    String RESOLVE_ALIASES_PATH = "resolve-aliases";
 
     /**
      * Tries to initialize this config adapter. If an exception occurs, it is logged to {@code
