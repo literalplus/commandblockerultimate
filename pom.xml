@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Command Blocker Ultimate
-  ~ Copyright (C) 2014-2015 Philipp Nowak / Literallie (xxyy.github.io)
+  ~ Copyright (C) 2014-2019 Philipp Nowak / Literallie (l1t.li)
   ~
   ~ This program is free software; you can redistribute it and/or
   ~ modify it under the terms of the GNU General Public License
@@ -131,8 +131,8 @@
             </dependency>
             <dependency>
                 <groupId>com.comphenix.protocol</groupId>
-                <artifactId>ProtocolLib</artifactId>
-                <version>4.3.0</version>
+                <artifactId>ProtocolLib-API</artifactId>
+                <version>4.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.mcstats.bukkit</groupId>
