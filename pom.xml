@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Command Blocker Ultimate
-  ~ Copyright (C) 2014-2017 Philipp Nowak / Literallie (l1t.li)
+  ~ Copyright (C) 2014-2019 Philipp Nowak / Literallie (l1t.li)
   ~
   ~ This program is free software; you can redistribute it and/or
   ~ modify it under the terms of the GNU General Public License
@@ -78,7 +78,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version-suffix>-SNAPSHOT</version-suffix>
         <full-version>${project.version}${version-suffix}</full-version>
-        <minecraft.version>1.8.8</minecraft.version>
+        <minecraft.version>1.9.4</minecraft.version>
         <spigot.version>${minecraft.version}-R0.1-SNAPSHOT</spigot.version>
         <java.version>1.8</java.version>
         <bungee.version>1.8-SNAPSHOT</bungee.version>
