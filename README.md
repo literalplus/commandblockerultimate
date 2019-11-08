@@ -37,23 +37,21 @@ Features
 
 (*) You need to install [ProtocolLib](http://dev.bukkit.org/bukkit-plugins/protocollib/) for that to work
 
-Compilation [![Build Status](http://ci.l1t.li/job/public~cmdblkult/badge/icon)](http://ci.l1t.li/job/public~cmdblkult/)
+Compilation [![Build Status](http://ci.lit.plus/job/public~cmdblkult/badge/icon)](http://ci.lit.plus/job/public~cmdblkult/)
 ===========
 You could compile it yourself by doing
 ````
-git clone https://github.com/xxyy/commandblockerultimate.git
+git clone https://github.com/literalplus/commandblockerultimate.git
 mvn clean package
 ````
 
-Or you could just head over to my [Continuous Integration Server](https://ci.l1t.li/job/public~cmdblkult/) and get your free executable TODAY!
+Or you could just head over to my [Continuous Integration Server](https://ci.lit.plus/job/public~cmdblkult/) and get your free executable TODAY!
 
 For fully tested versions, check out the [Spigot Resource entry](https://www.spigotmc.org/resources/command-blocker-ultimate.296/) for this plugin!
 
-(But there's more! If you download RIGHT NOW, you can get plenty of other open-source plugins and other stuff FOR FREE at https://github.com/xxyy !!!1)
-
 Support
 =======
-If encounter any problem with this plugin, just [open an issue :)](https://github.com/xxyy/commandblockerultimate/issues)
+If encounter any problem with this plugin, just [open an issue :)](https://github.com/literalplus/commandblockerultimate/issues)
 
 Contribution
 ============
@@ -63,7 +61,7 @@ License
 =======
 ````
 Command Blocker Ultimate
-Copyright (C) 2014-2018 Philipp Nowak / Literallie (git@l1t.li)
+Copyright (C) 2014-2019 Philipp Nowak / Literallie (git@lit.plus)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
